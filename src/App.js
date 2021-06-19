@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import Greeter from './artifacts/contracts/Greeter.sol/Greeter.json'
 
 function App() {
   return (
