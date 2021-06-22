@@ -12,7 +12,7 @@ task("accounts", "Prints the list of accounts", async () => {
 
 module.exports = {
   solidity: {
-    version: "0.8.3",
+    version: "0.7.1",
     settings: {
       optimizer: {
         enabled: true,
@@ -28,10 +28,10 @@ module.exports = {
     hardhat: {
       chainId: 1337
     },
-    ropsten: {
-      url: "", //infura key
-      accounts: [`0x{process.env.ACCOUNT_KEY}`]
-    }
+    // ropsten: {
+    //   url: "", //infura key
+    //   accounts: [`0x{process.env.ACCOUNT_KEY}`]
+    // }
   }
 };
 

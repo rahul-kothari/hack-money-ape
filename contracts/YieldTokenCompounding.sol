@@ -1,0 +1,141 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.7.0;
+
+import "./balancer-core-v2/vault/interfaces/IVault.sol";
+import "./element-finance/ITranche.sol";
+import "./balancer-core-v2/lib/openzeppelin/IERC20.sol";
+
+/// @notice Simple version of YTC.
+contract YieldTokenCompoundingSimple {
+    //Address of balancer v2 vault that holds all tokens
+    IVault public immutable balVault;
+    address internal immutable _trancheFactory;
+    bytes32 internal immutable _trancheBytecodeHash;
+    uint256 internal immutable _MAX_VALUE = type(uint256).max;
+
+    constructor(address _balVault, address __trancheFactory, bytes32 __trancheBytecodeHash) {
+        balVault = IVault(_balVault);
+        _trancheFactory = __trancheFactory;
+        _trancheBytecodeHash = __trancheBytecodeHash;        
+    }
+
+    /**
+    @notice Do Yield Token Compounding i.e. convert base tokens to PTs, YTs and sell PTs for base tokens and reconvert for more YTs recursively
+    @param _n the number of compounding to do
+    @param _trancheAddress the element.fi tranche contract address for the token to compound
+    @param _balancerPoolId of the pool containing PTs and Base Tokens. AMM formula is constant power sum formula.
+    @param _amount The amount of base tokens supplied initially
+    @dev assume user has approved this contract for base tokens.
+     */
+    function compound(
+        uint8 _n,
+        address _trancheAddress,
+        bytes32 _balancerPoolId,
+        uint256 _amount
+        // uint256 expectedYtOutput
+    ) public {
+        // Step 1: Assume the user approves the contract for the base token [permit support is a nice to have in general but for simplicity fine to omit]
+
+        // Step 2: User calls deposit, the smart contract uses transferFrom to move the tokens from the user to the WP for the tranche.
+        ITranche tranche = ITranche(_trancheAddress);
+        IERC20 baseToken = IERC20(tranche.underlying());
+        address baseTokenAddress = address(baseToken);
+        //address(uint160(addr)) makes it of type address payable.
+        address payable wrappedPositionAddress = address(uint160(address(tranche.position())));
+        address thisAddress = address(this);
+        
+        baseToken.transferFrom(msg.sender, wrappedPositionAddress, _amount);
+
+        // The amount of yts accrued so far.
+        uint256 ytBalance = 0;
+        // Step 5: repeat steps 3-4 N times.
+        for (uint8 i = 0; i < _n; i++) {
+            // Step 3: Smart contract calls prefundedDeposit on the tranche with destination of itself
+            (uint256 pt, uint256 yt) = tranche.prefundedDeposit(thisAddress);
+            ytBalance += yt;
+            // Step 4: Smart contract calls balancer smart contract and sells PT for base and indicates the wp as the destination.
+            // Note: if last compounding, then send base tokens to user instead of WP
+            _amount = _swapPTsForBaseTokenOnBalancer(
+                _trancheAddress,
+                _balancerPoolId,
+                baseTokenAddress,
+                thisAddress,
+                i == _n - 1 ? msg.sender : wrappedPositionAddress,
+                pt
+            );
+        }
+
+        // Step 6: Send the smart contract balance of yt to the user
+        // Transfer YTs from this contract to the user
+        // require(ytBalance < expectedYtOutput, "Too much slippage");
+        tranche.interestToken().transfer(msg.sender, ytBalance);
+        // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.        
+    }
+
+    function _swapPTsForBaseTokenOnBalancer(
+        address _trancheAddress,
+        bytes32 _poolId,
+        address _baseTokenAddress,
+        address _fromAddress,
+        address payable _receiverAddress,
+        uint256 _amount
+    ) internal returns (uint256) {
+        // Swap PTs (tranche contract token) for base tokens
+        IVault.SwapKind kind = IVault.SwapKind.GIVEN_IN;
+        IAsset assetIn = IAsset(_trancheAddress);
+        IAsset assetOut = IAsset(_baseTokenAddress);
+        IVault.SingleSwap memory singleSwap = IVault.SingleSwap({
+            poolId: _poolId,
+            kind: kind,
+            assetIn: assetIn,
+            assetOut: assetOut,
+            amount: _amount,
+            userData: bytes("")
+        });
+
+        // Sell from this contract to Wrapped Position contract /userAddress (for last compounding)
+        IVault.FundManagement memory funds = IVault.FundManagement({
+            sender: _fromAddress,
+            fromInternalBalance: false,
+            recipient: _receiverAddress,
+            toInternalBalance: false
+        });
+
+        // TODO: What values to give for limit??
+        uint256 limit = 0;
+        uint256 deadline = _MAX_VALUE; 
+
+        uint256 baseTokensReceived = balVault.swap(
+            singleSwap,
+            funds,
+            limit,
+            deadline
+        );
+        return baseTokensReceived;
+    }
+
+    /// @dev Derive address of the Tranche contract (from a wrapped position contract and expiration using create2) and approve balancer vault to spend this contract's tranche tokens
+    /// @param _position The wrapped position contract address
+    /// @param _expiration The expiration time of the tranche
+    function approveTranchePTOnBalancer(address _position, uint256 _expiration
+    ) external {
+
+        bytes32 salt = keccak256(abi.encodePacked(_position, _expiration));
+        bytes32 addressBytes = keccak256(
+            abi.encodePacked(
+                bytes1(0xff),
+                _trancheFactory,
+                salt,
+                _trancheBytecodeHash
+            )
+        );
+        ITranche tranche = ITranche(address(uint160(uint256(addressBytes))));
+
+        address balancerVaultAddr = address(balVault);
+        // Only approve if not done already. This to prevent overflow.
+        if (tranche.allowance(address(this), balancerVaultAddr) > 0) {
+            // Permit the balancerVault to spend this contract's PT tokens (aka tranche tokens)
+            tranche.approve(address(balVault), _MAX_VALUE);
+        }
+    }
+}
