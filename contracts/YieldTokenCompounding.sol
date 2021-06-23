@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.7.0;
+pragma experimental ABIEncoderV2;
 
 import "./balancer-core-v2/vault/interfaces/IVault.sol";
 import "./element-finance/ITranche.sol";
 import "./balancer-core-v2/lib/openzeppelin/IERC20.sol";
 
 /// @notice Simple version of YTC.
-contract YieldTokenCompoundingSimple {
+contract YieldTokenCompounding {
     //Address of balancer v2 vault that holds all tokens
     IVault public immutable balVault;
     address internal immutable _trancheFactory;
@@ -32,44 +33,48 @@ contract YieldTokenCompoundingSimple {
         address _trancheAddress,
         bytes32 _balancerPoolId,
         uint256 _amount
-        // uint256 expectedYtOutput
     ) public {
         // Step 1: Assume the user approves the contract for the base token [permit support is a nice to have in general but for simplicity fine to omit]
 
         // Step 2: User calls deposit, the smart contract uses transferFrom to move the tokens from the user to the WP for the tranche.
         ITranche tranche = ITranche(_trancheAddress);
-        IERC20 baseToken = IERC20(tranche.underlying());
-        address baseTokenAddress = address(baseToken);
+        address baseTokenAddress = address(tranche.underlying());
         //address(uint160(addr)) makes it of type address payable.
         address payable wrappedPositionAddress = address(uint160(address(tranche.position())));
-        address thisAddress = address(this);
         
-        baseToken.transferFrom(msg.sender, wrappedPositionAddress, _amount);
+        // tranche.underlying() = baseToken. Transfer base tokens from user to WP.
+        tranche.underlying().transferFrom(msg.sender, wrappedPositionAddress, _amount);
 
+        // Step 5: repeat steps 3-4 N times.
+        uint256 ytBalance = _forLoop(_n, tranche, _balancerPoolId, baseTokenAddress, wrappedPositionAddress);
+
+        // Step 6: Send the smart contract balance of yt to the user
+        // Transfer YTs from this contract to the user
+        tranche.interestToken().transfer(msg.sender, ytBalance);
+        // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.        
+    }
+    
+    function _forLoop(uint8 _n, ITranche tranche, bytes32 _balancerPoolId, 
+        address baseTokenAddress, address payable wrappedPositionAddress) 
+        internal returns(uint256) {
         // The amount of yts accrued so far.
         uint256 ytBalance = 0;
-        // Step 5: repeat steps 3-4 N times.
         for (uint8 i = 0; i < _n; i++) {
             // Step 3: Smart contract calls prefundedDeposit on the tranche with destination of itself
-            (uint256 pt, uint256 yt) = tranche.prefundedDeposit(thisAddress);
+            (uint256 pt, uint256 yt) = tranche.prefundedDeposit(address(this));
             ytBalance += yt;
             // Step 4: Smart contract calls balancer smart contract and sells PT for base and indicates the wp as the destination.
             // Note: if last compounding, then send base tokens to user instead of WP
-            _amount = _swapPTsForBaseTokenOnBalancer(
-                _trancheAddress,
+            _swapPTsForBaseTokenOnBalancer(
+                address(tranche),//_trancheAddress,
                 _balancerPoolId,
                 baseTokenAddress,
-                thisAddress,
+                address(this),
                 i == _n - 1 ? msg.sender : wrappedPositionAddress,
                 pt
             );
         }
-
-        // Step 6: Send the smart contract balance of yt to the user
-        // Transfer YTs from this contract to the user
-        // require(ytBalance < expectedYtOutput, "Too much slippage");
-        tranche.interestToken().transfer(msg.sender, ytBalance);
-        // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.        
+        return ytBalance;
     }
 
     function _swapPTsForBaseTokenOnBalancer(

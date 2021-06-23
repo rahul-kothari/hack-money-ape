@@ -5,22 +5,25 @@
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 const ethers = hre.ethers;
+const fs = require("fs");
 
 async function main() {
-  [account] = await ethers.getSigners();
-  deployerAddress = account.address;
-  console.log(`Deploying contracts using ${deployerAddress}`);
+  [signer] = await ethers.getSigners();
+  console.log(`Deploying contracts using ${signer.address}`);
 
   //If running standalone like `$ node scripts/deploy.js` uncomment next line:
   //await hre.run("compile");
 
-  // We get the contract to deploy
-  const Greeter = await ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const data = fs.readFileSync("../constants.json");
+  const bytecodeHash = ethers.utils.solidityKeccak256(["bytes"], [data.trancheBytecode]);
+  const balVault = data.balancerVaultAddress;
+  const trancheFactory = data.trancheFactoryAddress;
 
-  await greeter.deployed();
-
-  console.log("Greeter deployed to:", greeter.address);
+  const YTC = await ethers.getContractFactory("YieldTokenCompounding");
+  const ytc_contract = await YTC.deploy(balVault, trancheFactory, bytecodeHash);
+  await ytc_contract.deployed();
+  
+  console.log("ytc_contract deployed to:", ytc_contract.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

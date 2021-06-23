@@ -28,7 +28,7 @@ module.exports = {
     hardhat: {
       chainId: 1337
     },
-    // ropsten: {
+    // goerli: {
     //   url: "", //infura key
     //   accounts: [`0x{process.env.ACCOUNT_KEY}`]
     // }
