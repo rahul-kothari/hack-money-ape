@@ -6,7 +6,7 @@ import "./balancer-core-v2/vault/interfaces/IVault.sol";
 import "./element-finance/ITranche.sol";
 import "./balancer-core-v2/lib/openzeppelin/IERC20.sol";
 
-/// @notice Simple version of YTC.
+/// @notice Yield Token Compounding on top of element.finance.
 contract YieldTokenCompounding {
     //Address of balancer v2 vault that holds all tokens
     IVault public immutable balVault;
@@ -17,7 +17,7 @@ contract YieldTokenCompounding {
     constructor(address _balVault, address __trancheFactory, bytes32 __trancheBytecodeHash) {
         balVault = IVault(_balVault);
         _trancheFactory = __trancheFactory;
-        _trancheBytecodeHash = __trancheBytecodeHash;        
+        _trancheBytecodeHash = __trancheBytecodeHash; 
     }
 
     /**
@@ -118,29 +118,11 @@ contract YieldTokenCompounding {
         );
         return baseTokensReceived;
     }
-
-    /// @dev Derive address of the Tranche contract (from a wrapped position contract and expiration using create2) and approve balancer vault to spend this contract's tranche tokens
-    /// @param _position The wrapped position contract address
-    /// @param _expiration The expiration time of the tranche
-    function approveTranchePTOnBalancer(address _position, uint256 _expiration
-    ) external {
-
-        bytes32 salt = keccak256(abi.encodePacked(_position, _expiration));
-        bytes32 addressBytes = keccak256(
-            abi.encodePacked(
-                bytes1(0xff),
-                _trancheFactory,
-                salt,
-                _trancheBytecodeHash
-            )
-        );
-        ITranche tranche = ITranche(address(uint160(uint256(addressBytes))));
-
-        address balancerVaultAddr = address(balVault);
-        // Only approve if not done already. This to prevent overflow.
-        if (tranche.allowance(address(this), balancerVaultAddr) > 0) {
-            // Permit the balancerVault to spend this contract's PT tokens (aka tranche tokens)
-            tranche.approve(address(balVault), _MAX_VALUE);
-        }
+    
+    /// @dev Approve balancer vault to spend this contract's tranche tokens (PTs aka fixed yield tokens)
+    /// @param _trancheAddress The tranche address
+    function approveTranchePTOnBalancer(address _trancheAddress) public {
+        ITranche tranche = ITranche(_trancheAddress);
+        tranche.approve(address(balVault), _MAX_VALUE);
     }
 }
