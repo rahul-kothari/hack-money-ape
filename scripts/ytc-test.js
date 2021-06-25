@@ -35,14 +35,19 @@ async function main(amount=100, n=1, baseTokenName="weth", trancheIndex=0) {
     let tx = await ytc.approveTranchePTOnBalancer(trancheAddress);
     await tx.wait();
     console.log(`Approved balancer vault on tranche: ${tx.hash}`);
+    console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
 
     //2. User (signer) approves spending of base tokens to the ytc contract.
-    baseToken.approve(yieldTokenCompoundingAddress, amount)
+    await baseToken.approve(yieldTokenCompoundingAddress, amount)
 
     //3. Compound!
     tx = await ytc.compound(1, trancheAddress, balancerPoolId, amount);
     await tx.wait();
     console.log(`Compounded: ${tx.hash}`);
+
+    //4. TODO: Print balances (Base token, PT, YT)
+    // baseToken.balanceOf(signer.getAddress);
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere

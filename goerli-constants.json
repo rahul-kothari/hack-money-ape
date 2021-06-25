@@ -1,5 +1,4 @@
 {
-	"trancheBytecodeHash": "0x3ce2e73576445f4b14106b78300fa3e4a04cf879b6f26f65e11e0da42ff21538",
 	"tokens": {
 		"usdc": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
 		"weth": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
@@ -24,6 +23,7 @@
 	"balancerVault": "0x65748E8287Ce4B9E6D83EE853431958851550311",
 	"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
 	"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7",
+	"yieldTokenCompoundingAddress": "0x00c4E67B75E64373CC90Cf07Ec6Ac7c1F133e90C",
 	"tranches": {
 		"usdc": [
 			{

@@ -10,14 +10,10 @@ import "./balancer-core-v2/lib/openzeppelin/IERC20.sol";
 contract YieldTokenCompounding {
     //Address of balancer v2 vault that holds all tokens
     IVault public immutable balVault;
-    address internal immutable _trancheFactory;
-    bytes32 internal immutable _trancheBytecodeHash;
     uint256 internal immutable _MAX_VALUE = type(uint256).max;
 
-    constructor(address _balVault, address __trancheFactory, bytes32 __trancheBytecodeHash) {
+    constructor(address _balVault) {
         balVault = IVault(_balVault);
-        _trancheFactory = __trancheFactory;
-        _trancheBytecodeHash = __trancheBytecodeHash; 
     }
 
     /**
