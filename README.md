@@ -1,4 +1,12 @@
-## Ape
+## Ape - YTC
+
+![YTC](./images/ytc-representation)
+
+Iteration 1: User deposits 10 USDC to get 9.9 PT and 10 YT. 9.9 PT sold for 9.7 USDC. 
+Iteration 2: Deposit USDC back for more PT and YT. Sell PT for USDC and return to user.
+(Iteration 2 is where the real magic happens)
+
+At the end of i=2, user put in 10 USDC to get 19.72 YT and 9.54 USDC.
 
 ## Instructions:
 ```

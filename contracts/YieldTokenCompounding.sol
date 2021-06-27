@@ -22,6 +22,7 @@ contract YieldTokenCompounding {
     @param _trancheAddress the element.fi tranche contract address for the token to compound
     @param _balancerPoolId of the pool containing PTs and Base Tokens. AMM formula is constant power sum formula.
     @param _amount The amount of base tokens supplied initially
+    @return number of YTs user obtained.
     @dev assume user has approved this contract for base tokens.
      */
     function compound(
@@ -29,7 +30,8 @@ contract YieldTokenCompounding {
         address _trancheAddress,
         bytes32 _balancerPoolId,
         uint256 _amount
-    ) public {
+    ) public returns (uint256) {
+        require (_n > 0 && _n < 31, "n has to be between 1 to 255 inclusive.");
         // Step 1: Assume the user approves the contract for the base token [permit support is a nice to have in general but for simplicity fine to omit]
 
         // Step 2: User calls deposit, the smart contract uses transferFrom to move the tokens from the user to the WP for the tranche.
@@ -47,7 +49,8 @@ contract YieldTokenCompounding {
         // Step 6: Send the smart contract balance of yt to the user
         // Transfer YTs from this contract to the user
         tranche.interestToken().transfer(msg.sender, ytBalance);
-        // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.        
+        // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.     
+        return ytBalance;   
     }
     
     function _forLoop(uint8 _n, ITranche tranche, bytes32 _balancerPoolId, 
@@ -62,7 +65,7 @@ contract YieldTokenCompounding {
             // Step 4: Smart contract calls balancer smart contract and sells PT for base and indicates the wp as the destination.
             // Note: if last compounding, then send base tokens to user instead of WP
             _swapPTsForBaseTokenOnBalancer(
-                address(tranche),//_trancheAddress,
+                address(tranche),
                 _balancerPoolId,
                 baseTokenAddress,
                 address(this),
@@ -102,7 +105,6 @@ contract YieldTokenCompounding {
             toInternalBalance: false
         });
 
-        // TODO: What values to give for limit??
         uint256 limit = 0;
         uint256 deadline = _MAX_VALUE; 
 
