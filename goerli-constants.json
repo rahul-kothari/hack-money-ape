@@ -23,7 +23,7 @@
 	"balancerVault": "0x65748E8287Ce4B9E6D83EE853431958851550311",
 	"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
 	"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7",
-	"yieldTokenCompoundingAddress": "0x1C7a06b4B0173e98da45124C5b03669d407dDDAb",
+	"yieldTokenCompoundingAddress": "0x82da944692981eaF7f637CE9aBCCc423a79Cc50F",
 	"tranches": {
 		"usdc": [
 			{

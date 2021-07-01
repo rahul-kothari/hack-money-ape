@@ -22,7 +22,7 @@ contract YieldTokenCompounding {
     @param _trancheAddress the element.fi tranche contract address for the token to compound
     @param _balancerPoolId of the pool containing PTs and Base Tokens. AMM formula is constant power sum formula.
     @param _amount The amount of base tokens supplied initially
-    @return number of YTs user obtained.
+    @return number of PTs and YTs user obtained.
     @dev assume user has approved this contract for base tokens.
      */
     function compound(
@@ -30,7 +30,7 @@ contract YieldTokenCompounding {
         address _trancheAddress,
         bytes32 _balancerPoolId,
         uint256 _amount
-    ) public returns (uint256) {
+    ) public returns (uint256, uint256) {
         require (_n > 0 && _n < 31, "n has to be between 1 to 255 inclusive.");
         // Step 1: Assume the user approves the contract for the base token [permit support is a nice to have in general but for simplicity fine to omit]
 
@@ -42,15 +42,21 @@ contract YieldTokenCompounding {
         
         // tranche.underlying() = baseToken. Transfer base tokens from user to WP.
         tranche.underlying().transferFrom(msg.sender, wrappedPositionAddress, _amount);
+        uint256 ytBalance = 0;
+        if (_n > 1) {
+            // Step 5: repeat steps 3-4 N-1 times.
+            ytBalance = _forLoop(_n-1, tranche, _balancerPoolId, baseTokenAddress, wrappedPositionAddress);
 
-        // Step 5: repeat steps 3-4 N times.
-        uint256 ytBalance = _forLoop(_n, tranche, _balancerPoolId, baseTokenAddress, wrappedPositionAddress);
+            // Step 6: Send the smart contract balance of yt to the user
+            // Transfer YTs from this contract to the user
+            tranche.interestToken().transfer(msg.sender, ytBalance);
+        }
 
-        // Step 6: Send the smart contract balance of yt to the user
-        // Transfer YTs from this contract to the user
-        tranche.interestToken().transfer(msg.sender, ytBalance);
-        // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.     
-        return ytBalance;   
+        // Step 7: one final time, swap the remaining base tokens (in WP) for PTs and YTs and send to user.
+        // So at the end of YTC, user gets PT and YT and no base tokens.
+        (uint256 pt, uint256 yt) = tranche.prefundedDeposit(msg.sender);
+        return (pt, yt+ytBalance);
+
     }
     
     function _forLoop(uint8 _n, ITranche tranche, bytes32 _balancerPoolId, 
@@ -63,27 +69,26 @@ contract YieldTokenCompounding {
             (uint256 pt, uint256 yt) = tranche.prefundedDeposit(address(this));
             ytBalance += yt;
             // Step 4: Smart contract calls balancer smart contract and sells PT for base and indicates the wp as the destination.
-            // Note: if last compounding, then send base tokens to user instead of WP
-            swapPTsForBaseTokenOnBalancer(
-                address(tranche),
+            _swapPTsForBaseTokenOnBalancer(
+                address(tranche),//_trancheAddress,
                 _balancerPoolId,
                 baseTokenAddress,
                 address(this),
-                i == _n - 1 ? msg.sender : wrappedPositionAddress,
+                wrappedPositionAddress,
                 pt
             );
         }
         return ytBalance;
     }
 
-    function swapPTsForBaseTokenOnBalancer(
+    function _swapPTsForBaseTokenOnBalancer(
         address _trancheAddress,
         bytes32 _poolId,
         address _baseTokenAddress,
         address _fromAddress,
         address payable _receiverAddress,
         uint256 _amount
-    ) public returns (uint256) {
+    ) internal returns (uint256) {
         // Swap PTs (tranche contract token) for base tokens
         IVault.SwapKind kind = IVault.SwapKind.GIVEN_IN;
         IAsset assetIn = IAsset(_trancheAddress);

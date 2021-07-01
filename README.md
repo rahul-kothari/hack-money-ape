@@ -22,6 +22,12 @@ ABI for the YTC contract can be accessed like so:
 JSON.parse(fs.readFileSync("./src/artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json")).abi
 ```
 
+To run scripts/or do transactions in goerli, you need to set 2 env variables (used by hardhat.config.js)
+```
+ALCHEMY_API_KEY = ask Rahul for this
+PRIVATE_KEY = the goerli pvt key you are using when running scripts as a signer!
+```
+
 ### Element.fi contract addresses:
 [`./goerli-constants.json`](./goerli-constants.json)
 Alternatively use the elf-sdk.

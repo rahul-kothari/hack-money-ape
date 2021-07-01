@@ -10,6 +10,7 @@ task("accounts", "Prints the list of accounts", async () => {
   }
 });
 
+const INFURA_KEY = 
 module.exports = {
   solidity: {
     version: "0.7.1",
@@ -23,15 +24,15 @@ module.exports = {
   paths: {
     artifacts: './src/artifacts',
   },
-  defaultNetwork: "hardhat",
+  defaultNetwork: "goerli",
   networks: {
     hardhat: {
       chainId: 1337
     },
-    // goerli: {
-    //   url: "", //infura key
-    //   accounts: [`0x{process.env.ACCOUNT_KEY}`]
-    // }
+    goerli: {
+      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+      accounts: [`0x${process.env.PRIVATE_KEY}`]
+    }
   }
 };
 
