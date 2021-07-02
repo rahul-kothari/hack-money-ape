@@ -22,21 +22,24 @@ contract YieldTokenCompounding {
     @param _trancheAddress the element.fi tranche contract address for the token to compound
     @param _balancerPoolId of the pool containing PTs and Base Tokens. AMM formula is constant power sum formula.
     @param _amount The amount of base tokens supplied initially
-    @return number of YTs user obtained.
+    @param _expectedYtOutput slippage protection
+    @return number of YTs user obtained, number of base tokens spent (useful for YTC calculator)
     @dev assume user has approved this contract for base tokens.
      */
     function compound(
         uint8 _n,
         address _trancheAddress,
         bytes32 _balancerPoolId,
-        uint256 _amount
-    ) public returns (uint256) {
+        uint256 _amount,
+        uint256 _expectedYtOutput
+    ) public returns (uint256, uint256) {
         require (_n > 0 && _n < 31, "n has to be between 1 to 255 inclusive.");
         // Step 1: Assume the user approves the contract for the base token [permit support is a nice to have in general but for simplicity fine to omit]
 
         // Step 2: User calls deposit, the smart contract uses transferFrom to move the tokens from the user to the WP for the tranche.
         ITranche tranche = ITranche(_trancheAddress);
         address baseTokenAddress = address(tranche.underlying());
+        uint256 initialBalance = IERC20(baseTokenAddress).balanceOf(msg.sender);
         //address(uint160(addr)) makes it of type address payable.
         address payable wrappedPositionAddress = address(uint160(address(tranche.position())));
         
@@ -45,12 +48,19 @@ contract YieldTokenCompounding {
 
         // Step 5: repeat steps 3-4 N times.
         uint256 ytBalance = _forLoop(_n, tranche, _balancerPoolId, baseTokenAddress, wrappedPositionAddress);
+        
+        require(ytBalance >= _expectedYtOutput, "Too much slippage");
 
         // Step 6: Send the smart contract balance of yt to the user
         // Transfer YTs from this contract to the user
         tranche.interestToken().transfer(msg.sender, ytBalance);
         // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.     
-        return ytBalance;   
+        
+        return (ytBalance, _baseTokensSpent(baseTokenAddress, initialBalance));   
+    }
+    
+    function _baseTokensSpent(address baseTokenAddress, uint256 initialBalance) internal view returns (uint256) {
+        return initialBalance - IERC20(baseTokenAddress).balanceOf(msg.sender);
     }
     
     function _forLoop(uint8 _n, ITranche tranche, bytes32 _balancerPoolId, 

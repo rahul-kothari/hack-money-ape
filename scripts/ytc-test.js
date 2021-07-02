@@ -29,10 +29,10 @@ async function main() {
 
     // Load erc20 contract of base token and check if enough balance
     const baseToken = new ethers.Contract(baseTokenAddress, erc20Abi, signer);
-    const baseTokenBforeBalance =  await getERC20Balance(baseToken, signer.getAddress());
+    const baseTokenBeforeBalance =  await getERC20Balance(baseToken, signer.getAddress());
 
-    console.log("User base token initial balance: ", baseTokenBforeBalance);
-    if(baseTokenBforeBalance <= amount) {
+    console.log("User base token initial balance: ", baseTokenBeforeBalance);
+    if(baseTokenBeforeBalance <= amount) {
       throw new Error(`Not enough base token balance`);
     }
 
@@ -66,13 +66,13 @@ async function main() {
     // console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
 
     //1. User (signer) approves spending of base tokens to the ytc contract.
-    // let tx = await baseToken.approve(yieldTokenCompoundingAddress, beforeBalance);
+    // tx = await baseToken.approve(yieldTokenCompoundingAddress, baseTokenBeforeBalance);
     // console.log("User approves YTC contract to spend base token on its behalf - SUCCESFUL");
     // console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
 
     //2. Compound!
     console.log(`YTC - compound ${n} times with ${amount} ${baseTokenName}`);
-    tx = await ytc.compound(n, trancheAddress, balancerPoolId, amount);
+    tx = await ytc.compound(n, trancheAddress, balancerPoolId, amount, 1000);
     await tx.wait();
     console.log(`Compounded: ${tx.hash}`);
     console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
@@ -83,9 +83,9 @@ async function main() {
     const ytAfterBalance = await getERC20Balance(yieldToken, signer.getAddress());
     console.log("Yield Token balance: ", ytAfterBalance);
     const ptAfterBalance = await getERC20Balance(tranche, signer.getAddress());
-    console.log("Yield Token balance: ", ytAfterBalance);
+    console.log("Yield Token balance: ", ptAfterBalance);
 
-    console.log(`Spent ${baseTokenBforeBalance - baseTokenAfterBalance} for ${ytAfterBalance - ytBeforeBalance} YTs (${await yieldToken.name()}) and ${ptAfterBalance - ptBeforeBalance} PTs (${await tranche.name()})`);
+    console.log(`Spent ${baseTokenBeforeBalance - baseTokenAfterBalance} for ${ytAfterBalance - ytBeforeBalance} YTs (${await yieldToken.name()})`);
 }
 
 main()
