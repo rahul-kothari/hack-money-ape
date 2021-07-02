@@ -30,7 +30,7 @@ module.exports = {
       chainId: 1337
     },
     goerli: {
-      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+      url: `${process.env.GOERLI_PROVIDER_URL}`,
       accounts: [`0x${process.env.PRIVATE_KEY}`]
     }
   }

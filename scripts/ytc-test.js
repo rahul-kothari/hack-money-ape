@@ -1,57 +1,88 @@
 const hre = require("hardhat");
 const ethers = hre.ethers;
-const fs = require("fs");
+const prompt = require('prompt-sync')();
+const {getAbi, getERC20Balance, getGoerliElementFinanceData} = require("./helpers")
 
-function getAbi(path) {
-    return JSON.parse(fs.readFileSync(path)).abi
-}
-
-// TODO: NOT TESTED!
-async function main(amount=100, n=1, baseTokenName="weth", trancheIndex=0) {
+async function main() {
     const signer = (await ethers.getSigners())[0]
 
-    const ytcAbi = getAbi("./src/artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json")
-    const erc20Abi = getAbi("./src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json")
-
-    let data = JSON.parse(fs.readFileSync("./goerli-constants.json"));
+    // Get ABIs
+    const ytcAbi = getAbi("YieldTokenCompounding.sol/YieldTokenCompounding.json")
+    const erc20Abi = getAbi("balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json")
+    const trancheAbi = getAbi("element-finance/ITranche.sol/ITranche.json")
+    
+    let data = getGoerliElementFinanceData();
     const yieldTokenCompoundingAddress = data["yieldTokenCompoundingAddress"];
-    const baseTokenAddress = data["tokens"][baseTokenName];
-    const trancheDetails = data["tranches"][baseTokenName][trancheIndex];
-    const trancheAddress = trancheDetails["address"];
-    const balancerPoolId = trancheDetails["ptPool"]["poolId"];
-    
-    if (!yieldTokenCompoundingAddress) {
-      throw new Error("Add YTC contract details");
-    }
-    
+    // Load YTC contract
     const ytc = new ethers.Contract(yieldTokenCompoundingAddress, ytcAbi, signer);
-    const baseToken = new ethers.Contract(baseTokenAddress, erc20Abi, signer);
+    
+    // Get base token name:
+    const baseTokens = Object.keys(data["tokens"]);
+    const baseTokenName = prompt(`Enter base token name [${baseTokens}]: `).toLowerCase();
+    if (! baseTokenName in baseTokens) {
+      throw new Error("Base token not valid on element.fi yet");
+    }
+    const baseTokenAddress = data["tokens"][baseTokenName];
 
-    if(await baseToken.balanceOf(signer.getAddress) <= 0) {
+    //Get amount:
+    const amount = parseInt(prompt("Enter base tokens amount in decimals: "));
+
+    // Load erc20 contract of base token and check if enough balance
+    const baseToken = new ethers.Contract(baseTokenAddress, erc20Abi, signer);
+    const baseTokenBforeBalance =  await getERC20Balance(baseToken, signer.getAddress());
+
+    console.log("User base token initial balance: ", baseTokenBforeBalance);
+    if(baseTokenBforeBalance <= amount) {
       throw new Error(`Not enough base token balance`);
     }
 
-    //1. Approve balancer to spend tranche tokens on this sc behalf:
-    let tx = await ytc.approveTranchePTOnBalancer(trancheAddress);
-    await tx.wait();
-    console.log(`Approved balancer vault on tranche: ${tx.hash}`);
-    console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
+    // Get specific tranche
+    const tranches = data["tranches"][baseTokenName];    
+    let expiries = []
+    tranches.forEach(tranche => {
+      expiries.push(new Date(tranche.expiration * 1000).toLocaleDateString())
+    });
+    const trancheIndex = parseInt(prompt(`Enter index of the expiry date of the tranche [${expiries}]: `))
 
-    //2. User (signer) approves spending of base tokens to the ytc contract.
-    await baseToken.approve(yieldTokenCompoundingAddress, amount)
+    const trancheDetails = tranches[trancheIndex];
+    const trancheAddress = trancheDetails["address"];
+    const balancerPoolId = trancheDetails["ptPool"]["poolId"];
+    const tranche = new ethers.Contract(trancheAddress, trancheAbi, signer)
+    console.log(`Selected Tranche ${trancheAddress}`);   
+    const yieldTokenAddress = await tranche.interestToken();
+    const yieldToken = new ethers.Contract(yieldTokenAddress, erc20Abi, signer);
+    const ytBeforeBalance = await getERC20Balance(yieldToken, signer.getAddress());
 
-    //3. Compound!
-    tx = await ytc.compound(1, trancheAddress, balancerPoolId, amount);
+    // Get number of compounds
+    const n = parseInt(prompt("Enter number of compounds to do: "));
+    
+    // 0. Approve balancer to spend tranche tokens on this sc behalf:
+    // let tx = await ytc.approveTranchePTOnBalancer(trancheAddress);
+    // await tx.wait();
+    // console.log(`Approved balancer vault on tranche: ${tx.hash}`);
+    // console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
+
+    //1. User (signer) approves spending of base tokens to the ytc contract.
+    // let tx = await baseToken.approve(yieldTokenCompoundingAddress, beforeBalance);
+    // console.log("User approves YTC contract to spend base token on its behalf - SUCCESFUL");
+    // console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
+
+    //2. Compound!
+    console.log(`YTC - compound ${n} times with ${amount} ${baseTokenName}`);
+    tx = await ytc.compound(n, trancheAddress, balancerPoolId, amount);
     await tx.wait();
     console.log(`Compounded: ${tx.hash}`);
+    console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
 
-    //4. TODO: Print balances (Base token, PT, YT)
-    // baseToken.balanceOf(signer.getAddress);
+    //3. Print balances (Base token, YT)
+    const baseTokenAfterBalance = await getERC20Balance(baseToken, signer.getAddress());
+    console.log("Base Token new balance: ", baseTokenAfterBalance);
+    const ytAfterBalance = await getERC20Balance(yieldToken, signer.getAddress());
+    console.log("Yield Token balance: ", ytAfterBalance);
 
+    console.log(`Spent ${baseTokenBforeBalance - baseTokenAfterBalance} for ${ytAfterBalance - ytBeforeBalance}`)
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main()
   .then(() => process.exit(0))
   .catch(error => {
