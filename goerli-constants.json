@@ -24,6 +24,7 @@
 	"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
 	"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7",
 	"yieldTokenCompoundingAddress": "0x82da944692981eaF7f637CE9aBCCc423a79Cc50F",
+	"yieldTokenCompoundingPTAddress": "0x23430dAE7eCcf9D97349657f63672E6A84cE660e",
 	"tranches": {
 		"usdc": [
 			{

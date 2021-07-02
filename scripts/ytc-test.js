@@ -49,6 +49,9 @@ async function main() {
     const balancerPoolId = trancheDetails["ptPool"]["poolId"];
     const tranche = new ethers.Contract(trancheAddress, trancheAbi, signer)
     console.log(`Selected Tranche ${trancheAddress}`);   
+    
+    const ptBeforeBalance = await getERC20Balance(tranche, signer.getAddress());
+    
     const yieldTokenAddress = await tranche.interestToken();
     const yieldToken = new ethers.Contract(yieldTokenAddress, erc20Abi, signer);
     const ytBeforeBalance = await getERC20Balance(yieldToken, signer.getAddress());
@@ -79,8 +82,10 @@ async function main() {
     console.log("Base Token new balance: ", baseTokenAfterBalance);
     const ytAfterBalance = await getERC20Balance(yieldToken, signer.getAddress());
     console.log("Yield Token balance: ", ytAfterBalance);
+    const ptAfterBalance = await getERC20Balance(tranche, signer.getAddress());
+    console.log("Yield Token balance: ", ytAfterBalance);
 
-    console.log(`Spent ${baseTokenBforeBalance - baseTokenAfterBalance} for ${ytAfterBalance - ytBeforeBalance}`)
+    console.log(`Spent ${baseTokenBforeBalance - baseTokenAfterBalance} for ${ytAfterBalance - ytBeforeBalance} YTs (${await yieldToken.name()}) and ${ptAfterBalance - ptBeforeBalance} PTs (${await tranche.name()})`);
 }
 
 main()

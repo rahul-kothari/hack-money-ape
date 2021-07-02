@@ -6,24 +6,17 @@
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "chai": "^4.3.4",
-    "elf-sdk": "git+https://github.com/element-fi/elf-sdk.git",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.3.1",
     "hardhat": "^2.4.0",
     "prompt-sync": "^4.2.0"
   },
   "scripts": {
-    "setup-sdk": "cd ./node_modules/elf-sdk && npm i && npm run load-contracts && npm run generate-interfaces && npm run build && cd ../..",
+    "setup-sdk": "git clone git@github.com:element-fi/elf-sdk.git && cd elf-sdk && npm i && npm run load-contracts && npm run generate-interfaces && npm run build && cd ..",
     "start": "npx hardhat node",
     "build": "npx hardhat compile",
     "ytc": "node ./scripts/ytc-test.js --network goerli",
     "ytc-calculator": ""
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
