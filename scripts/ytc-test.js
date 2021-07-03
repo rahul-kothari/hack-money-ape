@@ -79,11 +79,11 @@ async function main() {
 
     //3. Print balances (Base token, YT)
     const baseTokenAfterBalance = await getERC20Balance(baseToken, signer.getAddress());
-    console.log("Base Token new balance: ", baseTokenAfterBalance);
+    // console.log("Base Token new balance: ", baseTokenAfterBalance);
     const ytAfterBalance = await getERC20Balance(yieldToken, signer.getAddress());
-    console.log("Yield Token balance: ", ytAfterBalance);
-    const ptAfterBalance = await getERC20Balance(tranche, signer.getAddress());
-    console.log("Yield Token balance: ", ptAfterBalance);
+    // console.log("Yield Token balance: ", ytAfterBalance);
+    // const ptAfterBalance = await getERC20Balance(tranche, signer.getAddress());
+    // console.log("Principal Token balance: ", ptAfterBalance);
 
     console.log(`Spent ${baseTokenBeforeBalance - baseTokenAfterBalance} for ${ytAfterBalance - ytBeforeBalance} YTs (${await yieldToken.name()})`);
 }

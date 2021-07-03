@@ -79,7 +79,7 @@ async function main() {
     const term = daysLeftInTerm/365
     // console.log("Days left in term, term: ", daysLeftInTerm, term);
     
-    
+    let values = {};
     for (let i=1; i<11; i++) {
         // TODO: Gas fee estimation + tx fee + convert to base token amount
         // let gasFee = ethers.utils.formatEther(ethers.BigNumber.from(await ytc.estimateGas.compound(2,trancheAddress, balancerPoolId, amountCollateralDeposited, "100")).toNumber());
@@ -91,12 +91,18 @@ async function main() {
         ytExposure = ytExposure / (10**yieldTokenDecimals);
         baseTokensSpent = baseTokensSpent / (10**baseTokenDecimals);
         // console.log("yt exposure, base token spent: ", ytExposure, baseTokensSpent);
-        // console.log("grossYtGain: ", speculatedVariableRate * term * ytExposure)
+        // console.log("grossYtGain: ", userData["speculatedVariableRate"] * term * ytExposure)
         let netGain = (userData["speculatedVariableRate"] * term * ytExposure) - baseTokensSpent //- gasFee;
-        // console.log("nett: ", netGain)
         let finalApy = (netGain / baseTokensSpent)*100
-        console.log(`Compound ${i}:\t YT Exposure = ${ytExposure},\t baseTokensSpent = ${baseTokensSpent},\t final APR = ${finalApy}`);
+
+        // Add values to table.
+        values[i] = {
+          "YT Exposure": ytExposure, 
+          "Net Gain": `${netGain} ${userData["baseTokenName"]}`,
+          "Final APR": finalApy
+        }
     }
+    console.table(values);
 }
 
 main()
