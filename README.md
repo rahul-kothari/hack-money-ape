@@ -1,7 +1,7 @@
-![APe]("./images/ape.png")
+![APe](./images/ape.png)
 ## Ape - YTC
 
-![YTC]("./images/ytc-representation.jpg")
+![YTC](./images/ytc-representation.jpg)
 
 Iteration 1: User deposits 10 USDC to get 9.9 PT and 10 YT. 9.9 PT sold for 9.7 USDC. 
 Iteration 2: Deposit USDC back for more PT and YT. Sell PT for USDC and return to user.
