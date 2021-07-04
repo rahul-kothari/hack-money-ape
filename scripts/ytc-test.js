@@ -66,9 +66,9 @@ async function main() {
     // console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
 
     //1. User (signer) approves spending of base tokens to the ytc contract.
-    // tx = await baseToken.approve(yieldTokenCompoundingAddress, baseTokenBeforeBalance);
-    // console.log("User approves YTC contract to spend base token on its behalf - SUCCESFUL");
-    // console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
+    tx = await baseToken.approve(yieldTokenCompoundingAddress, amount);
+    console.log("User approves YTC contract to spend base token on its behalf - SUCCESFUL");
+    console.log(`Goerli block explorer link: https://goerli.etherscan.io/tx/${tx.hash}`);
 
     //2. Compound!
     console.log(`YTC - compound ${n} times with ${amount} ${baseTokenName}`);

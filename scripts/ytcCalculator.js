@@ -76,15 +76,17 @@ async function main() {
      */
     const trancheExpirationTimestamp = parseInt(trancheDetails["expiration"]) * 1000
     const daysLeftInTerm = Math.floor((trancheExpirationTimestamp - new Date().getTime())/(1000*60*60*24));
-    const term = daysLeftInTerm/365
+
+    //On goerli, as of today (July), there is only 1 active tranche due to expire on August so YTC gives poor APY. For demo purposes, we mimicked a tranche which would expire 6 months from today. Hence term = 0.5
+    const term = 0.5//daysLeftInTerm/365
     // console.log("Days left in term, term: ", daysLeftInTerm, term);
     
     let values = {};
     for (let i=1; i<11; i++) {
         // TODO: Gas fee estimation + tx fee + convert to base token amount
-        // let gasFee = ethers.utils.formatEther(ethers.BigNumber.from(await ytc.estimateGas.compound(2,trancheAddress, balancerPoolId, amountCollateralDeposited, "100")).toNumber());
-        // console.log(gasFee);
-        // ethers.getGasPrice()
+        // let gasFee = ethers.utils.formatEther(ethers.BigNumber.from(await ytc.estimateGas.compound(i,trancheAddress, balancerPoolId, userData["amountCollateralDeposited"], "100")).toNumber());
+        // FIXME: Need to convert gasFee in baseToken amount!
+        
         let returnedVals = await ytc.callStatic.compound(i,trancheAddress, balancerPoolId, userData["amountCollateralDeposited"], "100");
 
         [ytExposure, baseTokensSpent] = returnedVals.map(val => ethers.BigNumber.from(val).toNumber());

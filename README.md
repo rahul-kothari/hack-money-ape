@@ -32,6 +32,7 @@ This is an automated tool that drastically improves UX for YTC. Furthermore, it 
 * Gas improvements
 * More slippage protection
 * Integrate `element-finance SDK`
+* Better gas price prediction and inclusion into the final APR for the YTC Calculator.
 
 ## Instructions:
 ```
