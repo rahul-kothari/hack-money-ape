@@ -21,6 +21,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
+import Wallet from '../features/wallet/Wallet';
 
 interface NavBarProps {
   title: string;
@@ -74,18 +75,7 @@ const NavBar: React.FC<NavBarProps> = (props) => {
           justify={'flex-end'}
           direction={'row'}
           spacing={6}>
-          <Button
-            display={{  md: 'inline-flex' }}
-            fontSize={'sm'}
-            fontWeight={600}
-            color={'white'}
-            bg={'pink.400'}
-            href={'#'}
-            _hover={{
-              bg: 'pink.300',
-            }}>
-            Connect Wallet
-          </Button>
+            <Wallet/>
         </Stack>
       </Flex>
 

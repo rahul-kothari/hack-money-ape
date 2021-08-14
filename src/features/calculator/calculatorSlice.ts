@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { stat } from "fs";
 import { RootState, AppThunk  } from "../../app/store";
 import { calculateMock, CalculatorData, CalculatorResult } from "./calculatorAPI";
 
