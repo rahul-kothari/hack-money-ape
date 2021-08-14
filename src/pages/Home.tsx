@@ -3,6 +3,7 @@ import NavBar from '../components/NavBar'
 import YtcCreator from '../components/YtcCreator'
 // import Image from 'next/image'
 import { Box, Container, Text } from '@chakra-ui/react'
+import Calculator from '../features/calculator/Calculator'
 
 export default function Home() {
   return (
@@ -14,7 +15,8 @@ export default function Home() {
       <Box minHeight="100vh" display="flex" flexDir="column" bg="white">
         <NavBar title='APY' />
         <Container maxW="xl" mt="15px" flex={1}>
-          <YtcCreator />
+          {/* <YtcCreator /> */}
+            <Calculator/>
         </Container>
       </Box>
     </div>

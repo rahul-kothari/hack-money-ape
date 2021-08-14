@@ -1,12 +1,11 @@
 const fs = require("fs");
-const hre = require("hardhat");
-const ethers = hre.ethers;
-
+const ethers = require('ethers');
+const {georli} = require('./constants/goerli-constants');
 
 const DEFAULT_ARTIFACTS_PATH = "./src/artifacts/contracts";
 
 function getGoerliElementFinanceData() {
-    return JSON.parse(fs.readFileSync("./goerli-constants.json"))
+    return georli;
 }
 
 function getAbi(path) {
