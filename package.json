@@ -15,18 +15,15 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
-    "autoprefixer": "^9.8.6",
     "chai": "^4.3.4",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.3.1",
     "hardhat": "^2.4.0",
-    "postcss": "^7.0.36",
     "prompt-sync": "^4.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.0",
     "react-scripts": "4.0.3",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
     "typescript": "~4.1.5"
   },
   "scripts": {
@@ -35,8 +32,8 @@
     "build": "npx hardhat compile",
     "ytc": "node ./scripts/ytc-test.js --network goerli",
     "ytc-calculator": "",
-    "react:start": "react-scripts start",
-    "react:build": "react-scripts build"
+    "react:start": "craco start",
+    "react:build": "craco build"
   },
   "browserslist": {
     "production": [
@@ -49,5 +46,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.36",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7"
   }
 }
