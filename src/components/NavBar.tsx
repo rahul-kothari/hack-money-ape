@@ -22,6 +22,9 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons';
 import Wallet from '../features/wallet/Wallet';
+import {
+  Link as ReactRouterLink
+} from 'react-router-dom'
 
 interface NavBarProps {
   title: string;
@@ -98,8 +101,9 @@ const DesktopNav = () => {
           <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
               <Link
+                as={ReactRouterLink}
                 p={2}
-                href={navItem.href ?? '#'}
+                to={navItem.href ?? '#'}
                 fontSize={'sm'}
                 fontWeight={500}
                 color={linkColor}
@@ -144,7 +148,8 @@ const DesktopSubNav: React.FC<DesktopSubNavProps> = (props) => {
 
   return (
     <Link
-      href={href}
+      as={ReactRouterLink}
+      to={href}
       role={'group'}
       display={'block'}
       p={2}
@@ -205,7 +210,7 @@ const MobileNavItem: React.FC<MobileNavItemProps> = (props) => {
       <Flex
         py={2}
         as={Link}
-        href={href ?? '#'}
+        to={href}
         justify={'space-between'}
         align={'center'}
         _hover={{
@@ -262,7 +267,11 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   {
     label: 'YTC Creator',
-    href: '#'
+    href: '/creator'
+  },
+  {
+    label: 'YTC Calculator',
+    href: '/calculator'
   },
   {
     label: 'Analytics',

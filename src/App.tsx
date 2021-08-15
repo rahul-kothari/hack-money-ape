@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
 import Calculator from './features/calculator/Calculator';
-import Home from './pages/Home';
+import Layout from './components/Layout';
 
 function App() {
   return (
     <div className="App">
-      <Home/>
+      <Layout/>
     </div>
   );
 }

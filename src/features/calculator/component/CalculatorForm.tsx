@@ -45,7 +45,7 @@ const CalculatorForm = (props: Props) => {
             onSubmit={handleSubmit}
         >
             <Form>
-                <SelectControl name="tranchAddress" label="Tranche Address">
+                <SelectControl name="tranchAddress" label="Tranche">
                     {
                         tranches.sort((a, b) => (a.expiration - b.expiration)).map((tranche: Tranche) => (
                             <option
