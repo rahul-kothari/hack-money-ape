@@ -1,4 +1,38 @@
-export const data: any = {
+export interface Tranche {
+    expiration: number,
+    address: string,
+    ptPool: {
+        address: string,
+        poolId: string,
+        fee: string,
+        timeStretch: number
+    },
+    ytPool: {
+        address: string,
+        poolId: string,
+        fee: string,
+    },
+    trancheFactory: string,
+    weightedPoolFactory: string,
+    convergentCurvePoolFactory: string,
+}
+
+interface GoerliConstantsObject {
+	tokens: {[name: string]: string};
+	wrappedPositions: {[name: string]: {[name: string]: string}};
+	vaults: {[name: string]: {[name: string]: string}};
+	trancheFactory: string;
+	userProxy: string;
+	balancerVault: string;
+	weightedPoolFactory: string;
+	convergentCurvePoolFactory: string;
+	yieldTokenCompoundingAddress: string;
+	yieldTokenCompoundingPTAddress: string;
+	tranches: {[tokenName: string]: Tranche[]}
+}
+
+
+export const data: GoerliConstantsObject = {
 	tokens: {
 		usdc: "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
 		weth: "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
@@ -99,7 +133,7 @@ export const data: any = {
 				},
 				trancheFactory: "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
 				weightedPoolFactory: "0x7576dB443020ec4F46526c317262347Acdf1B99d",
-				convergentCurvePoolFactor: "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+				convergentCurvePoolFactory: "0x0766B218517d9dC198155f0dC3485270cF788aF7"
 			},
 			{
 				expiration: 1621010937,

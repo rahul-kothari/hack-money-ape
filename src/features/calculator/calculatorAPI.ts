@@ -6,7 +6,6 @@ import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/E
 
 import {data} from '../../constants/goerli-constants';
 
-
 export interface CalculatorData {
     baseTokenName: string;
     trancheIndex: number;
@@ -92,7 +91,7 @@ export const calculate = async (provider: Web3Provider, signer: Signer, userData
      * Adjusted APR = (Net Gain / (Collateral Deposited - Balance))*100 
      *              = (Net Gain / (base tokens spent))*100 
      */
-    const trancheExpirationTimestamp = parseInt(trancheDetails.expiration) * 1000
+    const trancheExpirationTimestamp = trancheDetails.expiration * 1000
     const daysLeftInTerm = Math.floor((trancheExpirationTimestamp - new Date().getTime())/(1000*60*60*24));
 
     //On goerli, as of today (July), there is only 1 active tranche due to expire on August so YTC gives poor APY. For demo purposes, we mimicked a tranche which would expire 6 months from today. Hence term = 0.5
