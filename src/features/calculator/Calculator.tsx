@@ -3,7 +3,7 @@ import { CalculatorData } from './calculatorAPI';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { Results } from './component/Results';
 import { executeCalculatorAsync, selectResults } from './calculatorSlice';
-import { selectProvider, selectSigner } from '../wallet/walletSlice';
+import {useWallet} from 'use-wallet';
 
 
 //TODO replace hardcoded user data with form input
@@ -19,17 +19,17 @@ interface Props {
 
 export const Calculator = (props: Props) => {
     const values = useAppSelector(selectResults);
-    const signer = useAppSelector(selectSigner);
-    const provider = useAppSelector(selectProvider);
     const dispatch = useAppDispatch();
+
+    const wallet = useWallet();
 
     useEffect(() => {
         console.log('effect signer and provider')
-        if (provider && signer){
+        if (wallet.status === 'connected'){
             console.log('executing calculation')
-            dispatch(executeCalculatorAsync({provider, signer, userData}))
+            dispatch(executeCalculatorAsync({wallet, userData}))
         }
-    }, [signer, provider])
+    }, [wallet])
 
     return (
         <Results values={values}/>

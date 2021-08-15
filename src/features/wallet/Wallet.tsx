@@ -1,38 +1,67 @@
-import { Button } from '@chakra-ui/react'
+import { Button, Text, Flex } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
+import {useWallet} from 'use-wallet';
 
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import { disconnectWallet, walletConnectAsync, selectSigner } from './walletSlice';
 
 interface Props {
     
 }
 
 export const Wallet = (props: Props) => {
-    const signer = useAppSelector(selectSigner);
-    const dispatch = useAppDispatch();
-    const [address, setAddress] = useState<string | undefined>(undefined);
-
-    useEffect(() => {
-        if (signer){
-            signer.getAddress().then((address) => {
-                setAddress(address)
-            })
-        }
-    }, [signer])
+    const wallet = useWallet();
 
     const handleConnect = () => {
-        dispatch(walletConnectAsync())
+        wallet.connect()
     }
 
     const handleDisconnect = () => {
-        dispatch(disconnectWallet())
+        wallet.reset()
     }
 
     return (
         <div>
             {
-                !signer ? 
+                wallet.status === 'connected' ? 
+                <Flex
+                    flexShrink = {1}
+                    justifyContent = "space-between"
+                    alignItems = "center"
+                >
+                    <Flex
+                        flexShrink = {1}
+                        justifyContent = "space-between"
+                        alignItems = "center"
+                        px = {2}
+                    >
+                        <Text style={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        }}
+                            p={1}
+                            flexShrink={1}
+                        >
+                            {wallet.account}
+                        </Text>
+                        <Text
+                            p={1}
+                        >
+                        {wallet.networkName}
+                        </Text>
+                    </Flex>
+                    <Button
+                        onClick={handleDisconnect}
+                        fontSize={'sm'}
+                        fontWeight={600}
+                        color={'white'}
+                        bg={'teal.400'}
+                        href={'#'}
+                        _hover={{
+                            bg: 'teal.300',
+                        }}>
+                            Disconnect
+                    </Button> 
+                </Flex> :
                 <Button
                     onClick={handleConnect}
                     display={{  md: 'inline-flex' }}
@@ -45,22 +74,7 @@ export const Wallet = (props: Props) => {
                         bg: 'pink.300',
                     }}>
                         Connect Wallet
-                </Button> :
-                <Button
-                    onClick={handleDisconnect}
-                    display={{  md: 'inline-flex' }}
-                    fontSize={'sm'}
-                    fontWeight={600}
-                    color={'white'}
-                    bg={'blue.400'}
-                    href={'#'}
-                    _hover={{
-                        bg: 'pink.300',
-                    }}>
-                    {address}
                 </Button>
-            
-                
             }
         </div>
     )

@@ -1,8 +1,6 @@
-import { Web3Provider } from "@ethersproject/providers";
-import { Signer } from "ethers";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { calculate, calculateMock, CalculatorData, CalculatorResult } from "./calculatorAPI";
+import { calculate, CalculatorData, CalculatorResult } from "./calculatorAPI";
 
 export interface CalculatorState {
     results: CalculatorResult[];
@@ -18,8 +16,8 @@ const initialState: CalculatorState = {
 
 export const executeCalculatorAsync = createAsyncThunk(
     'calculator/calculate',
-    async (args: {provider: Web3Provider, signer: Signer, userData: CalculatorData}) => {
-        const response = await calculate(args.provider, args.signer, args.userData);
+    async (args: {wallet: any, userData: CalculatorData}) => {
+        const response = await calculate(args.wallet, args.userData);
 
         return {
             result: response,

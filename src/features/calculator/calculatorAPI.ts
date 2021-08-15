@@ -54,7 +54,9 @@ export const calculateMock = async (userData: CalculatorData): Promise<Calculato
 
 
 // Demo script to show how to build a YTC calculator!
-export const calculate = async (provider: Web3Provider, signer: Signer, userData: CalculatorData) => {
+export const calculate = async (wallet: any, userData: CalculatorData) => {
+    const signer: Signer = wallet.ethereum.getSigner();
+
     const ytcAbi = YieldTokenCompounding.abi;
     const erc20Abi = ERC20.abi;
     const trancheAbi = ITranche.abi;
