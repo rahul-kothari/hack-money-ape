@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Calculator from './features/calculator/Calculator';
 import Layout from './components/Layout';
 import {UseWalletProvider} from 'use-wallet';
 

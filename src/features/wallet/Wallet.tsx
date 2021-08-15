@@ -4,7 +4,6 @@ import {useWallet} from 'use-wallet';
 
 
 interface Props {
-    
 }
 
 export const Wallet = (props: Props) => {

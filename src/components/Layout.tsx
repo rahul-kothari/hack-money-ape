@@ -12,6 +12,7 @@ import {data} from '../constants/goerli-constants';
 // import Image from 'next/image'
 import { Box, Container } from '@chakra-ui/react'
 import CalculatorForm from '../features/calculator/component/CalculatorForm'
+import Home from '../pages/Home';
 
 export default function Layout() {
   return (
@@ -40,7 +41,7 @@ export default function Layout() {
                       <YtcCreator/>
                   </Route>
                   <Route path="/">
-                    <div>Home</div>
+                      <Home/>
                   </Route>
               </Switch>
             </Container>

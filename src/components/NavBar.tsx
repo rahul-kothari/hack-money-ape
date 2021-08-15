@@ -3,7 +3,6 @@ import {
   Flex,
   Text,
   IconButton,
-  Button,
   Stack,
   Collapse,
   Icon,
@@ -49,6 +48,7 @@ const NavBar: React.FC<NavBarProps> = (props) => {
         align={'center'}>
         <Flex
           flex={{ base: 1, md: 'auto' }}
+          flexBasis="66%"
           ml={{ base: -2 }}
           display={{ base: 'flex', md: 'none' }}>
           <IconButton
@@ -60,7 +60,11 @@ const NavBar: React.FC<NavBarProps> = (props) => {
             aria-label={'Toggle Navigation'}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+        <Flex
+          flexBasis="66%"
+          flex={{ base: 1 }}
+          justify={{ base: 'center', md: 'start' }}
+        >
           <Text
             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
             fontFamily={'heading'}
@@ -73,13 +77,12 @@ const NavBar: React.FC<NavBarProps> = (props) => {
           </Flex>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
+        <Flex
           justify={'flex-end'}
           direction={'row'}
           spacing={6}>
             <Wallet/>
-        </Stack>
+        </Flex>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
