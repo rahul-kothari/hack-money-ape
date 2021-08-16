@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Button, Spinner } from '@chakra-ui/react'
 import { useWallet } from 'use-wallet';
 import { checkApproval, sendApproval } from './approvalAPI';
@@ -19,12 +19,12 @@ const Approval: React.FC<Props> = (props: Props) => {
 
     const wallet = useWallet();
 
-    const [approved, setApproved] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [isApproved, setIsApproved] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleCheckApproval = () => {
         checkApproval(wallet, amount, tokenAddress, approvalAddress).then((result) => {
-            if (result) setApproved(true);
+            if (result) setIsApproved(true);
         }).catch((error: Error) => {
             console.error(error);
         })
@@ -34,10 +34,11 @@ const Approval: React.FC<Props> = (props: Props) => {
         if (wallet.status === "connected") {
             handleCheckApproval();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [wallet.status])
 
     const handleApprove = async () => {
-        setLoading(true);
+        setIsLoading(true);
         // send the approval request
         // This does not resolve based on the approval being successful
         // Rather it resolves on the approval happening in the wallet
@@ -46,30 +47,30 @@ const Approval: React.FC<Props> = (props: Props) => {
             amount,
             approvalAddress,
             tokenAddress,
-            () => {setApproved(true)}
+            () => {setIsApproved(true)}
         ).then(() => {
             handleCheckApproval();
         }).catch((error: Error) => {
             console.error(error);
         }).finally(() => {
-            setLoading(false);
+            setIsLoading(false);
         })
     }
 
-    if (loading){
+    if (isLoading){
         return <Button
             disabled
         >
             <Spinner/>
         </Button>
     }
-    if (approved){
+    if (isApproved){
         return children;
     }
     return <Button
         onClick = {handleApprove}
     >
-        {`Approve ${tokenName}`}
+        {`Approve ${tokenName.toUpperCase()}`}
     </Button>
 }
 

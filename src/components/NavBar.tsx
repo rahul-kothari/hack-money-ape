@@ -46,43 +46,29 @@ const NavBar: React.FC<NavBarProps> = (props) => {
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}>
-        <Flex
+        {/* This is the hamburger icon where the */}
+        <HamburgerMenu
+          isOpen={isOpen}
+          onToggle={onToggle}
           flex={{ base: 1, md: 'auto' }}
-          flexBasis="66%"
           ml={{ base: -2 }}
-          display={{ base: 'flex', md: 'none' }}>
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={'ghost'}
-            aria-label={'Toggle Navigation'}
-          />
-        </Flex>
-        <Flex
-          flexBasis="66%"
+          display={{ base: 'flex', md: 'none' }}
+          backgroundColor={'green'}
+        />
+        <DesktopNavbar
+          title={title}
           flex={{ base: 1 }}
           justify={{ base: 'center', md: 'start' }}
-        >
-          <Text
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}>
-            {title}
-          </Text>
-
-          <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-            <DesktopNav />
-          </Flex>
-        </Flex>
-
-        <Flex
+          backgroundColor={'blue'}
+        />
+        <WalletSection
           justify={'flex-end'}
           direction={'row'}
-          spacing={6}>
-            <Wallet/>
-        </Flex>
+          spacing={6}
+          flexShrink={1}
+          backgroundColor={'red'}
+        />
+
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -92,6 +78,63 @@ const NavBar: React.FC<NavBarProps> = (props) => {
   );
 }
 
+type FlexProps = React.ComponentProps<typeof Flex>
+
+interface HamburgerMenuProps {
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+const HamburgerMenu: React.FC<HamburgerMenuProps & FlexProps> = (props) => {
+  const {isOpen, onToggle, ...rest} = props;
+
+  return <Flex
+    {...rest}
+    >
+
+    <IconButton
+      onClick={onToggle}
+      icon={
+        isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
+      }
+      variant={'ghost'}
+      aria-label={'Toggle Navigation'}
+    />
+    </Flex>
+}
+
+interface DesktopNavbarProps {
+  title: string;
+}
+
+const DesktopNavbar: React.FC<DesktopNavbarProps & FlexProps> = (props) => {
+  const { title, ...rest } = props;
+  return <Flex
+    {...rest}
+  >
+    <Text
+      textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+      fontFamily={'heading'}
+      color={useColorModeValue('gray.800', 'white')}>
+      {title}
+    </Text>
+
+    <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+      <DesktopNav />
+    </Flex>
+  </Flex>
+}
+
+
+const WalletSection: React.FC<FlexProps> = (props) => {
+  const {...rest} = props;
+
+  return <Flex
+            {...rest}
+          >
+            <Wallet/>
+        </Flex>
+}
 const DesktopNav = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');

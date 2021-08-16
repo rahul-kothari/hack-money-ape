@@ -1,5 +1,5 @@
+import React from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
 import {useWallet} from 'use-wallet';
 
 
@@ -22,12 +22,10 @@ export const Wallet = (props: Props) => {
             {
                 wallet.status === 'connected' ? 
                 <Flex
-                    flexShrink = {1}
                     justifyContent = "space-between"
                     alignItems = "center"
                 >
                     <Flex
-                        flexShrink = {1}
                         justifyContent = "space-between"
                         alignItems = "center"
                         px = {2}
@@ -38,14 +36,13 @@ export const Wallet = (props: Props) => {
                             textOverflow: 'ellipsis'
                         }}
                             p={1}
-                            flexShrink={1}
                         >
                             {wallet.account}
                         </Text>
                         <Text
                             p={1}
                         >
-                        {wallet.networkName}
+                            {wallet.networkName}
                         </Text>
                     </Flex>
                     <Button

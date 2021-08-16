@@ -1,4 +1,3 @@
-import { Web3Provider } from "@ethersproject/providers";
 import { ethers, Signer } from "ethers";
 import YieldTokenCompounding from '../../artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json'
@@ -94,8 +93,9 @@ export const calculate = async (wallet: any, userData: CalculatorData) => {
      * Adjusted APR = (Net Gain / (Collateral Deposited - Balance))*100 
      *              = (Net Gain / (base tokens spent))*100 
      */
-    const trancheExpirationTimestamp = trancheDetails.expiration * 1000
-    const daysLeftInTerm = Math.floor((trancheExpirationTimestamp - new Date().getTime())/(1000*60*60*24));
+    // FIXME the following two lines were unused variable at the time of conversion
+    // const trancheExpirationTimestamp = trancheDetails.expiration * 1000
+    // const daysLeftInTerm = Math.floor((trancheExpirationTimestamp - new Date().getTime())/(1000*60*60*24));
 
     //On goerli, as of today (July), there is only 1 active tranche due to expire on August so YTC gives poor APY. For demo purposes, we mimicked a tranche which would expire 6 months from today. Hence term = 0.5
     const term = 0.5//daysLeftInTerm/365
