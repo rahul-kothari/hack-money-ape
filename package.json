@@ -58,9 +58,12 @@
     ]
   },
   "devDependencies": {
+    "@typechain/ethers-v5": "^7.0.1",
+    "@typechain/hardhat": "^2.3.0",
     "@types/react-router-dom": "^5.1.8",
     "autoprefixer": "^9.8.6",
     "postcss": "^7.0.36",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
+    "typechain": "^5.1.2"
   }
 }
