@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require('@typechain/hardhat');
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -33,6 +34,10 @@ module.exports = {
       url: `${process.env.GOERLI_PROVIDER_URL}`,
       accounts: [`0x${process.env.PRIVATE_KEY}`]
     }
-  }
+  },
+  typechain: {
+    outDir: 'src/types',
+    target: 'ethers-v5',
+  },
 };
 

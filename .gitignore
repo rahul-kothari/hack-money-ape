@@ -27,6 +27,7 @@ node_modules
 #Hardhat files
 cache
 artifacts
+src/types
 
 #VS Code
 .vscode
