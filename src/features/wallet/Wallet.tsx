@@ -17,6 +17,10 @@ export const Wallet = (props: Props) => {
         wallet.reset()
     }
 
+    const shortenAddress = (address: string): string => {
+        return address.slice(0, 6) + '....' + address.slice(-4)
+    }
+
     return (
         <div>
             {
@@ -37,7 +41,7 @@ export const Wallet = (props: Props) => {
                         }}
                             p={1}
                         >
-                            {wallet.account}
+                            {shortenAddress(wallet.account)}
                         </Text>
                         <Text
                             p={1}

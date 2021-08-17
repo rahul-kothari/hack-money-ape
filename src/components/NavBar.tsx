@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useBreakpointValue,
+  // useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/react';
 import {
@@ -47,26 +47,24 @@ const NavBar: React.FC<NavBarProps> = (props) => {
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}>
         {/* This is the hamburger icon where the */}
+        
         <HamburgerMenu
           isOpen={isOpen}
           onToggle={onToggle}
           flex={{ base: 1, md: 'auto' }}
           ml={{ base: -2 }}
           display={{ base: 'flex', md: 'none' }}
-          backgroundColor={'green'}
         />
         <DesktopNavbar
           title={title}
           flex={{ base: 1 }}
-          justify={{ base: 'center', md: 'start' }}
-          backgroundColor={'blue'}
+          justify={{ base: 'start'}}
         />
         <WalletSection
           justify={'flex-end'}
           direction={'row'}
           spacing={6}
           flexShrink={1}
-          backgroundColor={'red'}
         />
 
       </Flex>
@@ -112,12 +110,6 @@ const DesktopNavbar: React.FC<DesktopNavbarProps & FlexProps> = (props) => {
   return <Flex
     {...rest}
   >
-    <Text
-      textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-      fontFamily={'heading'}
-      color={useColorModeValue('gray.800', 'white')}>
-      {title}
-    </Text>
 
     <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
       <DesktopNav />
