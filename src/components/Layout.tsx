@@ -7,6 +7,7 @@ import {
   Route,
 } from "react-router-dom";
 import YtcCreator from '../components/YtcCreator';
+import Template from './Template';
 
 // import Image from 'next/image'
 import { Box, Container } from '@chakra-ui/react'
@@ -18,7 +19,7 @@ import {data} from '../constants/goerli-constants';
 export default function Layout() {
   return (
     <div>
-        <Router>
+        {/* <Router>
           <Head
             title='APY - Ape Predicting Yield'
             description='Token yield compounding using Element.fi and Balancer'
@@ -42,7 +43,8 @@ export default function Layout() {
               </Switch>
             </Container>
           </Box>
-        </Router>
+        </Router> */}
+        <Template />
     </div>
   )
 }
