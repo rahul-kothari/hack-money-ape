@@ -44,7 +44,9 @@ export default function Layout() {
             </Container>
           </Box>
         </Router> */}
-        <Template />
+        <Router>
+          <Template />
+        </Router>
     </div>
   )
 }
