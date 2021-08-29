@@ -7,7 +7,7 @@ import {Popover, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader,
 interface Props {
 }
 
-export const Template = (props: Props) => {
+export const Template: React.FC<Props> = (props: Props) => {
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col justify-between">
             <Header/>
@@ -63,14 +63,15 @@ export const Template = (props: Props) => {
 
 const Header = () => {
     return (
-        <div id="header" className="flex flex-col items-center p-3 justify-between md:flex-row md:items-center">
-            <div id="Logo" className="-m-6">
+        // <div id="header" className="flex flex-col items-center p-3 justify-between md:flex-row md:items-center">
+        <div id="header" className="grid grid-rows-3 grid-cols-1 md:grid-cols-3 md:grid-rows-1">
+            <div id="Logo" className="-m-4 flex flex-row justify-center md:justify-start">
                 <Link to="/">
                     <img src={apeImage} alt={"APY"} className="h-32 w-32"/>
                 </Link>
             </div>
             <Navbar/>
-            <div id="wallet" className="p-3 flex flex-row justify-center gap-3 items-center">
+            <div id="wallet" className="p-3 flex flex-row justify-center md:justify-end gap-3 items-center">
                 <WalletSettings/>
                 <Wallet/>
             </div>
@@ -110,7 +111,7 @@ const WalletSettings = () => {
 
 const Navbar = () => {
     return (
-    <div id="navbar" className="p-3 flex flex-row justify-center gap-6 text-lg">
+    <div id="navbar" className="p-3 flex flex-row justify-center items-center gap-6 text-lg">
         <div id="navbar-item1" className="h-5">
             <NavLink to="/ytc" activeClassName="text-indigo-300">
                 YTC
