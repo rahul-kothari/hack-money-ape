@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
 import {useWallet} from 'use-wallet';
 
-
 interface Props {
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import Layout from './components/Layout';
 import {UseWalletProvider} from 'use-wallet';
+import Layout from './components/Layout';
 
 function App() {
   return (
