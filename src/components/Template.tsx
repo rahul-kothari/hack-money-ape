@@ -1,8 +1,8 @@
-import React from 'react'
-import { Link, NavLink, Route, Switch } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { Link, NavLink, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Wallet from '../features/wallet/Wallet';
 import apeImage from '../images/ape.png';
-import {Popover, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger} from '@chakra-ui/react';
+import {Popover, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Select, Button, ButtonGroup} from '@chakra-ui/react';
 
 interface Props {
 }
@@ -20,12 +20,42 @@ export const Template: React.FC<Props> = (props: Props) => {
                                     Yield Token Compounding
                                 </h2>
                             </div>
-                            <Calculate/>
+                            <Calculate
+                                tokens={[
+                                    {
+                                        name: 'USDC',
+                                        address: '0x000000000000000',
+                                    },
+                                    {
+                                        name: 'DAI',
+                                        address: '0x111111111111111111',
+                                    },
+                                    {
+                                        name: 'WETH',
+                                        address: '0x22222222222222222',
+                                    }
+                                ]}
+                            />
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
                             </svg>
 
-                            <Ape/>
+                            <Ape
+                                {
+                                    ...{
+                                        principleToken: {
+                                            name: 'ePT-CRV3USDC',
+                                            date: 'Dec, 20, 2021'
+                                        },
+                                        yieldToken: {
+                                            name: 'eYT-CRV3USDC',
+                                            date: 'Dec, 20, 2021'
+                                        },
+                                        principleTokenAmount: 34.0,
+                                        yieldTokenAmount: 0.9,
+                                    }
+                                }
+                            />
                         </div>
                     </Route>
                     <Route path="/decollateralize">
@@ -80,6 +110,18 @@ const Header = () => {
 }
 
 const WalletSettings = () => {
+    const [slippageTolerance, setSlippageTolerance] = useState(1);
+
+    const handleSlippageChange = (percentage: number) => {
+        setSlippageTolerance(percentage);
+    }
+
+    const handleSlippageInputChange: React.ChangeEventHandler<HTMLInputElement>  = (event) => {
+        event.preventDefault();
+
+        handleSlippageChange(parseInt(event.target.value));
+    }
+
     return (
         <Popover>
             <PopoverTrigger>
@@ -93,14 +135,26 @@ const WalletSettings = () => {
                 <PopoverCloseButton/>
                 <PopoverHeader>Transaction Settings</PopoverHeader>
                 <PopoverBody>
-                    <text className="Slippage"></text>
-                    <div className="flex flex-row justify-center gap-4 items-center">
-                        <div>0.1%</div>
-                        <div>0.5%</div>
-                        <div>1%</div>
-                        <div className="shadow-inner flex flex-row items-center p-2 w-16 rounded-xl">
-                            <input type="number" placeholder="2" className="min-w-0"></input>
-                            <div>%</div>
+                    <div className="flex flex-col">
+                        <text id="slippage" className="text-sm text-left">Slippage Tolerance</text>
+                        <div className="flex flex-row justify-center gap-4 items-center">
+                            <ButtonGroup>
+                                {
+                                    [0.1, 0.5, 1].map((percentage) => (
+                                        <button
+                                            onClick={ () => handleSlippageChange(percentage) }
+                                            className={`hover:bg-gray-50 px-2 py-1 rounded-2xl ${percentage === slippageTolerance && "text-indigo-400"}`}
+                                        >
+                                            {percentage}%
+                                        </button>
+                                    ))
+                                }
+                            </ButtonGroup>
+                            <div className="shadow-inner flex flex-row items-center p-2 w-16 rounded-xl">
+                                <input type="number" value={slippageTolerance} onChange={handleSlippageInputChange} className="min-w-0 text-indigo-400">
+                                </input>
+                                <div>%</div>
+                            </div>
                         </div>
                     </div>
                 </PopoverBody>
@@ -133,28 +187,102 @@ const Navbar = () => {
     </div>)
 }
 
-const Calculate = () => {
+interface CalculateProps {
+    tokens: {
+        name: string,
+        address: string
+    }[]
+}
+
+// TODO replace this method with one that provides the balance
+const getBalance = (tokenAddress: string) => {
+    return 1000
+}
+
+// TODO replace this method with one that actually provides the tranches
+const getTranches = (tokenAddress: string): Tranche[] => {
+    return [
+        {
+            address: '0x444444444444444444',
+            expiry: 1639991814,
+        },
+        {
+            address: '0x555555555555555555',
+            expiry: 1671527814,
+        }
+    ]
+}
+
+interface Tranche {
+    address: string,
+    expiry: number,
+}
+
+const Calculate: React.FC<CalculateProps> = (props: CalculateProps) => {
+    const {tokens} = props;
+
+    const [tokenAddress, setTokenAddress] = useState<string | undefined>(undefined);
+    const [tranchAddress, setTrancheAddress] = useState<string | undefined>();
+    const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
+    const [amount, setAmount] = useState<number | undefined>(undefined);
+    const [balance, setBalance] = useState<number | undefined>(undefined);
+    const [compounds, setCompounds] = useState<number | undefined>(undefined);
+
+    const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
+        event.preventDefault();
+        const value = event.target.value;
+        setTokenAddress(value)
+    }
+
+    const handleAmountChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        event.preventDefault();
+        const value = event.target.value;
+        setAmount(parseInt(value));
+    }
+
+    const handleCompoundsChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        event.preventDefault();
+        const value = event.target.value;
+        setCompounds(parseInt(value));
+    }
+
+    const handleMax: React.MouseEventHandler<HTMLButtonElement> = () => {
+        setAmount(balance);
+    }
+
+    useEffect(() => {
+        if (tokenAddress){
+            setTranches(getTranches(tokenAddress))
+            setBalance(getBalance(tokenAddress))
+        }
+    }, [tokenAddress])
+
     return (
         <div id="calculate" className="py-5 flex flex-col gap-3">
             <div id="selects" className="flex flex-row items-center justify-center gap-6 mb-4">
-                <div id="asset-select-proxy" className="rounded-full bg-indigo-100 flex flex-row py-2 px-3 gap-2 items-center hover:bg-indigo-200 cursor-pointer">
-                    <div id="asset-icon" className="h-6 w-6 bg-blue-400">
-                    </div>
-                    <div id="asset-name">
-                        USDC
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                </div>
-                <div id="asset-select-proxy" className="rounded-full bg-indigo-100 flex flex-row py-2 px-3 gap-2 items-center hover:bg-indigo-200 cursor-pointer">
-                    <div id="tranche-select-proxy">
-                        DEC 20, 2021
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                </div>
+                {/* <div id="asset-select-proxy" className="rounded-full bg-indigo-100 flex flex-row py-2 px-3 gap-2 items-center hover:bg-indigo-200 cursor-pointer"> */}
+                    <Select
+                        width="36"
+                        rounded="full"
+                        variant="filled"
+                        bgColor="#E0E7FF"
+                        onChange={handleChange}
+                    >
+                        {tokens.map((token) => {
+                            return <option value={token.address} key={token.address}>
+                                {token.name}
+                            </option>
+                        })}
+                    </Select>
+                    <Select width="36" rounded="full" variant="filled" bgColor="#E0E7FF">
+                        {
+                            tranches && tranches.map((tranche) => {
+                                return <option value={tranche.address} key={tranche.address}>
+                                    {(new Date(tranche.expiry * 1000)).toLocaleDateString()}
+                                </option>
+                            })
+                        }
+                    </Select>
             </div>
             <div id="form" className="flex flex-col items-stretch p-6 gap-3 w-full bg-indigo-100 rounded-2xl">
                 <div id="table-headers" className="flex flex-row justify-between">
@@ -162,33 +290,70 @@ const Calculate = () => {
                         Compounds
                     </div>
                     <div id="amount-header" className="flex flex-row gap-2 items-center text-sm">
-                        <button id="max" className="bg-gray-300 rounded-full text-sm p-1 px-2 hover:bg-gray-400">
+                        <button id="max" onClick={handleMax} className="bg-gray-300 rounded-full text-sm p-1 px-2 hover:bg-gray-400">
                             MAX
                         </button>
                         <div id="balance">
-                            Balance: 0.1000
+                            Balance: {balance}                        
                         </div>
                     </div>
                 </div>
                 <div id="table-inputs" className="flex flex-row justify-between items-center">
                     <div id="percentage exposure" className="flex p-2 hover:shadow-inner w-1/2">
-                        <input type="number" placeholder="0" id="number-compounds" className="text-lg bg-indigo-100 min-w-0"/>
+                        <input
+                            type="number"
+                            value={compounds}
+                            placeholder={"0"}
+                            onChange={handleCompoundsChange}
+                            id="number-compounds"
+                            className="text-lg bg-indigo-100 min-w-0"
+                        />
                     </div>
                     <div id="amount-input" className="flex flex-row gap-2 p-2 hover:shadow-inner w-1/2">
-                        <input type="number" placeholder="0" id="amount-input" className="text-lg text-right bg-indigo-100 min-w-0"/>
+                        <input
+                            type="number"
+                            value={amount}
+                            placeholder={"0.0"}
+                            onChange={handleAmountChange}
+                            id="amount-input"
+                            className="text-lg text-right bg-indigo-100 min-w-0"/>
                         <div id="amount-input" className="text-lg">USDC</div>
                     </div>
                 </div>
             </div>
-            <button id="approve-calculate-button" className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400">
+            <Button
+                id="approve-calculate-button"
+                className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400"
+                rounded="full"
+                bgColor="#6366F1"
+                mt="4"
+                p="2"
+                textColor="gray.50"
+            >
                 SIMULATE
-            </button>
+            </Button>
         </div>
     )
 
 }
 
-const Ape = () => {
+interface ApeProps {
+    principleToken: {
+        name: string,
+        date: string,
+    };
+    yieldToken: {
+        name: string,
+        date: string,
+    };
+    principleTokenAmount: number;
+    yieldTokenAmount: number;
+}
+
+const Ape: React.FC<ApeProps> = (props: ApeProps) => {
+
+    const {principleToken, yieldToken, principleTokenAmount, yieldTokenAmount} = props;
+
     return (
         <div id="ape" className="py-5 flex flex-col gap-3">
             <div id="form" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400">
@@ -197,17 +362,17 @@ const Ape = () => {
                     </div>
                     <div id="asset-details" className="flex-grow text-left">
                         <div id="asset-name">
-                            ePT-CRV3USDC
+                            {principleToken.name}
                         </div>
                         <div id="asset-date">
-                            Dec 20, 2021
+                            {principleToken.date}
                         </div>
                     </div>
 
                 </div>
                 <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
                     <div id="amount-text" className="self-center text-lg">
-                        1.000
+                        {principleTokenAmount}
                     </div>
                 </div>
             </div>
@@ -217,23 +382,31 @@ const Ape = () => {
                     </div>
                     <div id="asset-details" className="flex-grow text-left">
                         <div id="asset-name">
-                            eYT-CRV3USDC
+                            {yieldToken.name}
                         </div>
                         <div id="asset-date">
-                            Dec 20, 2021
+                            {yieldToken.date}
                         </div>
                     </div>
 
                 </div>
                 <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
                     <div id="amount-text" className="self-center text-lg">
-                        1.000
+                        {yieldTokenAmount}
                     </div>
                 </div>
             </div>
-            <button id="ape-button" className="w-full bg-indigo-500 rounded-full mx-auto p-2 text-gray-50 hover:bg-indigo-400">
+            <Button
+                id="approve-calculate-button"
+                className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400"
+                rounded="full"
+                bgColor="#6366F1"
+                mt="4"
+                p="2"
+                textColor="gray.50"
+            >
                 APE
-            </button>
+            </Button>
         </div>
     )
 }
