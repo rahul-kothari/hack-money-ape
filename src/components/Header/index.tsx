@@ -9,9 +9,9 @@ export const Header = () => {
     return (
         // <div id="header" className="flex flex-col items-center p-3 justify-between md:flex-row md:items-center">
         <div id="header" className="grid grid-rows-3 grid-cols-1 md:grid-cols-3 md:grid-rows-1">
-            <div id="Logo" className="-m-4 flex flex-row justify-center md:justify-start">
+            <div id="Logo" className="p-2 flex flex-row justify-center md:justify-start">
                 <Link to="/">
-                    <img src={apeImage} alt={"APY"} className="h-32 w-32"/>
+                    <img src={apeImage} alt={"APY"} className="h-24"/>
                 </Link>
             </div>
             <Navbar/>
