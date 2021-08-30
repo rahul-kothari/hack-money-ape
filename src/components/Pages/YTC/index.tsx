@@ -4,6 +4,24 @@ import React, { useEffect, useState } from "react"
 interface YTCProps {}
 
 export const YTC: React.FC<YTCProps> = (props) => {
+
+    const [simulatedResults, setSimulatedResults] = useState<ApeProps | undefined>(undefined)
+
+    const handleSimulation = () => {
+        setSimulatedResults({
+            principleToken: {
+                name: 'ePT-CRV3USDC',
+                expiry: 1640057082,
+            },
+            yieldToken: {
+                name: 'eYT-CRV3USDC',
+                expiry: 1671593082,
+            },
+            principleTokenAmount: 34.0,
+            yieldTokenAmount: 0.9,
+        })
+    }
+
     return <div>
         <div id="title" className="">
             <h2 className="text-2xl font-bold">
@@ -25,27 +43,21 @@ export const YTC: React.FC<YTCProps> = (props) => {
                     address: '0x22222222222222222',
                 }
             ]}
+            onSimulate={handleSimulation}
         />
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
-        </svg>
+        {
+            simulatedResults && <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+                </svg>
 
-        <Ape
-            {
-                ...{
-                    principleToken: {
-                        name: 'ePT-CRV3USDC',
-                        date: 'Dec, 20, 2021'
-                    },
-                    yieldToken: {
-                        name: 'eYT-CRV3USDC',
-                        date: 'Dec, 20, 2021'
-                    },
-                    principleTokenAmount: 34.0,
-                    yieldTokenAmount: 0.9,
-                }
-            }
-        />
+                <Ape
+                    {
+                        ...simulatedResults
+                    }
+                />
+            </>
+        }
     </div>
 }
 
@@ -53,7 +65,8 @@ interface CalculateProps {
     tokens: {
         name: string,
         address: string
-    }[]
+    }[];
+    onSimulate: () => void;
 }
 
 // TODO replace this method with one that provides the balance
@@ -81,7 +94,7 @@ interface Tranche {
 }
 
 export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
-    const {tokens} = props;
+    const {tokens, onSimulate} = props;
 
     const [tokenAddress, setTokenAddress] = useState<string | undefined>(undefined);
     const [trancheAddress, setTrancheAddress] = useState<string | undefined>();
@@ -139,6 +152,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                         variant="filled"
                         bgColor="#E0E7FF"
                         onChange={handleChange}
+                        shadow="inner"
                     >
                         {tokens.map((token) => {
                             return <option value={token.address} key={token.address}>
@@ -146,7 +160,15 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                             </option>
                         })}
                     </Select>
-                    <Select width="36" rounded="full" variant="filled" bgColor="#E0E7FF" value={trancheAddress} onChange={handleTrancheChange}>
+                    <Select
+                        width="36"
+                        rounded="full"
+                        variant="filled"
+                        bgColor="#E0E7FF"
+                        value={trancheAddress}
+                        onChange={handleTrancheChange}
+                        shadow="inner"
+                    >
                         {
                             tranches && tranches.map((tranche: Tranche) => {
                                 return <option value={tranche.address} key={tranche.address}>
@@ -156,7 +178,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                         }
                     </Select>
             </div>
-            <div id="form" className="flex flex-col items-stretch p-6 gap-3 w-full bg-indigo-100 rounded-2xl">
+            <div id="form" className="flex flex-col items-stretch p-6 gap-3 w-full bg-indigo-100 rounded-2xl shadow-inner">
                 <div id="table-headers" className="flex flex-row justify-between">
                     <div id="percentage-header" className="text-sm">
                         Compounds
@@ -201,6 +223,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                 mt="4"
                 p="2"
                 textColor="gray.50"
+                onClick={onSimulate}
             >
                 SIMULATE
             </Button>
@@ -212,11 +235,11 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
 interface ApeProps {
     principleToken: {
         name: string,
-        date: string,
+        expiry: number,
     };
     yieldToken: {
         name: string,
-        date: string,
+        expiry: number,
     };
     principleTokenAmount: number;
     yieldTokenAmount: number;
@@ -237,7 +260,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                             {principleToken.name}
                         </div>
                         <div id="asset-date">
-                            {principleToken.date}
+                            {(new Date(principleToken.expiry * 1000)).toLocaleDateString()}
                         </div>
                     </div>
 
@@ -257,7 +280,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                             {yieldToken.name}
                         </div>
                         <div id="asset-date">
-                            {yieldToken.date}
+                            {(new Date(yieldToken.expiry * 1000)).toLocaleDateString()}
                         </div>
                     </div>
 
