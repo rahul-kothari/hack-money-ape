@@ -7,15 +7,14 @@ import Navbar from '../Navbar';
 
 export const Header = () => {
     return (
-        // <div id="header" className="flex flex-col items-center p-3 justify-between md:flex-row md:items-center">
-        <div id="header" className="grid grid-rows-3 grid-cols-1 md:grid-cols-3 md:grid-rows-1">
-            <div id="Logo" className="p-2 flex flex-row justify-center md:justify-start">
+        <div id="header" className="flex flex-col items-center p-3 justify-between md:flex-row md:items-center">
+            <div id="Logo" className="p-2 flex flex-row justify-center md:justify-start md:flex-1">
                 <Link to="/">
                     <img src={apeImage} alt={"APY"} className="h-24"/>
                 </Link>
             </div>
             <Navbar/>
-            <div id="wallet" className="p-3 flex flex-row justify-center md:justify-end gap-3 items-center">
+            <div id="wallet" className="p-3 flex flex-row justify-center md:justify-end gap-3 items-center md:flex-1">
                 <WalletSettings/>
                 <Wallet/>
             </div>

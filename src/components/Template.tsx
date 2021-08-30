@@ -11,7 +11,7 @@ export const Template: React.FC<Props> = (props: Props) => {
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col justify-between">
             <Header/>
-            <div id="body" className="p-5 mx-auto max-w-lg w-full">
+            <div id="body" className="p-5 mx-auto max-w-lg w-full flex-1">
                 <Switch>
                     <Route path="/ytc">
                         <YTC/>
