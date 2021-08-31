@@ -1,4 +1,5 @@
 import { Button, Select } from "@chakra-ui/react"
+import { Formik } from "formik"
 import React, { useEffect, useState } from "react"
 
 interface YTCProps {}
@@ -44,6 +45,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
                 }
             ]}
             onSimulate={handleSimulation}
+            simulated={!!simulatedResults}
         />
         {
             simulatedResults && <>
@@ -67,6 +69,7 @@ interface CalculateProps {
         address: string
     }[];
     onSimulate: () => void;
+    simulated: boolean;
 }
 
 // TODO replace this method with one that provides the balance
@@ -94,139 +97,161 @@ interface Tranche {
 }
 
 export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
-    const {tokens, onSimulate} = props;
+    const {tokens, onSimulate, simulated} = props;
 
-    const [tokenAddress, setTokenAddress] = useState<string | undefined>(undefined);
-    const [trancheAddress, setTrancheAddress] = useState<string | undefined>();
     const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
-    const [amount, setAmount] = useState<number | undefined>(undefined);
     const [balance, setBalance] = useState<number | undefined>(undefined);
-    const [compounds, setCompounds] = useState<number | undefined>(undefined);
+
 
     useEffect(() => {
-        setTokenAddress(tokens[0].address);
-    }, [tokens])
+        setTranches(getTranches(tokens[0].address))
+    }, [])
 
-    const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
-        event.preventDefault();
-        const value = event.target.value;
-        setTokenAddress(value)
+    const initialValues: {
+        tokenAddress: string | undefined,
+        trancheAddress: string | undefined,
+        amount: number | undefined,
+        compounds: number | undefined
+    } = {
+        tokenAddress: undefined,
+        trancheAddress: undefined,
+        amount: undefined,
+        compounds: undefined
     }
-
-    const handleAmountChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        event.preventDefault();
-        const value = event.target.value;
-        setAmount(parseInt(value));
-    }
-
-    const handleTrancheChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
-        event.preventDefault();
-        const value = event.target.value;
-        setTrancheAddress(value);
-    }
-
-    const handleCompoundsChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        event.preventDefault();
-        const value = event.target.value;
-        setCompounds(parseInt(value));
-    }
-
-    const handleMax: React.MouseEventHandler<HTMLButtonElement> = () => {
-        setAmount(balance);
-    }
-
-    useEffect(() => {
-        if (tokenAddress){
-            setTranches(getTranches(tokenAddress))
-            setBalance(getBalance(tokenAddress))
-        }
-    }, [tokenAddress])
 
     return (
         <div id="calculate" className="py-5 flex flex-col gap-3">
-            <div id="selects" className="flex flex-row items-center justify-center gap-6 mb-4">
-                {/* <div id="asset-select-proxy" className="rounded-full bg-indigo-100 flex flex-row py-2 px-3 gap-2 items-center hover:bg-indigo-200 cursor-pointer"> */}
-                    <Select
-                        width="36"
-                        rounded="full"
-                        variant="filled"
-                        bgColor="#E0E7FF"
-                        onChange={handleChange}
-                        shadow="inner"
-                    >
-                        {tokens.map((token) => {
-                            return <option value={token.address} key={token.address}>
-                                {token.name}
-                            </option>
-                        })}
-                    </Select>
-                    <Select
-                        width="36"
-                        rounded="full"
-                        variant="filled"
-                        bgColor="#E0E7FF"
-                        value={trancheAddress}
-                        onChange={handleTrancheChange}
-                        shadow="inner"
-                    >
-                        {
-                            tranches && tranches.map((tranche: Tranche) => {
-                                return <option value={tranche.address} key={tranche.address}>
-                                    {(new Date(tranche.expiry * 1000)).toLocaleDateString()}
-                                </option>
+            <Formik
+                initialValues={initialValues}
+                onSubmit={onSimulate}
+            >
+                {
+                    ({
+                        values,
+                        setValues,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting,
+                    }) => {
+
+                        const handleTokenChange = (event: React.ChangeEvent<any>) => {
+                            const value = event.target.value;
+
+                            if (value) {
+                                setTranches(getTranches(value))
+                                setBalance(getBalance(value))
+                            }
+                            
+                            handleChange(event);
+                        }
+
+                        const handleMax: React.MouseEventHandler<HTMLButtonElement> = (event: React.MouseEvent) => {
+                            event.preventDefault()
+                            setValues({
+                                ...values,
+                                amount: balance
                             })
                         }
-                    </Select>
-            </div>
-            <div id="form" className="flex flex-col items-stretch p-6 gap-3 w-full bg-indigo-100 rounded-2xl shadow-inner">
-                <div id="table-headers" className="flex flex-row justify-between">
-                    <div id="percentage-header" className="text-sm">
-                        Compounds
-                    </div>
-                    <div id="amount-header" className="flex flex-row gap-2 items-center text-sm">
-                        <button id="max" onClick={handleMax} className="bg-gray-300 rounded-full text-sm p-1 px-2 hover:bg-gray-400">
-                            MAX
-                        </button>
-                        <div id="balance">
-                            Balance: {balance}                        
-                        </div>
-                    </div>
-                </div>
-                <div id="table-inputs" className="flex flex-row justify-between items-center">
-                    <div id="percentage exposure" className="flex p-2 hover:shadow-inner w-1/2">
-                        <input
-                            type="number"
-                            value={compounds}
-                            placeholder={"0"}
-                            onChange={handleCompoundsChange}
-                            id="number-compounds"
-                            className="text-lg bg-indigo-100 min-w-0"
-                        />
-                    </div>
-                    <div id="amount-input" className="flex flex-row gap-2 p-2 hover:shadow-inner w-1/2">
-                        <input
-                            type="number"
-                            value={amount}
-                            placeholder={"0.0"}
-                            onChange={handleAmountChange}
-                            id="amount-input"
-                            className="text-lg text-right bg-indigo-100 min-w-0"/>
-                        <div id="amount-input" className="text-lg">USDC</div>
-                    </div>
-                </div>
-            </div>
-            <Button
-                id="approve-calculate-button"
-                className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400"
-                rounded="full"
-                bgColor="#6366F1"
-                mt="4"
-                p="2"
-                textColor="gray.50"
-                onClick={onSimulate}
-            >
-                SIMULATE
-            </Button>
+
+                        return <form onSubmit={handleSubmit}>
+                            <div id="selects" className="flex flex-row items-center justify-center gap-6 mb-4">
+                                    <Select
+                                        width="36"
+                                        name="tokenAddress"
+                                        rounded="full"
+                                        variant="filled"
+                                        bgColor="#E0E7FF"
+                                        onChange={handleTokenChange}
+                                        shadow="lg"
+                                    >
+                                        {tokens.map((token) => {
+                                            return <option value={token.address} key={token.address}>
+                                                {token.name}
+                                            </option>
+                                        })}
+                                    </Select>
+                                    <Select
+                                        width="36"
+                                        name="trancheAddress"
+                                        rounded="full"
+                                        variant="filled"
+                                        bgColor="#E0E7FF"
+                                        value={values.trancheAddress}
+                                        onChange={handleChange}
+                                        shadow="lg"
+                                    >
+                                        {
+                                            tranches && tranches.map((tranche: Tranche) => {
+                                                return <option value={tranche.address} key={tranche.address}>
+                                                    {(new Date(tranche.expiry * 1000)).toLocaleDateString()}
+                                                </option>
+                                            })
+                                        }
+                                    </Select>
+                            </div>
+                            <div id="form" className="flex flex-col items-stretch p-6 gap-3 w-full bg-indigo-100 rounded-2xl shadow-lg">
+                                <div id="table-headers" className="flex flex-row justify-between">
+                                    <div id="percentage-header" className="text-sm">
+                                        Compounds
+                                    </div>
+                                    <div id="amount-header" className="flex flex-row gap-2 items-center text-sm">
+                                        <button
+                                            id="max"
+                                            onClick={handleMax}
+                                            className="bg-gray-300 rounded-full text-sm p-1 px-2 hover:bg-gray-400"
+                                        >
+                                            MAX
+                                        </button>
+                                        <div id="balance">
+                                            Balance: {balance}                        
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="table-inputs" className="flex flex-row justify-between items-center">
+                                    <div id="percentage exposure" className="flex p-2 hover:shadow-inner w-1/2">
+                                        <input
+                                            type="number"
+                                            name="compounds"
+                                            value={values.compounds}
+                                            placeholder={"0"}
+                                            onChange={handleChange}
+                                            id="number-compounds"
+                                            className="text-lg bg-indigo-100 min-w-0"
+                                        />
+                                    </div>
+                                    <div id="amount-input" className="flex flex-row gap-2 p-2 hover:shadow-inner w-1/2">
+                                        <input
+                                            type="number"
+                                            name="amount"
+                                            value={values.amount}
+                                            placeholder={"0.0"}
+                                            onChange={handleChange}
+                                            id="amount-input"
+                                            className="text-lg text-right bg-indigo-100 min-w-0"/>
+                                        <div id="amount-input" className="text-lg">USDC</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <Button
+                                id="approve-calculate-button"
+                                className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400"
+                                rounded="full"
+                                bgColor="#6366F1"
+                                mt="4"
+                                p="2"
+                                textColor="gray.50"
+                                type="submit"
+                                width="full"
+                            >
+                                {simulated ? "RE-SIMULATE" : "SIMULATE"}
+                            </Button>
+                        </form>
+                    }
+                }
+            </Formik>
         </div>
     )
 
