@@ -46,6 +46,9 @@ export const YTC: React.FC<YTCProps> = (props) => {
             <h2 className="text-2xl font-bold">
                 Yield Token Compounding
             </h2>
+            <a href="https://medium.com/element-finance/intro-to-yield-token-compounding-40a75a11e18c#:~:text=Element%20lets%20you%20put%20otherwise,Yield%20Token%20Compounding%20(YTC)." target="_blank" className="text-sm">
+                What is Yield Token Compounding?
+            </a>
         </div>
         <Calculator
             tokens={[
