@@ -31,19 +31,9 @@ export const Wallet = (props: Props) => {
                     <Flex
                         justifyContent = "space-between"
                         alignItems = "center"
-                        px = {2}
                     >
-                        <Text style={{
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis'
-                        }}
-                            p={1}
-                        >
-                            {shortenAddress(wallet.account)}
-                        </Text>
                         <Text
-                            p={1}
+                            pr={2}
                         >
                             {wallet.networkName}
                         </Text>
@@ -58,7 +48,7 @@ export const Wallet = (props: Props) => {
                         _hover={{
                             bg: 'teal.300',
                         }}>
-                            Disconnect
+                            {shortenAddress(wallet.account)}
                     </Button> 
                 </Flex> :
                 <Button

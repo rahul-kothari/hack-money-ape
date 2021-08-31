@@ -14,7 +14,7 @@ export const Header = () => {
                 </Link>
             </div>
             <Navbar/>
-            <div id="wallet" className="p-3 flex flex-row justify-center md:justify-end gap-3 items-center md:flex-1">
+            <div id="wallet" className="p-3 flex flex-row justify-center md:justify-end items-center md:flex-1 gap-1">
                 <WalletSettings/>
                 <Wallet/>
             </div>

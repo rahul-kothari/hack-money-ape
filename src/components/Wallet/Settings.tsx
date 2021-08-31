@@ -29,7 +29,7 @@ export const WalletSettings = () => {
                 <PopoverHeader>Transaction Settings</PopoverHeader>
                 <PopoverBody>
                     <div className="flex flex-col">
-                        <text id="slippage" className="text-sm text-left">Slippage Tolerance</text>
+                        <div id="slippage" className="text-sm text-left">Slippage Tolerance</div>
                         <div className="flex flex-row justify-center gap-4 items-center">
                             <ButtonGroup>
                                 {
