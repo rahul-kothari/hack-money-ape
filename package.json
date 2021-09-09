@@ -20,6 +20,8 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
     "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "elf-sdk": "file:elf-sdk",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.3.1",
     "formik": "^2.2.9",
