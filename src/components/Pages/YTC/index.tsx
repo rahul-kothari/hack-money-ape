@@ -1,4 +1,7 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { getBaseTokens } from "../../../features/element";
+import { Token, Tranche } from "../../../types/manual/types";
+// TODO move this to tyeps file
 import { Calculator } from "./Calculator";
 import { Ape, ApeProps } from "./Executor";
 
@@ -7,6 +10,13 @@ interface YTCProps {}
 export const YTC: React.FC<YTCProps> = (props) => {
 
     const [simulatedResults, setSimulatedResults] = useState<ApeProps | undefined>(undefined)
+    const [baseTokens, setBaseTokens] = useState<Token[]>([]);
+
+    useEffect(() => {
+        getBaseTokens().then((res) => {
+            setBaseTokens(res);
+        })
+    })
 
     const handleSimulation = () => {
         setSimulatedResults({
@@ -36,23 +46,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
             </a>
         </div>
         <Calculator
-            tokens={[
-                {
-                    name: 'USDC',
-                    address: '0x000000000000000',
-                    price: 1,
-                },
-                {
-                    name: 'DAI',
-                    address: '0x111111111111111111',
-                    price: 1,
-                },
-                {
-                    name: 'WETH',
-                    address: '0x22222222222222222',
-                    price: 3414.10
-                }
-            ]}
+            tokens={baseTokens}
             onSimulate={handleSimulation}
             simulated={!!simulatedResults}
         />

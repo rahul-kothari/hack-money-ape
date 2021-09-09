@@ -3,6 +3,8 @@ import { Formik, useFormikContext } from "formik";
 import { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Token, Tranche } from "../../../types/manual/types";
+import { Approval } from '../../../features/approval/Approval';
+import { getBalance, getTranches } from "../../../features/element";
 
 interface CalculateProps {
     tokens: Token[];
@@ -17,24 +19,6 @@ export interface FormFields {
     compounds: number | undefined
 }
 
-// TODO replace this method with one that provides the balance
-const getBalance = (tokenAddress: string) => {
-    return 1000
-}
-
-// TODO replace this method with one that actually provides the tranches
-const getTranches = (tokenAddress: string): Tranche[] => {
-    return [
-        {
-            address: '0x444444444444444444',
-            expiry: 1639991814,
-        },
-        {
-            address: '0x555555555555555555',
-            expiry: 1671527814,
-        }
-    ]
-}
 
 
 export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
@@ -53,21 +37,10 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                 initialValues={initialValues}
                 onSubmit={onSimulate}
             >
-                {
-                    ({
-                        values,
-                        setValues,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                    }) => <Form
-                        tokens={tokens}
-                        simulated={simulated}
-                    />
-                }
+                <Form
+                    tokens={tokens}
+                    simulated={simulated}
+                />
             </Formik>
         </div>
     )
@@ -81,10 +54,6 @@ function useQuery() {
 
 
 interface FormProps {
-    // setTranches: (tranches: Tranche[]) => void;
-    // setBalance: (balance: number) => void;
-    // balance?: number;
-    // tranches?: Tranche[];
     tokens: Token[];
     simulated: boolean;
 }
@@ -104,42 +73,57 @@ const Form: React.FC<FormProps> = (props) => {
 
     const getTokenAddress = useCallback(
         () => {
-            const token = query.get('base_token');
+            const token = query.get('base_token') || tokens[0].address;
             return token;
         },
-        [],
+        [tokens],
     )
+
+    const getTokenNameByAddress = (tokenAddress: string | undefined): string | undefined => {
+        if (!tokenAddress){
+            return undefined;
+        }
+        const token: Token | undefined = tokens.find((token) => {
+            return token.address === tokenAddress;
+        })
+        return token?.name || undefined;
+    }
 
     // if there is a token specified in the query params we want to set the value of the form to it
     useEffect(() => {
-        const tokenAddress = getTokenAddress();
-        console.log(tokenAddress)
-        console.log('Use effect re-run')
-        setFieldValue('tokenAddress', tokenAddress)
+        console.log('run useeffect')
+        if (tokens.length >= 1){
+            const tokenAddress = getTokenAddress();
+            setFieldValue('tokenAddress', tokenAddress)
+        }
     }, [getTokenAddress, tokens, setFieldValue])
 
     useEffect(() => {
-        console.log('token address',tokenAddress)
         // if the token is selected then put it in
         if (tokenAddress){
-            setTranches(getTranches(tokenAddress));
-            setBalance(getBalance(tokenAddress));
+            getTranches(tokenAddress).then((res) => {
+                setTranches(res);
+            })
+            getBalance(tokenAddress).then((res) => {
+                setBalance(res);
+            })
         } 
     }, [tokenAddress])
 
 
+    // custom handler for token input change, as it needs to be added as a query param
     const handleTokenChange = (event: React.ChangeEvent<any>) => {
         const value = event.target.value;
 
+        // add the token address as a query param
         if (value) {
-            setTranches(getTranches(value))
-            setBalance(getBalance(value))
             history.push(`/ytc?base_token=${value}`)
         }
         
         formik.handleChange(event);
     }
 
+    // Sets the amount to the user's balance of the base token
     const handleMax: React.MouseEventHandler<HTMLButtonElement> = (event: React.MouseEvent) => {
         event.preventDefault()
         formik.setFieldValue('amount', balance);
@@ -176,7 +160,7 @@ const Form: React.FC<FormProps> = (props) => {
                 {
                     tranches && tranches.map((tranche: Tranche) => {
                         return <option value={tranche.address} key={tranche.address}>
-                            {(new Date(tranche.expiry * 1000)).toLocaleDateString()}
+                            {(new Date(tranche.expiration * 1000)).toLocaleDateString()}
                         </option>
                     })
                 }
@@ -201,7 +185,7 @@ const Form: React.FC<FormProps> = (props) => {
                 </div>
             </div>
             <div id="table-inputs" className="flex flex-row justify-between items-center">
-                <div id="percentage exposure" className="flex p-2 hover:shadow-inner w-1/2">
+                <div id="percentage exposure" className="flex p-2 rounded-xl hover:shadow-inner w-1/2">
                     <input
                         type="number"
                         name="compounds"
@@ -212,7 +196,7 @@ const Form: React.FC<FormProps> = (props) => {
                         className="text-lg bg-indigo-100 min-w-0"
                     />
                 </div>
-                <div id="amount-input" className="flex flex-row gap-2 p-2 hover:shadow-inner w-1/2">
+                <div id="amount-input" className="flex flex-row rounded-xl gap-2 p-2 hover:shadow-inner w-1/2">
                     <input
                         type="number"
                         name="amount"
@@ -221,22 +205,33 @@ const Form: React.FC<FormProps> = (props) => {
                         onChange={formik.handleChange}
                         id="amount-input"
                         className="text-lg text-right bg-indigo-100 min-w-0"/>
-                    <div id="amount-input" className="text-lg">USDC</div>
+                    <div id="amount-input" className="text-lg">{getTokenNameByAddress(formik.values.tokenAddress)}</div>
                 </div>
             </div>
         </div>
-        <Button
-            id="approve-calculate-button"
-            className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400"
-            rounded="full"
-            bgColor="#6366F1"
-            mt="4"
-            p="2"
-            textColor="gray.50"
-            type="submit"
-            width="full"
-        >
-            {simulated ? "RE-SIMULATE" : "SIMULATE"}
-        </Button>
+            <Approval
+                tokenAddress={formik.values.tokenAddress}
+                tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
+                approvalAddress={formik.values.trancheAddress}
+                rounded="full"
+                bgColor="#6366F1"
+                mt="4"
+                p="2"
+                textColor="gray.50"
+                width="full"
+            >
+                <Button
+                    id="approve-calculate-button"
+                    rounded="full"
+                    bgColor="#6366F1"
+                    mt="4"
+                    p="2"
+                    textColor="gray.50"
+                    type="submit"
+                    width="full"
+                >
+                    {simulated ? "RE-SIMULATE" : "SIMULATE"}
+                </Button>
+            </Approval>
     </form>
 }
