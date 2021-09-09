@@ -36,10 +36,10 @@ module.exports = {
         block: 13180350
       }
     },
-    // goerli: {
-    //   url: `${process.env.GOERLI_PROVIDER_URL}`,
-    //   accounts: [`0x${process.env.PRIVATE_KEY}`]
-    // },
+    goerli: {
+      url: `${process.env.GOERLI_PROVIDER_URL}`,
+      accounts: [`0x${process.env.PRIVATE_KEY}`]
+    },
   },
   typechain: {
     outDir: 'src/types',
