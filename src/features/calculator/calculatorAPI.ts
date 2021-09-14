@@ -1,9 +1,9 @@
-import { ethers, Signer } from "ethers";
+import { ethers, Signer, Contract } from "ethers";
 import YieldTokenCompounding from '../../artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json'
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json'
 
-import {data} from '../../constants/goerli-constants';
+import { data } from '../../constants/goerli-constants';
 
 export interface CalculatorData {
     baseTokenName: string;
@@ -126,3 +126,24 @@ export const calculate = async (wallet: any, userData: CalculatorData) => {
     }
     return values;
 }
+
+const estimateGasCost = async (provider: ethers.providers.Web3Provider, contract: Contract, methodName: string): Promise<string> => {
+    const {maxFeePerGas, maxPriorityFeePerGas} = await provider.getFeeData();
+
+    if (!maxFeePerGas || !maxPriorityFeePerGas){
+        throw 'get gas fees failed'
+    }
+
+    const gasEstimate: ethers.BigNumber = await contract.estimateGas[methodName]();
+
+    const gasCostWei: ethers.BigNumber = gasEstimate.mul(maxFeePerGas.add(maxPriorityFeePerGas));
+
+    const gasCostEth: string = ethers.utils.formatEther(gasCostWei);
+    
+    return gasCostEth;
+}
+
+// // Grabs the pricefeed of the base asset compared to eth used for gas
+// const ethToBaseAsset = async (provider: ethers.providers.Web3Provider, baseTokenContract: Contract): Promise<BigNumber> => {
+
+// }

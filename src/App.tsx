@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <UseWalletProvider
       // TODO add walletconect as a configuration option with a specified rpc node
-        chainId={5}
+        chainId={1337}
       >
         <Layout/>
       </UseWalletProvider>
