@@ -41,7 +41,7 @@
   "scripts": {
     "setup-sdk": "git clone git@github.com:element-fi/elf-sdk.git && cd elf-sdk && npm i && npm run load-contracts && npm run generate-interfaces && npm run build && cd ..",
     "start": "npx hardhat node",
-    "build": "npx hardhat compile",
+    "build": "npx hardhat compile && craco build",
     "ytc": "node ./scripts/ytc-test.js --network goerli",
     "ytc-calculator": "",
     "react:start": "craco start",
