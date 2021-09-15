@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { getBaseTokens } from "../../../features/element";
-import { Token, Tranche } from "../../../types/manual/types";
+import { Token } from "../../../types/manual/types";
 // TODO move this to tyeps file
 import { Calculator } from "./Calculator";
 import { Ape, ApeProps } from "./Executor";

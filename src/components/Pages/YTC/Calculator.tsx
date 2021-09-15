@@ -76,6 +76,8 @@ const Form: React.FC<FormProps> = (props) => {
             const token = query.get('base_token') || tokens[0].address;
             return token;
         },
+        // TODO this should be resolved not ignored
+        // eslint-disable-next-line
         [tokens],
     )
 

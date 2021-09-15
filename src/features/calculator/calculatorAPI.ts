@@ -127,11 +127,12 @@ export const calculate = async (wallet: any, userData: CalculatorData) => {
     return values;
 }
 
+// eslint-disable-next-line
 const estimateGasCost = async (provider: ethers.providers.Web3Provider, contract: Contract, methodName: string): Promise<string> => {
     const {maxFeePerGas, maxPriorityFeePerGas} = await provider.getFeeData();
 
     if (!maxFeePerGas || !maxPriorityFeePerGas){
-        throw 'get gas fees failed'
+        throw Error('get gas fees failed')
     }
 
     const gasEstimate: ethers.BigNumber = await contract.estimateGas[methodName]();

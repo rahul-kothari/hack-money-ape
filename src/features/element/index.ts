@@ -40,10 +40,10 @@ export const getBalance = async (tokenAddress: string): Promise<number> => {
     return 1000;
 }
 
-const getElementTokens = async (tokenAddress: string): Promise<void> => {
-    await promiseTimeout(1000);
-    return;
-}
+// const getElementTokens = async (tokenAddress: string): Promise<void> => {
+//     await promiseTimeout(1000);
+//     return;
+// }
 
 const promiseTimeout = (time: number): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
