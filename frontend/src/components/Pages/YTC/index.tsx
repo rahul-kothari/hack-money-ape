@@ -16,7 +16,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
         getBaseTokens().then((res) => {
             setBaseTokens(res);
         })
-    })
+    }, [])
 
     const handleSimulation = () => {
         setSimulatedResults({
