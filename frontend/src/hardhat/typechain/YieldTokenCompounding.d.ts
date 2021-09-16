@@ -23,8 +23,7 @@ interface YieldTokenCompoundingInterface extends ethers.utils.Interface {
   functions: {
     "approveTranchePTOnBalancer(address)": FunctionFragment;
     "balVault()": FunctionFragment;
-    "compound(uint8,address,bytes32,uint256,uint256)": FunctionFragment;
-    "swapPTsForBaseTokenOnBalancer(address,bytes32,address,address,address,uint256)": FunctionFragment;
+    "compound(uint8,address,bytes32,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -34,11 +33,7 @@ interface YieldTokenCompoundingInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "balVault", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "compound",
-    values: [BigNumberish, string, BytesLike, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "swapPTsForBaseTokenOnBalancer",
-    values: [string, BytesLike, string, string, string, BigNumberish]
+    values: [BigNumberish, string, BytesLike, BigNumberish]
   ): string;
 
   decodeFunctionResult(
@@ -47,10 +42,6 @@ interface YieldTokenCompoundingInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "balVault", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "compound", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "swapPTsForBaseTokenOnBalancer",
-    data: BytesLike
-  ): Result;
 
   events: {};
 }
@@ -111,17 +102,6 @@ export class YieldTokenCompounding extends BaseContract {
       _trancheAddress: string,
       _balancerPoolId: BytesLike,
       _amount: BigNumberish,
-      _expectedYtOutput: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    swapPTsForBaseTokenOnBalancer(
-      _trancheAddress: string,
-      _poolId: BytesLike,
-      _baseTokenAddress: string,
-      _fromAddress: string,
-      _receiverAddress: string,
-      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -137,17 +117,6 @@ export class YieldTokenCompounding extends BaseContract {
     _n: BigNumberish,
     _trancheAddress: string,
     _balancerPoolId: BytesLike,
-    _amount: BigNumberish,
-    _expectedYtOutput: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  swapPTsForBaseTokenOnBalancer(
-    _trancheAddress: string,
-    _poolId: BytesLike,
-    _baseTokenAddress: string,
-    _fromAddress: string,
-    _receiverAddress: string,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -165,19 +134,8 @@ export class YieldTokenCompounding extends BaseContract {
       _trancheAddress: string,
       _balancerPoolId: BytesLike,
       _amount: BigNumberish,
-      _expectedYtOutput: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
-
-    swapPTsForBaseTokenOnBalancer(
-      _trancheAddress: string,
-      _poolId: BytesLike,
-      _baseTokenAddress: string,
-      _fromAddress: string,
-      _receiverAddress: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
   };
 
   filters: {};
@@ -195,17 +153,6 @@ export class YieldTokenCompounding extends BaseContract {
       _trancheAddress: string,
       _balancerPoolId: BytesLike,
       _amount: BigNumberish,
-      _expectedYtOutput: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    swapPTsForBaseTokenOnBalancer(
-      _trancheAddress: string,
-      _poolId: BytesLike,
-      _baseTokenAddress: string,
-      _fromAddress: string,
-      _receiverAddress: string,
-      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -222,17 +169,6 @@ export class YieldTokenCompounding extends BaseContract {
       _n: BigNumberish,
       _trancheAddress: string,
       _balancerPoolId: BytesLike,
-      _amount: BigNumberish,
-      _expectedYtOutput: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    swapPTsForBaseTokenOnBalancer(
-      _trancheAddress: string,
-      _poolId: BytesLike,
-      _baseTokenAddress: string,
-      _fromAddress: string,
-      _receiverAddress: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
