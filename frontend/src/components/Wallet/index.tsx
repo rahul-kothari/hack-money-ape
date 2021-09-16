@@ -1,42 +1,39 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
-import { useWallet } from 'use-wallet';
-import { ProviderContext, CurrentAddressContext, SignerContext } from "../../hardhat/SymfoniContext";
+import { ProviderContext, CurrentAddressContext, SignerContext, SymfoniContext } from "../../hardhat/SymfoniContext";
 import Web3Modal from "web3modal";
+import { current } from 'immer';
 
 interface Props {
 }
-
-const providerOptions = {
-    injected: {
-        package: null,
-    }
-};
-
-const web3Modal = new Web3Modal({
-  network: "mainnet", // optional
-  cacheProvider: true, // optional
-  providerOptions // required
-});
-
 
 export const Wallet = (props: Props) => {
 
     const [provider, setProvider] = useContext(ProviderContext);
     const [currentAddress, setCurrentAddress] = useContext(CurrentAddressContext)
-    const [signer, setSigner] = useContext(SignerContext)
+    const {init} = useContext(SymfoniContext);
 
-    const wallet = useWallet();
+    const [networkName, setNetworkName] = useState("");
+
+    // Set the network name when connected
+    useEffect(() => {
+        provider?.getNetwork().then(
+            ({name}) => {
+                if (name == "homestead"){
+                    setNetworkName('mainnet')
+                } else {
+                    setNetworkName(name);
+                }
+            }
+        )
+    }, [provider])
 
     const handleConnect = async () => {
-        // const provider = await web3Modal.connect();
-        // setProvider(provider)
-        wallet.connect();
+        init();
     }
 
     const handleDisconnect = () => {
-        wallet.reset()
-        // setProvider(undefined)
+        setProvider(undefined);
     }
 
     const shortenAddress = (address: string): string => {
@@ -46,7 +43,7 @@ export const Wallet = (props: Props) => {
     return (
         <div>
             {
-                wallet.status === 'connected' ? 
+                !!provider ? 
                 <Flex
                     justifyContent = "space-between"
                     alignItems = "center"
@@ -58,7 +55,7 @@ export const Wallet = (props: Props) => {
                         <Text
                             pr={2}
                         >
-                            {wallet.networkName}
+                            {networkName}
                         </Text>
                     </Flex>
                     <Button
@@ -71,7 +68,7 @@ export const Wallet = (props: Props) => {
                         _hover={{
                             bg: 'teal.300',
                         }}>
-                            {shortenAddress(wallet.account)}
+                            {shortenAddress(currentAddress)}
                     </Button> 
                 </Flex> :
                 <Button
