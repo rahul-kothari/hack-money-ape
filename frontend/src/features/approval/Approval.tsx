@@ -70,6 +70,7 @@ export const Approval: React.FC<Props> = (props: Props) => {
         [wallet, amount, tokenAddress, approvalAddress, handleCheckApproval]
     )
 
+    console.log(approvalAddress, tokenAddress);
     if (!approvalAddress || !tokenAddress){
         return <Button
             {...rest}

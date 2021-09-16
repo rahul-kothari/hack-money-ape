@@ -9,11 +9,11 @@ import { UseWalletProvider } from 'use-wallet';
 function App() {
   return (
     <div className="App">
-	<Symfoni autoInit={true} loadingComponent={<LoadingComponent/>}>
-    <UseWalletProvider>
-      <Layout/>
-    </UseWalletProvider>
-	</Symfoni>
+      <Symfoni autoInit={false} loadingComponent={<LoadingComponent/>}>
+        <UseWalletProvider>
+          <Layout/>
+        </UseWalletProvider>
+      </Symfoni>
     </div>
   );
 }

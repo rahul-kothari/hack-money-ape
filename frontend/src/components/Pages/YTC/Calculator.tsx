@@ -105,6 +105,7 @@ const Form: React.FC<FormProps> = (props) => {
         if (tokenAddress){
             getTranches(tokenAddress).then((res) => {
                 setTranches(res);
+                formik.setFieldValue('trancheAddress', res[0].address);
             })
             getBalance(tokenAddress).then((res) => {
                 setBalance(res);

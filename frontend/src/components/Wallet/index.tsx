@@ -1,26 +1,42 @@
 import React, { useContext, useEffect } from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
 import { useWallet } from 'use-wallet';
-import { ProviderContext } from "../../hardhat/SymfoniContext";
-
+import { ProviderContext, CurrentAddressContext, SignerContext } from "../../hardhat/SymfoniContext";
+import Web3Modal from "web3modal";
 
 interface Props {
 }
 
+const providerOptions = {
+    injected: {
+        package: null,
+    }
+};
+
+const web3Modal = new Web3Modal({
+  network: "mainnet", // optional
+  cacheProvider: true, // optional
+  providerOptions // required
+});
+
+
 export const Wallet = (props: Props) => {
 
     const [provider, setProvider] = useContext(ProviderContext);
+    const [currentAddress, setCurrentAddress] = useContext(CurrentAddressContext)
+    const [signer, setSigner] = useContext(SignerContext)
 
     const wallet = useWallet();
 
     const handleConnect = async () => {
         // const provider = await web3Modal.connect();
-        // await web3Modal.toggleModal();
+        // setProvider(provider)
         wallet.connect();
     }
 
     const handleDisconnect = () => {
         wallet.reset()
+        // setProvider(undefined)
     }
 
     const shortenAddress = (address: string): string => {
