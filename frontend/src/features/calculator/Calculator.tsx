@@ -21,15 +21,15 @@ export const Calculator = (props: Props) => {
     const values = useAppSelector(selectResults);
     const dispatch = useAppDispatch();
 
-    const wallet = useWallet();
+    // const wallet = useWallet();
 
-    useEffect(() => {
-        console.log('effect signer and provider')
-        if (wallet.status === 'connected'){
-            console.log('executing calculation')
-            dispatch(executeCalculatorAsync({wallet, userData}))
-        }
-    }, [wallet])
+    // useEffect(() => {
+    //     console.log('effect signer and provider')
+    //     if (wallet.status === 'connected'){
+    //         console.log('executing calculation')
+    //         dispatch(executeCalculatorAsync({wallet, userData}))
+    //     }
+    // }, [wallet])
 
     return (
         <Results values={values}/>

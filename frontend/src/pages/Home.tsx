@@ -10,25 +10,25 @@ interface Props {
 }
 
 const Home = (props: Props) => {
-    const wallet = useWallet();
+    // const wallet = useWallet();
 
     return (
-        (wallet.status === 'connected') ?
-            <Approval
-                approvalAddress = "0x489478eA4117093D21701a0135BdA3859C556072"
-                tokenAddress = {data.tokens.dai}
-                tokenName = "dai"
-            >
-                <Approval
-                    approvalAddress = "0x489478eA4117093D21701a0135BdA3859C556072"
-                    tokenAddress = {data.tokens.usdc}
-                    tokenName = "usdc"
-                >
-                    <Button>
-                        Hello
-                    </Button>
-                </Approval>
-            </Approval> :
+        // (wallet.status === 'connected') ?
+        //     <Approval
+        //         approvalAddress = "0x489478eA4117093D21701a0135BdA3859C556072"
+        //         tokenAddress = {data.tokens.dai}
+        //         tokenName = "dai"
+        //     >
+        //         <Approval
+        //             approvalAddress = "0x489478eA4117093D21701a0135BdA3859C556072"
+        //             tokenAddress = {data.tokens.usdc}
+        //             tokenName = "usdc"
+        //         >
+        //             <Button>
+        //                 Hello
+        //             </Button>
+        //         </Approval>
+        //     </Approval> :
         <div>
             Not Connected
         </div>

@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
-import {useWallet} from 'use-wallet';
+import { useWallet } from 'use-wallet';
+import { ProviderContext } from "../../hardhat/SymfoniContext";
+
 
 interface Props {
 }
 
 export const Wallet = (props: Props) => {
+
+    const [provider, setProvider] = useContext(ProviderContext);
+
     const wallet = useWallet();
 
-    const handleConnect = () => {
-        wallet.connect()
+    const handleConnect = async () => {
+        // const provider = await web3Modal.connect();
+        // await web3Modal.toggleModal();
+        wallet.connect();
     }
 
     const handleDisconnect = () => {

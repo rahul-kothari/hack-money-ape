@@ -1,17 +1,19 @@
 import React from 'react';
 import './App.css';
-import {UseWalletProvider} from 'use-wallet';
 import Layout from './components/Layout';
+import LoadingComponent from './components/LoadingComponent';
+import { Symfoni } from "./hardhat/SymfoniContext";
+import { UseWalletProvider } from 'use-wallet';
+
 
 function App() {
   return (
     <div className="App">
-      <UseWalletProvider
-      // TODO add walletconect as a configuration option with a specified rpc node
-        chainId={1337}
-      >
-        <Layout/>
-      </UseWalletProvider>
+	<Symfoni autoInit={true} loadingComponent={<LoadingComponent/>}>
+    <UseWalletProvider>
+      <Layout/>
+    </UseWalletProvider>
+	</Symfoni>
     </div>
   );
 }
