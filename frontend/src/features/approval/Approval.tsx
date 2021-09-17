@@ -1,7 +1,7 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react'
 import { Button, ButtonProps, Spinner } from '@chakra-ui/react'
-import { useWallet } from 'use-wallet';
 import { checkApproval, sendApproval } from './approvalAPI';
+import { ProviderContext, ERC20Context, CurrentAddressContext } from '../../hardhat/SymfoniContext';
 
 const MAX_UINT_HEX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
@@ -16,67 +16,81 @@ type Props = {
 
 
 export const Approval: React.FC<Props> = (props: Props) => {
+    const [provider] = useContext(ProviderContext);
+    const erc20 = useContext(ERC20Context);
+    const [currentAddress] = useContext(CurrentAddressContext)
     const {amount = MAX_UINT_HEX, approvalAddress, tokenAddress, tokenName, children, ...rest} = props;
 
-    const wallet = useWallet();
 
     const [isApproved, setIsApproved] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-
     const handleCheckApproval = useCallback(
         () => {
-            if (tokenAddress && approvalAddress){
-                checkApproval(wallet, amount, tokenAddress, approvalAddress).then((result) => {
-                    if (result) setIsApproved(true);
-                }).catch((error: Error) => {
-                    console.error(error);
-                })
+            if (tokenAddress && approvalAddress && provider){
+                const tokenContract = erc20.factory?.attach(tokenAddress);
+                if (tokenContract){
+                    console.log('checking approval')
+                    checkApproval(amount, approvalAddress, currentAddress, tokenContract).then((result) => {
+                        if (result) setIsApproved(true);
+                    }).catch((error: Error) => {
+                        console.error(error);
+                    })
+                }
             }
         },
-        [wallet, amount, tokenAddress, approvalAddress],
+        [currentAddress, amount, approvalAddress],
     )
-
-
-    useEffect(() => {
-        if (wallet.status === "connected") {
-            handleCheckApproval();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wallet.status])
 
     const handleApprove = useCallback(
         async () => {
-            if (approvalAddress && tokenAddress) {
+            if (approvalAddress && tokenAddress && provider) {
                 setIsLoading(true);
                 // send the approval request
                 // This does not resolve based on the approval being successful
                 // Rather it resolves on the approval happening in the wallet
-                sendApproval(
-                    wallet, 
-                    amount,
-                    approvalAddress,
-                    tokenAddress,
-                    () => {setIsApproved(true)}
-                ).then(() => {
-                    handleCheckApproval();
-                }).catch((error: Error) => {
-                    console.error(error);
-                }).finally(() => {
-                    setIsLoading(false);
-                })
+                const tokenContract = erc20.factory?.attach(tokenAddress);
+                if (tokenContract){
+                    sendApproval(
+                        amount,
+                        approvalAddress,
+                        tokenContract
+                    ).then(() => {
+                        handleCheckApproval();
+                    }).catch((error: Error) => {
+                        console.error(error);
+                    }).finally(() => {
+                        setIsLoading(false);
+                    })
+                }
             }
         },
-        [wallet, amount, tokenAddress, approvalAddress, handleCheckApproval]
+        [amount, tokenAddress, approvalAddress, handleCheckApproval]
     )
 
+
+    useEffect(() => {
+        if (provider) {
+            handleCheckApproval();
+        }
+    }, [provider, handleCheckApproval])
+
+
     console.log(approvalAddress, tokenAddress);
-    if (!approvalAddress || !tokenAddress){
+    if (!provider){
         return <Button
             {...rest}
             disabled
         >
             CONNECT YOUR WALLET
+        </Button>
+    }
+    if (!approvalAddress || !tokenAddress){
+        return <Button
+            {...rest}
+            disabled
+        >
+            SELECT TRANCHE
         </Button>
     }
     if (isLoading){

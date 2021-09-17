@@ -1,10 +1,11 @@
 import { Button, Select } from "@chakra-ui/react";
 import { Formik, useFormikContext } from "formik";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Token, Tranche } from "../../../types/manual/types";
 import { Approval } from '../../../features/approval/Approval';
 import { getBalance, getTranches } from "../../../features/element";
+import { CurrentAddressContext, ERC20Context } from "../../../hardhat/SymfoniContext";
 
 interface CalculateProps {
     tokens: Token[];
@@ -62,6 +63,9 @@ const Form: React.FC<FormProps> = (props) => {
 
     const {tokens, simulated} = props;
 
+
+    const erc20 = useContext(ERC20Context)
+    const [currentAddress] = useContext(CurrentAddressContext)
     const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
     const [balance, setBalance] = useState<number | undefined>(undefined);
     const history = useHistory();
@@ -105,9 +109,10 @@ const Form: React.FC<FormProps> = (props) => {
         if (tokenAddress){
             getTranches(tokenAddress).then((res) => {
                 setTranches(res);
-                formik.setFieldValue('trancheAddress', res[0].address);
+                formik.setFieldValue('trancheAddress', res[0]?.address);
             })
-            getBalance(tokenAddress).then((res) => {
+            const tokenContract = erc20.factory?.attach(tokenAddress);
+            getBalance(currentAddress, tokenContract).then((res) => {
                 setBalance(res);
             })
         } 
