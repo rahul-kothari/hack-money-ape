@@ -100,7 +100,6 @@ const Form: React.FC<FormProps> = (props) => {
 
     // if there is a token specified in the query params we want to set the value of the form to it
     useEffect(() => {
-        console.log('run useeffect')
         if (tokens.length >= 1){
             const tokenAddress = getTokenAddress();
             setFieldValue('tokenAddress', tokenAddress)
@@ -112,14 +111,14 @@ const Form: React.FC<FormProps> = (props) => {
         if (tokenAddress){
             getTranches(tokenAddress).then((res) => {
                 setTranches(res);
-                formik.setFieldValue('trancheAddress', res[0]?.address);
+                setFieldValue('trancheAddress', res[0]?.address);
             })
             const tokenContract = erc20.factory?.attach(tokenAddress);
             getBalance(currentAddress, tokenContract).then((res) => {
                 setBalance(res);
             })
         } 
-    }, [tokenAddress])
+    }, [tokenAddress, erc20.factory, currentAddress, setFieldValue])
 
 
     // custom handler for token input change, as it needs to be added as a query param

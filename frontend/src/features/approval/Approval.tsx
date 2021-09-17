@@ -39,7 +39,7 @@ export const Approval: React.FC<Props> = (props: Props) => {
                 }
             }
         },
-        [currentAddress, amount, approvalAddress],
+        [currentAddress, amount, approvalAddress, erc20.factory, provider, tokenAddress],
     )
 
     const handleApprove = useCallback(
@@ -65,7 +65,7 @@ export const Approval: React.FC<Props> = (props: Props) => {
                 }
             }
         },
-        [amount, tokenAddress, approvalAddress, handleCheckApproval]
+        [amount, tokenAddress, approvalAddress, handleCheckApproval, erc20.factory, provider]
     )
 
 
@@ -76,7 +76,6 @@ export const Approval: React.FC<Props> = (props: Props) => {
     }, [provider, handleCheckApproval])
 
 
-    console.log(approvalAddress, tokenAddress);
     if (!provider){
         return <Button
             {...rest}

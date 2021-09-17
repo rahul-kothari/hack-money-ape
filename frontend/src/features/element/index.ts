@@ -44,11 +44,3 @@ export const getBalance = async (currentAddress: string, contract: ERC20 | undef
 //     await promiseTimeout(1000);
 //     return;
 // }
-
-const promiseTimeout = (time: number): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-            resolve();
-        }, time)
-    })
-}

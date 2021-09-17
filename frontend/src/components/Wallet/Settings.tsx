@@ -37,6 +37,7 @@ export const WalletSettings = () => {
                                         <button
                                             onClick={ () => handleSlippageChange(percentage) }
                                             className={`hover:bg-gray-50 px-2 py-1 rounded-2xl ${percentage === slippageTolerance && "text-indigo-400"}`}
+                                            key={percentage}
                                         >
                                             {percentage}%
                                         </button>

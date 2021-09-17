@@ -1,10 +1,10 @@
-import { ethers, Signer, Contract } from "ethers";
+import { ethers, Signer } from "ethers";
 import YieldTokenCompounding from '../../artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json'
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json'
 import { data } from '../../constants/goerli-constants';
 
-const MILLISECONDS_PER_DAY = 1000*60*60*24;
+// const MILLISECONDS_PER_DAY = 1000*60*60*24;
 
 export interface YieldExposureData {
     baseTokenName: string;
@@ -59,7 +59,7 @@ export const calculateMock = async (userData: CalculatorData): Promise<YTCOutput
     })
 }
 
-export const calculateYieldExposure = async (userData: YieldExposureData, signer: ethers.Signer): Promise<YTCOutput>=> {
+export const calculateYieldExposure = async (userData: YieldExposureData, signer: Signer): Promise<YTCOutput>=> {
 
     const ytcAbi = YieldTokenCompounding.abi;
     const erc20Abi = ERC20.abi;
@@ -108,7 +108,7 @@ export const calculateYieldExposure = async (userData: YieldExposureData, signer
 
 
 // Demo script to show how to build a YTC calculator!
-export const calculate = async (userData: CalculatorData, signer: ethers.Signer) => {
+export const calculate = async (userData: CalculatorData, signer: Signer) => {
 
     const ytcAbi = YieldTokenCompounding.abi;
     const erc20Abi = ERC20.abi;
@@ -147,10 +147,10 @@ export const calculate = async (userData: CalculatorData, signer: ethers.Signer)
      *              = (Net Gain / (base tokens spent))*100 
      */
     // Calculate the expiration in milliseconds
-    const trancheExpirationTimestamp = trancheDetails.expiration * 1000
-    const daysLeftInTerm = Math.floor((trancheExpirationTimestamp - new Date().getTime())/MILLISECONDS_PER_DAY);
+    // const trancheExpirationTimestamp = trancheDetails.expiration * 1000
+    // const daysLeftInTerm = Math.floor((trancheExpirationTimestamp - new Date().getTime())/MILLISECONDS_PER_DAY);
 
-    const term = daysLeftInTerm/365
+    // const term = daysLeftInTerm/365
     
     let values: YTCOutput[] = [];
     for (let i=1; i<11; i++) {
@@ -181,7 +181,7 @@ export const calculate = async (userData: CalculatorData, signer: ethers.Signer)
     return values;
 }
 
-const calculateGain = (ytExposure: number, speculatedVariableRate: number, term: number, baseTokensSpent: number) => {
+export const calculateGain = (ytExposure: number, speculatedVariableRate: number, term: number, baseTokensSpent: number) => {
 
     const netGain = (speculatedVariableRate * term * ytExposure) - baseTokensSpent //- gasFee;
     const finalApy = (netGain / baseTokensSpent)*100

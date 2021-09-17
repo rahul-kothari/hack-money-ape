@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
 import { ProviderContext, CurrentAddressContext, SymfoniContext } from "../../hardhat/SymfoniContext";
-import Web3Modal from "web3modal";
-import { current } from 'immer';
 
 interface Props {
 }
@@ -10,7 +8,7 @@ interface Props {
 export const Wallet = (props: Props) => {
 
     const [provider, setProvider] = useContext(ProviderContext);
-    const [currentAddress, setCurrentAddress] = useContext(CurrentAddressContext)
+    const [currentAddress] = useContext(CurrentAddressContext)
     const {init} = useContext(SymfoniContext);
 
     const [networkName, setNetworkName] = useState("");
@@ -19,7 +17,7 @@ export const Wallet = (props: Props) => {
     useEffect(() => {
         provider?.getNetwork().then(
             ({name}) => {
-                if (name == "homestead"){
+                if (name === "homestead"){
                     setNetworkName('mainnet')
                 } else {
                     setNetworkName(name);
