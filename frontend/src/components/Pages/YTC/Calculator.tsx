@@ -26,8 +26,8 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
     const initialValues: FormFields = {
         tokenAddress: undefined,
         trancheAddress: undefined,
-        amount: undefined,
-        compounds: undefined
+        amount: 0,
+        compounds: 0
     }
 
     return (
@@ -153,7 +153,7 @@ const Form: React.FC<FormProps> = (props) => {
                 name="tokenAddress"
                 rounded="full"
                 variant="filled"
-                bgColor="#E0E7FF"
+                bgColor="indigo.100"
                 value={formik.values.tokenAddress}
                 onChange={handleTokenChange}
                 shadow="lg"
@@ -169,7 +169,7 @@ const Form: React.FC<FormProps> = (props) => {
                 name="trancheAddress"
                 rounded="full"
                 variant="filled"
-                bgColor="#E0E7FF"
+                bgColor="indigo.100"
                 value={formik.values.trancheAddress}
                 onChange={formik.handleChange}
                 shadow="lg"
@@ -190,7 +190,7 @@ const Form: React.FC<FormProps> = (props) => {
             p={6}
             gridGap={3}
             w="full"
-            bgColor="#E0E7FF"
+            bgColor="indigo.100"
             rounded="2xl"
             shadow="lg"
         >
@@ -304,7 +304,7 @@ const Form: React.FC<FormProps> = (props) => {
                 textColor="gray.50"
                 width="full"
                 _hover={{
-                    bgColor:"#818CF8"
+                    bgColor:"#indigo.400"
                 }}
             >
                 <Button
@@ -317,7 +317,7 @@ const Form: React.FC<FormProps> = (props) => {
                     type="submit"
                     width="full"
                     _hover={{
-                        bgColor:"#818CF8"
+                        bgColor:"indigo.400"
                     }}
                 >
                     {simulated ? "RE-SIMULATE" : "SIMULATE"}

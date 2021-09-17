@@ -30,7 +30,6 @@ export const Approval: React.FC<Props> = (props: Props) => {
             if (tokenAddress && approvalAddress && provider){
                 const tokenContract = erc20.factory?.attach(tokenAddress);
                 if (tokenContract){
-                    console.log('checking approval')
                     checkApproval(amount, approvalAddress, currentAddress, tokenContract).then((result) => {
                         if (result) setIsApproved(true);
                     }).catch((error: Error) => {

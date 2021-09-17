@@ -51,7 +51,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
                 href="https://medium.com/element-finance/intro-to-yield-token-compounding-40a75a11e18c#:~:text=Element%20lets%20you%20put%20otherwise,Yield%20Token%20Compounding%20(YTC)."
                 isExternal
                 fontSize="xs"
-                textColor="#818CF8"
+                textColor="indigo.400"
             >
                 What is Yield Token Compounding?
             </Link>

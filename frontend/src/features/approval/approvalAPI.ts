@@ -13,8 +13,5 @@ export const checkApproval = async (amount: number | string, approvalAddress: st
     const allowance = await tokenContract.allowance(currentAccount, approvalAddress)
     const bigNumAmount = ethers.BigNumber.from(amount);
 
-    console.log('allowance', allowance.toString());
-    console.log('amount', bigNumAmount);
-
     return allowance.gte(bigNumAmount);
 }
