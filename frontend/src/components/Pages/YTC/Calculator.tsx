@@ -1,4 +1,4 @@
-import { Button, Select } from "@chakra-ui/react";
+import { Box, Button, Flex, Select, Text } from "@chakra-ui/react";
 import { Formik, useFormikContext } from "formik";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -31,7 +31,12 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
     }
 
     return (
-        <div id="calculate" className="py-5 flex flex-col gap-3">
+        <Flex
+            py={5}
+            flexDir="column"
+            gridGap={3}
+        >
+
             <Formik
                 initialValues={initialValues}
                 onSubmit={onSimulate}
@@ -41,7 +46,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                     simulated={simulated}
                 />
             </Formik>
-        </div>
+        </Flex>
     )
 
 }
@@ -136,7 +141,14 @@ const Form: React.FC<FormProps> = (props) => {
     }
 
     return <form onSubmit={formik.handleSubmit}>
-        <div id="selects" className="flex flex-row items-center justify-center gap-6 mb-4">
+        <Flex
+            id="selects"
+            flexDir="row"
+            justify="center"
+            alignItems="center"
+            mb={4}
+            gridGap={6}
+        >
             <Select
                 width="36"
                 name="tokenAddress"
@@ -171,27 +183,78 @@ const Form: React.FC<FormProps> = (props) => {
                     })
                 }
             </Select>
-        </div>
-        <div id="form" className="flex flex-col items-stretch p-6 gap-3 w-full bg-indigo-100 rounded-2xl shadow-lg">
-            <div id="table-headers" className="flex flex-row justify-between">
-                <div id="percentage-header" className="text-sm">
+        </Flex>
+        <Flex
+            id="parameters"
+            flexDir="column"
+            alignItems="stretch"
+            p={6}
+            gridGap={3}
+            w="full"
+            bgColor="#E0E7FF"
+            rounded="2xl"
+            shadow="lg"
+        >
+            <Flex
+                id="table-headers"
+                flexDir="row"
+                justify="space-between"
+                fontSize="sm"
+            >
+                <Flex
+                    id="compounds-header"
+                    alignItems="center"
+                    fontSize="sm"
+                >
                     Compounds
-                </div>
-                <div id="amount-header" className="flex flex-row gap-2 items-center text-sm">
-                    <button
-                        id="max"
-                        onClick={handleMax}
-                        className="bg-gray-300 rounded-full text-sm p-1 px-2 hover:bg-gray-400"
-                    >
-                        MAX
-                    </button>
-                    <div id="balance">
-                        Balance: {balance}                        
-                    </div>
-                </div>
-            </div>
-            <div id="table-inputs" className="flex flex-row justify-between items-center">
-                <div id="percentage exposure" className="flex p-2 rounded-xl hover:shadow-inner w-1/2">
+                </Flex>
+                <Flex
+                    id="amount-header"
+                    flexDir="row"
+                    gridGap={2}
+                    alignItems="center"
+                    fontSize="sm"
+                >
+
+                        <Button
+                            id="max"
+                            onClick={handleMax}
+                            bg="gray.300"
+                            rounded="full"
+                            fontSize="xs"
+                            py={0}
+                            px={2}
+                            _hover={
+                                {
+                                    bg: "gray.400"
+                                }
+                            }
+                        >
+                            MAX
+                        </Button>
+                        <Box
+                            id="balance"
+                        >
+                            Balance: {balance}                        
+                        </Box>
+                </Flex>
+            </Flex>
+            <Flex
+                id="table-inputs"
+                flexDir="row"
+                justify="space-between"
+                alignItems="center"
+            >
+                <Flex
+                    id="compounds"
+                    p={2}
+                    rounded="xl"
+                    w="50%"
+                    _hover={{
+                        shadow: "inner"
+                    }}
+                >
+
                     <input
                         type="number"
                         name="compounds"
@@ -201,8 +264,18 @@ const Form: React.FC<FormProps> = (props) => {
                         id="number-compounds"
                         className="text-lg bg-indigo-100 min-w-0"
                     />
-                </div>
-                <div id="amount-input" className="flex flex-row rounded-xl gap-2 p-2 hover:shadow-inner w-1/2">
+                </Flex>
+                <Flex
+                    id="amount"
+                    flexDir="row"
+                    p={2}
+                    rounded="xl"
+                    gridGap={2}
+                    w="50%"
+                    _hover={{
+                        shadow: "inner"
+                    }}
+                >
                     <input
                         type="number"
                         name="amount"
@@ -211,10 +284,16 @@ const Form: React.FC<FormProps> = (props) => {
                         onChange={formik.handleChange}
                         id="amount-input"
                         className="text-lg text-right bg-indigo-100 min-w-0"/>
-                    <div id="amount-input" className="text-lg">{getTokenNameByAddress(formik.values.tokenAddress)}</div>
-                </div>
-            </div>
-        </div>
+                    <Text
+                        id="amount-token-label"
+                        fontSize="lg"
+                        whiteSpace="nowrap"
+                    >
+                        {getTokenNameByAddress(formik.values.tokenAddress)}
+                    </Text>
+                </Flex>
+            </Flex>
+        </Flex>
             <Approval
                 tokenAddress={formik.values.tokenAddress}
                 tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
@@ -225,6 +304,9 @@ const Form: React.FC<FormProps> = (props) => {
                 p="2"
                 textColor="gray.50"
                 width="full"
+                _hover={{
+                    bgColor:"#818CF8"
+                }}
             >
                 <Button
                     id="approve-calculate-button"
@@ -235,6 +317,9 @@ const Form: React.FC<FormProps> = (props) => {
                     textColor="gray.50"
                     type="submit"
                     width="full"
+                    _hover={{
+                        bgColor:"#818CF8"
+                    }}
                 >
                     {simulated ? "RE-SIMULATE" : "SIMULATE"}
                 </Button>
