@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
-import { ProviderContext, CurrentAddressContext, SignerContext, SymfoniContext } from "../../hardhat/SymfoniContext";
+import { ProviderContext, CurrentAddressContext, SymfoniContext } from "../../hardhat/SymfoniContext";
 import Web3Modal from "web3modal";
 import { current } from 'immer';
 

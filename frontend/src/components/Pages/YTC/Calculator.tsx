@@ -20,8 +20,6 @@ export interface FormFields {
     compounds: number | undefined
 }
 
-
-
 export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
     const {tokens, onSimulate, simulated} = props;
 

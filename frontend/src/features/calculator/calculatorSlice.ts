@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { ethers } from "ethers";
 import { RootState } from "../../app/store";
-import { calculate, CalculatorData, CalculatorResult } from "./calculatorAPI";
+import { calculate, CalculatorData, YTCOutput } from "./calculatorAPI";
 
 export interface CalculatorState {
-    results: CalculatorResult[];
+    results: YTCOutput[];
     inputs: {},
     status: 'idle' | 'loading' | 'failed';
 }
@@ -16,8 +17,8 @@ const initialState: CalculatorState = {
 
 export const executeCalculatorAsync = createAsyncThunk(
     'calculator/calculate',
-    async (args: {wallet: any, userData: CalculatorData}) => {
-        const response = await calculate(args.wallet, args.userData);
+    async (args: {userData: CalculatorData, signer: ethers.Signer}) => {
+        const response = await calculate(args.userData, args.signer);
 
         return {
             result: response,

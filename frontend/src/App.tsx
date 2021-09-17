@@ -3,16 +3,13 @@ import './App.css';
 import Layout from './components/Layout';
 import LoadingComponent from './components/LoadingComponent';
 import { Symfoni } from "./hardhat/SymfoniContext";
-import { UseWalletProvider } from 'use-wallet';
 
 
 function App() {
   return (
     <div className="App">
       <Symfoni autoInit={false} loadingComponent={<LoadingComponent/>}>
-        <UseWalletProvider>
-          <Layout/>
-        </UseWalletProvider>
+        <Layout/>
       </Symfoni>
     </div>
   );

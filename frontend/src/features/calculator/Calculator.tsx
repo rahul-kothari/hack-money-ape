@@ -3,7 +3,6 @@ import { CalculatorData } from './calculatorAPI';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { Results } from './component/Results';
 import { executeCalculatorAsync, selectResults } from './calculatorSlice';
-import {useWallet} from 'use-wallet';
 
 
 //TODO replace hardcoded user data with form input
@@ -20,8 +19,6 @@ interface Props {
 export const Calculator = (props: Props) => {
     const values = useAppSelector(selectResults);
     const dispatch = useAppDispatch();
-
-    // const wallet = useWallet();
 
     // useEffect(() => {
     //     console.log('effect signer and provider')
