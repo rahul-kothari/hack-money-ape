@@ -160,7 +160,7 @@ const Form: React.FC<FormProps> = (props) => {
             >
                 {tokens.map((token) => {
                     return <option value={token.address} key={token.address}>
-                        {token.name}
+                        {token.name.toUpperCase()}
                     </option>
                 })}
             </Select>
@@ -219,9 +219,10 @@ const Form: React.FC<FormProps> = (props) => {
                             id="max"
                             onClick={handleMax}
                             bg="gray.300"
-                            rounded="full"
-                            fontSize="xs"
+                            rounded="xl"
+                            fontSize="sm"
                             py={0}
+                            h="20px"
                             px={2}
                             _hover={
                                 {
@@ -288,40 +289,53 @@ const Form: React.FC<FormProps> = (props) => {
                         fontSize="lg"
                         whiteSpace="nowrap"
                     >
-                        {getTokenNameByAddress(formik.values.tokenAddress)}
+                        {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
                     </Text>
                 </Flex>
             </Flex>
         </Flex>
-            <Approval
-                tokenAddress={formik.values.tokenAddress}
-                tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
-                approvalAddress={formik.values.trancheAddress}
-                rounded="full"
-                bgColor="#6366F1"
-                mt="4"
-                p="2"
-                textColor="gray.50"
-                width="full"
-                _hover={{
-                    bgColor:"#indigo.400"
-                }}
-            >
-                <Button
-                    id="approve-calculate-button"
-                    rounded="full"
-                    bgColor="#6366F1"
-                    mt="4"
-                    p="2"
-                    textColor="gray.50"
-                    type="submit"
-                    width="full"
-                    _hover={{
-                        bgColor:"indigo.400"
-                    }}
-                >
-                    {simulated ? "RE-SIMULATE" : "SIMULATE"}
-                </Button>
-            </Approval>
+        <ApproveAndSimulateButton
+            simulated={simulated}
+            tokenAddress={formik.values.tokenAddress}
+            tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
+            trancheAddress={formik.values.trancheAddress}
+        />
     </form>
+}
+
+
+const ApproveAndSimulateButton = (
+    {simulated, tokenAddress, tokenName, trancheAddress}: 
+    {simulated: boolean, tokenAddress: string | undefined, tokenName: string | undefined, trancheAddress: string | undefined}
+) => {
+    return <Approval
+        tokenAddress={tokenAddress}
+        tokenName={tokenName}
+        approvalAddress={trancheAddress}
+        rounded="full"
+        bgColor="#6366F1"
+        mt="4"
+        p="2"
+        textColor="gray.50"
+        width="full"
+        _hover={{
+            bgColor:"#indigo.400"
+        }}
+    >
+        <Button
+            id="approve-calculate-button"
+            rounded="full"
+            bgColor="#6366F1"
+            mt="4"
+            p="2"
+            textColor="gray.50"
+            type="submit"
+            width="full"
+            _hover={{
+                bgColor:"indigo.400"
+            }}
+        >
+            {simulated ? "RE-SIMULATE" : "SIMULATE"}
+        </Button>
+    </Approval>
 }

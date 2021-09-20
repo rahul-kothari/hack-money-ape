@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 export const Navbar = () => {
     return (
-    <div id="navbar" className="p-3 flex flex-row justify-center items-center gap-6 text-lg">
+    <div id="navbar" className="p-3 flex flex-row justify-center items-center gap-6 text-lg font-bold">
         <div id="navbar-item1" className="h-5">
             <NavLink to="/ytc" activeClassName="text-indigo-300">
                 YTC
@@ -19,9 +19,6 @@ export const Navbar = () => {
                 Ladder
             </NavLink>
         </div>
-        {/* <div id="navbar-item4" className="h-5">
-            Service4
-        </div> */}
     </div>)
 }
 
