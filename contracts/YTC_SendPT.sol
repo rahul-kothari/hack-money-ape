@@ -7,7 +7,7 @@ import "./element-finance/ITranche.sol";
 import "./balancer-core-v2/lib/openzeppelin/IERC20.sol";
 
 /// @notice Yield Token Compounding on top of element.finance.
-contract YieldTokenCompounding {
+contract YTC_SendPT {
     //Address of balancer v2 vault that holds all tokens
     IVault public immutable balVault;
     uint256 internal immutable _MAX_VALUE = type(uint256).max;
