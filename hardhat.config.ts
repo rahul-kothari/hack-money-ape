@@ -3,6 +3,7 @@ import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
 import "hardhat-deploy-ethers";
 import "hardhat-deploy";
+import "hardhat-ethernal";
 import "@symfoni/hardhat-react";
 import "@typechain/hardhat";
 import "@typechain/ethers-v5";
@@ -37,10 +38,16 @@ const config: HardhatUserConfig = {
     hardhat: {
       inject: false, // optional. If true, it will EXPOSE your mnemonic in your frontend code. Then it would be available as an "in-page browser wallet" / signer which can sign without confirmation.
       hardfork: "london",
+      accounts: [
+        {
+          balance: "10000000000000000000000",
+          privateKey: `0x${process.env.PRIVATE_KEY}`,
+        },
+      ],
       forking: {
         url: `${process.env.MAINNET_PROVIDER_URL}`,
         blockNumber: 13180350
-      }
+      },
     },
     goerli: {
       url: `${process.env.GOERLI_PROVIDER_URL}`,
