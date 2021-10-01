@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Token, Tranche } from "../../types/manual/types";
 import { constants } from '../../constants/mainnet-constants';
 import { ERC20 } from '../../hardhat/typechain/ERC20';
+import { BigNumber } from '@ethersproject/bignumber';
 
 // TODO this is a mock this should be replaced with a real function call
 export const getTranches = async (tokenAddress: string): Promise<Tranche[]> => {
@@ -35,7 +36,15 @@ export const getBaseTokens = async (): Promise<Token[]> => {
 // TODO this is a mock this should be replaced with a real function call
 export const getBalance = async (currentAddress: string, contract: ERC20 | undefined): Promise<number> => {
     if (contract){
-        return (await contract.balanceOf(currentAddress)).toNumber();
+        const decimals = await contract.decimals();
+
+        const balance = await contract.balanceOf(currentAddress);
+
+        const adjustedBalance = balance.div(BigNumber.from(10).pow(decimals));
+
+        console.log(adjustedBalance);
+
+        return (adjustedBalance).toNumber();
     }
     return 0;
 }
