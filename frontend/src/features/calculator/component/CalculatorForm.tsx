@@ -6,7 +6,7 @@ import {
     SubmitButton,
 } from 'formik-chakra-ui';
 import * as Yup from 'yup';
-import { Tranche } from '../../../constants/goerli-constants';
+import { Tranche } from '../../../types/manual/types';
 
 // TODO do we need decimals?
 interface Props {

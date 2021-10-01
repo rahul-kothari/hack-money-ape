@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
 import { RootState } from "../../app/store";
 import { calculate, CalculatorData, YTCOutput } from "./calculatorAPI";
+import { constants } from '../../constants/mainnet-constants';
 
 export interface CalculatorState {
     results: YTCOutput[];
@@ -18,7 +19,7 @@ const initialState: CalculatorState = {
 export const executeCalculatorAsync = createAsyncThunk(
     'calculator/calculate',
     async (args: {userData: CalculatorData, signer: ethers.Signer}) => {
-        const response = await calculate(args.userData, args.signer);
+        const response = await calculate(args.userData, constants, args.signer);
 
         return {
             result: response,

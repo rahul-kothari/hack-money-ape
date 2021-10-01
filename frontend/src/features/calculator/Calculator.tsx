@@ -6,12 +6,13 @@ import { executeCalculatorAsync, selectResults } from './calculatorSlice';
 
 
 //TODO replace hardcoded user data with form input
-const userData: CalculatorData = {
-            baseTokenName: 'dai',
-            trancheIndex: 0,
-            amountCollateralDeposited: 100,
-            speculatedVariableRate: 10
-        }
+// const userData: CalculatorData = {
+//             baseTokenName: 'dai',
+//             trancheIndex: 0,
+//             amountCollateralDeposited: 100,
+//             speculatedVariableRate: 10,
+//             ytcContractAddress: "0x0"
+//         }
 
 interface Props {
 }

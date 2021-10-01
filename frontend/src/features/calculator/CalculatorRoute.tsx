@@ -1,12 +1,12 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 import CalculatorForm from './component/CalculatorForm';
-import {data} from '../../constants/goerli-constants';
+import {constants} from '../../../../constants/mainnet-constants';
 
 interface Props {}
 
 const getNameByAddress = (address: string): string | undefined => {
-    const result = Object.entries(data.tokens).find(([key, value]) => (
+    const result = Object.entries(constants.tokens).find(([key, value]) => (
         value === address
     ))
 
@@ -23,7 +23,7 @@ const CalculatorRoute: React.FC<Props> = (props) => {
         tokenName ?
         <CalculatorForm 
             tranches={
-                data.tranches[tokenName]
+                constants.tranches[tokenName]
             }
             onSubmit = {async (values, formikHelpers) => {
                 alert(JSON.stringify(values));

@@ -1,5 +1,24 @@
 import { ConstantsObject } from "../types/manual/types";
 
+export interface Tranche {
+    expiration: number,
+    address: string,
+    ptPool: {
+        address: string,
+        poolId: string,
+        fee: string,
+        timeStretch: number
+    },
+    ytPool: {
+        address: string,
+        poolId: string,
+        fee: string,
+    },
+    trancheFactory: string,
+    weightedPoolFactory: string,
+    convergentCurvePoolFactory: string,
+}
+
 export const constants: ConstantsObject = {
 	tokens: {
 		usdc: "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",

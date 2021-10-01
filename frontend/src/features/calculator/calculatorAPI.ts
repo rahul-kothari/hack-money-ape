@@ -1,4 +1,4 @@
-import { ethers, Signer } from "ethers";
+import { BigNumber, BigNumberish, ethers, Signer } from "ethers";
 import YieldTokenCompounding from '../../artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json'
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json'
@@ -10,13 +10,13 @@ export interface YieldExposureData {
     baseTokenName: string;
     numberOfCompounds: number,
     trancheIndex: number;
-    amountCollateralDeposited: number,
+    amountCollateralDeposited: BigNumberish,
     ytcContractAddress: string;
 }
 
 export interface YTCOutput {
     ytExposure: number,
-    remainingTokens: number,
+    remainingTokens: BigNumberish,
     ethGasFees: number,
 }
 
@@ -99,7 +99,7 @@ export const calculateYieldExposure = async (userData: YieldExposureData, consta
     const ytExposure = ytExposureDecimals / (10**yieldTokenDecimals);
     const baseTokensSpent = baseTokensSpentDecimals / (10**baseTokenDecimals);
 
-    const remainingTokens = userData.amountCollateralDeposited - baseTokensSpent;
+    const remainingTokens = BigNumber.from(userData.amountCollateralDeposited).sub(BigNumber.from(baseTokensSpent));
 
     return {
         ytExposure,
