@@ -6,6 +6,9 @@ import {ERC20 as ERC20Type} from '../frontend/src/types/ERC20';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { constants as mainnetConstants } from './mainnet-constants';
 import { constants as goerliConstants} from './goerli-constants';
+import { getAllTokens } from '../scripts/helpers/getTokens';
+import { Deployment } from 'hardhat-deploy/dist/types';
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 
 if (hre.network.name == "goerli"){
     var constants = goerliConstants;
@@ -13,58 +16,45 @@ if (hre.network.name == "goerli"){
     var constants = mainnetConstants;
 }
 
-const TOKEN_WHALE = "0x959fdba32f2a3aa6099e5ff9290977d89c20270f"
-const TOKEN_NAME = "lusd3crv-f"
+let deployment: Deployment;
+let erc20Abi;
+let signer: SignerWithAddress;
 
 describe('calculate yield exposure test', () => {
+    before(async () => {
+        // Check that the contract has been deployed
+        await deployments.fixture(['YieldTokenCompounding'])
+        // This transfers tokens to the user account
+        await getAllTokens();
+        deployment = await hre.deployments.get('YieldTokenCompounding');
+        signer = (await hre.ethers.getSigners())[0];
+    })
+
     it('should yield results', async () => {
 
-        await deployments.fixture(['YieldTokenCompounding'])
-
-        const YTCDeployment = await hre.deployments.get('YieldTokenCompounding');
-
-        const signer = (await hre.ethers.getSigners())[0];
-        // impersonate a large holder of lusdcurve3
-        await hre.network.provider.request({
-            method: "hardhat_impersonateAccount",
-            params: [TOKEN_WHALE],
-          });
-        const whaleSigner = await hre.ethers.getSigner(TOKEN_WHALE)
-
-        // allow the contract to transfer tokens
-        const tokenName = TOKEN_NAME
-
-        const erc20Abi = ERC20.abi;
+        const tokenName = "lusd3crv-f"
+        const decimalAmount = 1000;
 
         const tokenAddress = constants.tokens[tokenName];
 
-        console.log(tokenName, tokenAddress);
+        erc20Abi = ERC20.abi;
 
-        // erc20 contract as the holder of lusd3crv
-        const erc20Contract: ERC20Type  = (new hre.ethers.Contract(tokenAddress, erc20Abi, whaleSigner) as ERC20Type);
+        // erc20 as our main user
+        const erc20Contract: ERC20Type  = (new hre.ethers.Contract(tokenAddress, erc20Abi, signer) as ERC20Type);
 
         // Sending 1000 units of the token
         const decimals = await erc20Contract.decimals()
-        const amount = BigNumber.from(1000).mul(BigNumber.from(10).pow(decimals))
-
-        // Create the transfer transaction
-        const transaction = await erc20Contract.transfer(signer.address, amount);
-
-        // Wait until the transaction is confirmed
-        transaction.wait();
-
-        // erc20 as our main user
-        const signerErc20Contract: ERC20Type  = (new hre.ethers.Contract(tokenAddress, erc20Abi, whaleSigner) as ERC20Type);
+        const amount = BigNumber.from(decimalAmount).mul(BigNumber.from(10).pow(decimals))
 
         // approve the amount required for the test
-        const tx = await signerErc20Contract.approve(YTCDeployment.address, amount)
+        const tx = await erc20Contract.approve(deployment.address, amount)
 
         const userData: YieldExposureData = {
             baseTokenName: tokenName,
             trancheIndex: 0,
             amountCollateralDeposited: amount.toNumber(),
             numberOfCompounds: 1,
-            ytcContractAddress: YTCDeployment.address,
+            ytcContractAddress: deployment.address,
         }
 
         console.log(await calculateYieldExposure(userData, constants, signer))
