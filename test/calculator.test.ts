@@ -40,6 +40,7 @@ describe('calculate yield exposure test', () => {
 
         console.log(tokenName, tokenAddress);
 
+        // erc20 contract as the holder of lusd3crv
         const erc20Contract: ERC20Type  = (new hre.ethers.Contract(tokenAddress, erc20Abi, whaleSigner) as ERC20Type);
 
         // Sending 1000 units of the token
@@ -52,10 +53,16 @@ describe('calculate yield exposure test', () => {
         // Wait until the transaction is confirmed
         transaction.wait();
 
+        // erc20 as our main user
+        const signerErc20Contract: ERC20Type  = (new hre.ethers.Contract(tokenAddress, erc20Abi, whaleSigner) as ERC20Type);
+
+        // approve the amount required for the test
+        const tx = await signerErc20Contract.approve(YTCDeployment.address, amount)
+
         const userData: YieldExposureData = {
             baseTokenName: tokenName,
             trancheIndex: 0,
-            amountCollateralDeposited: 100000000,
+            amountCollateralDeposited: amount.toNumber(),
             numberOfCompounds: 1,
             ytcContractAddress: YTCDeployment.address,
         }

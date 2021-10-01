@@ -46,7 +46,7 @@ const config: HardhatUserConfig = {
       ],
       forking: {
         url: `${process.env.MAINNET_PROVIDER_URL}`,
-        blockNumber: 13180350
+        blockNumber: 13336197
       },
     },
     goerli: {
