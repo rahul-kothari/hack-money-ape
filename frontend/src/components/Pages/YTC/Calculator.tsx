@@ -4,7 +4,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Token, Tranche } from "../../../types/manual/types";
 import { Approval } from '../../../features/approval/Approval';
-import { getBalance, getTranches } from "../../../features/element";
+import { getActiveTranches, getBalance } from "../../../features/element";
 import { CurrentAddressContext, ERC20Context } from "../../../hardhat/SymfoniContext";
 
 interface CalculateProps {
@@ -109,7 +109,7 @@ const Form: React.FC<FormProps> = (props) => {
     useEffect(() => {
         // if the token is selected then put it in
         if (tokenAddress){
-            getTranches(tokenAddress).then((res) => {
+            getActiveTranches(tokenAddress).then((res) => {
                 setTranches(res);
                 setFieldValue('trancheAddress', res[0]?.address);
             })

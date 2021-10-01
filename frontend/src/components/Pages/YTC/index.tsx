@@ -1,6 +1,6 @@
 import { Flex, Text, Link } from "@chakra-ui/layout";
 import React, { useEffect, useState } from "react"
-import { getBaseTokens } from "../../../features/element";
+import { getBaseTokensWithActiveTranches } from "../../../features/element";
 import { Token } from "../../../types/manual/types";
 // TODO move this to tyeps file
 import { Calculator } from "./Calculator";
@@ -14,7 +14,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
     const [baseTokens, setBaseTokens] = useState<Token[]>([]);
 
     useEffect(() => {
-        getBaseTokens().then((res) => {
+        getBaseTokensWithActiveTranches().then((res) => {
             setBaseTokens(res);
         })
     }, [])

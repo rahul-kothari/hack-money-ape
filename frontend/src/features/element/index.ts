@@ -4,6 +4,7 @@ import { Token, Tranche } from "../../types/manual/types";
 import { constants } from '../../constants/mainnet-constants';
 import { ERC20 } from '../../hardhat/typechain/ERC20';
 import { BigNumber } from '@ethersproject/bignumber';
+import { isTrancheActive } from '../calculator/calculatorAPI';
 
 // TODO this is a mock this should be replaced with a real function call
 export const getTranches = async (tokenAddress: string): Promise<Tranche[]> => {
@@ -20,6 +21,21 @@ export const getTranches = async (tokenAddress: string): Promise<Tranche[]> => {
     return []
 }
 
+export const getActiveTranches = async (tokenAddress: string): Promise<Tranche[]> => {
+    const tokenName = _.findKey(constants.tokens, (value) => value === tokenAddress)
+
+    if (tokenName){
+        const tranches = constants.tranches[tokenName]
+        if (tranches){
+            return tranches.filter((tranche: Tranche) => {
+                return isTrancheActive(tranche)
+            })
+        }
+    }
+
+    return []
+}
+
 // TODO this is a mock this should be replaced with a real function call
 export const getBaseTokens = async (): Promise<Token[]> => {
     const tokens = constants.tokens;
@@ -28,6 +44,29 @@ export const getBaseTokens = async (): Promise<Token[]> => {
         return {
             name: key,
             address: value,
+        }
+    })
+}
+
+export const getBaseTokensWithActiveTranches = async (): Promise<any> => {
+    const tokens = constants.tokens;
+
+    const promises = Object.entries(tokens).map(async ([key, value]: [string, string]) => {
+        const tranches = await getActiveTranches(value)
+
+        return {
+            name: key,
+            address: value,
+            tranches,
+        }
+    });
+
+    return (await Promise.all(promises)).filter(({name, address, tranches}) => {
+        return tranches.length > 0
+    }).map(({name, address, tranches}) => {
+        return {
+            name,
+            address,
         }
     })
 }

@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish, ethers, Signer } from "ethers";
 import YieldTokenCompounding from '../../artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json'
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json'
-import { ConstantsObject } from "../../types/manual/types";
+import { ConstantsObject, Tranche } from "../../types/manual/types";
 
 // const MILLISECONDS_PER_DAY = 1000*60*60*24;
 
@@ -74,6 +74,12 @@ export const calculateYieldExposure = async (userData: YieldExposureData, consta
 
     // Get specific tranche
     const trancheDetails = constants.tranches[userData.baseTokenName][userData.trancheIndex];
+
+    // if it is expired throw an error
+    if (!isTrancheActive(trancheDetails)){
+        throw new Error("Tranche is expired");
+    }
+
     const trancheAddress = trancheDetails.address;
     const balancerPoolId = trancheDetails.ptPool.poolId;    
     
@@ -207,6 +213,14 @@ const gasLimitToEthGasFee = async (signer: ethers.Signer, gasAmountEstimate: eth
     const gasCostEth: string = ethers.utils.formatEther(gasCostWei);
     
     return parseFloat(gasCostEth);
+}
+
+export const isTrancheActive = (tranche: Tranche): boolean => {
+    const time = new Date().getTime();
+    // expiration is in seconds normally
+    const expirationInMs = tranche.expiration * 1000
+
+    return time <= expirationInMs;
 }
 
 // // Grabs the pricefeed of the base asset compared to eth used for gas
