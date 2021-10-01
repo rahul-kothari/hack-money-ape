@@ -1,4 +1,4 @@
-import { ConstantsObject } from "../types/manual/types";
+import { ConstantsObject } from "../frontend/src/types/manual/types";
 
 export const constants: ConstantsObject = {
 	"tokens": {

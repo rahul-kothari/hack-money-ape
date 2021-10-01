@@ -2,7 +2,7 @@ import { ethers, Signer } from "ethers";
 import YieldTokenCompounding from '../../artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json'
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json'
-import { data } from '../../constants/goerli-constants';
+import { ConstantsObject } from "../../types/manual/types";
 
 // const MILLISECONDS_PER_DAY = 1000*60*60*24;
 
@@ -11,6 +11,7 @@ export interface YieldExposureData {
     numberOfCompounds: number,
     trancheIndex: number;
     amountCollateralDeposited: number,
+    ytcContractAddress: string;
 }
 
 export interface YTCOutput {
@@ -24,6 +25,7 @@ export interface CalculatorData {
     trancheIndex: number;
     amountCollateralDeposited: number,
     speculatedVariableRate: number,
+    ytcContractAddress: string;
 }
 
 //TODO this shouldn't really exist;
@@ -59,19 +61,19 @@ export const calculateMock = async (userData: CalculatorData): Promise<YTCOutput
     })
 }
 
-export const calculateYieldExposure = async (userData: YieldExposureData, signer: Signer): Promise<YTCOutput>=> {
+export const calculateYieldExposure = async (userData: YieldExposureData, constants: ConstantsObject, signer: Signer): Promise<YTCOutput>=> {
 
     const ytcAbi = YieldTokenCompounding.abi;
     const erc20Abi = ERC20.abi;
     const trancheAbi = ITranche.abi;
 
     // Get data
-    const yieldTokenCompoundingAddress = data.yieldTokenCompoundingAddress;
-    const tokens: any = data.tokens;
+    const yieldTokenCompoundingAddress = userData.ytcContractAddress;
+    const tokens: any = constants.tokens;
     const baseTokenAddress: string = tokens[userData.baseTokenName];
 
     // Get specific tranche
-    const trancheDetails = data.tranches[userData.baseTokenName][userData.trancheIndex];
+    const trancheDetails = constants.tranches[userData.baseTokenName][userData.trancheIndex];
     const trancheAddress = trancheDetails.address;
     const balancerPoolId = trancheDetails.ptPool.poolId;    
     
@@ -108,19 +110,19 @@ export const calculateYieldExposure = async (userData: YieldExposureData, signer
 
 
 // Demo script to show how to build a YTC calculator!
-export const calculate = async (userData: CalculatorData, signer: Signer) => {
+export const calculate = async (userData: CalculatorData, constants: ConstantsObject, signer: Signer) => {
 
     const ytcAbi = YieldTokenCompounding.abi;
     const erc20Abi = ERC20.abi;
     const trancheAbi = ITranche.abi;
 
     // Get data
-    const yieldTokenCompoundingAddress = data.yieldTokenCompoundingAddress;
-    const tokens: any = data.tokens;
+    const yieldTokenCompoundingAddress = userData.ytcContractAddress;
+    const tokens: any = constants.tokens;
     const baseTokenAddress: string = tokens[userData.baseTokenName];
     // Get specific tranche
     
-    const trancheDetails = data.tranches[userData.baseTokenName][userData.trancheIndex];
+    const trancheDetails = constants.tranches[userData.baseTokenName][userData.trancheIndex];
     const trancheAddress = trancheDetails.address;
     const balancerPoolId = trancheDetails.ptPool.poolId;    
     
