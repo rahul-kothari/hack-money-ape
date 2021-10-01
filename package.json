@@ -5,7 +5,7 @@
   "dependencies": {},
   "scripts": {
     "node": "npx hardhat node --watch",
-    "test": "npx hardhat test --deploy-fixtures",
+    "test": "npx hardhat test --deploy-fixture",
     "frontend": "cd frontend && npm run start"
   },
   "browserslist": {
