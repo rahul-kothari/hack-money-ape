@@ -15,7 +15,7 @@ export interface YieldExposureData {
 }
 
 export interface YTCOutput {
-    ytExposure: number,
+    ytExposure: BigNumberish,
     remainingTokens: BigNumberish,
     ethGasFees: number,
 }
@@ -101,11 +101,12 @@ export const calculateYieldExposure = async (userData: YieldExposureData, consta
     const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
 
     // Convert the result to a number
-    const [ytExposureDecimals, baseTokensSpentDecimals] = returnedVals.map((val: any) => ethers.BigNumber.from(val).toNumber());
-    const ytExposure = ytExposureDecimals / (10**yieldTokenDecimals);
-    const baseTokensSpent = baseTokensSpentDecimals / (10**baseTokenDecimals);
+    const [ytExposureDecimals, baseTokensSpentDecimals]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
+    const ytExposure = ytExposureDecimals.div(BigNumber.from(10).pow(yieldTokenDecimals));
 
-    const remainingTokens = BigNumber.from(userData.amountCollateralDeposited).sub(BigNumber.from(baseTokensSpent));
+    const remainingTokensDecimals = BigNumber.from(userData.amountCollateralDeposited).sub(BigNumber.from(baseTokensSpentDecimals));
+
+    const remainingTokens = remainingTokensDecimals.div(BigNumber.from(10).pow(baseTokenDecimals));
 
     return {
         ytExposure,

@@ -20,10 +20,10 @@ export const Results: React.FC<Props> = (props) => {
                 {values.map((value: YTCOutput) => {
                     return (
                         // TODO ytExposure isn't a great key
-                        <tr key={value.ytExposure}>
-                            <td>{value.ytExposure}</td>
-                            <td>{value.remainingTokens}</td>
-                            <td>{value.ethGasFees}</td>
+                        <tr key={value.ytExposure.toString()}>
+                            <td>{value.ytExposure.toString()}</td>
+                            <td>{value.remainingTokens.toString()}</td>
+                            <td>{value.ethGasFees.toString()}</td>
                         </tr>
                     )
                 })}

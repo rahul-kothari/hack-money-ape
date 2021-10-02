@@ -2,7 +2,9 @@
 import { calculateYieldExposure, YieldExposureData } from '../frontend/src/features/calculator/calculatorAPI';
 import hre, { deployments } from 'hardhat';
 import ERC20 from '../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
+import YieldTokenCompounding from '../frontend/src/artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import {ERC20 as ERC20Type} from '../frontend/src/types/ERC20';
+import {YieldTokenCompounding as YieldTokenCompoundingType} from '../frontend/src/types/YieldTokenCompounding'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { constants as mainnetConstants } from './mainnet-constants';
 import { constants as goerliConstants} from './goerli-constants';
@@ -33,6 +35,7 @@ describe('calculate yield exposure test', () => {
     it('should yield results', async () => {
 
         const tokenName = "lusd3crv-f"
+        const trancheIndex = 1;
         const decimalAmount = 1000;
 
         const tokenAddress = constants.tokens[tokenName];
@@ -46,18 +49,35 @@ describe('calculate yield exposure test', () => {
         const decimals = await erc20Contract.decimals()
         const amount = BigNumber.from(decimalAmount).mul(BigNumber.from(10).pow(decimals))
 
+        console.log('deployment address', deployment.address);
+
         // approve the amount required for the test
-        const tx = await erc20Contract.approve(deployment.address, amount)
+        const tx = await erc20Contract.approve(deployment.address, amount.mul(2))
+
+        await tx.wait();
+
+
+
+        const allowance = await erc20Contract.allowance(signer.address, deployment.address);
+
+        const yieldTokenCompoundingcontract: YieldTokenCompoundingType = (new hre.ethers.Contract(deployment.address, deployment.abi, signer)) as YieldTokenCompoundingType;
+
+        const tx2 = await yieldTokenCompoundingcontract.approveTranchePTOnBalancer(constants.tranches[tokenName][trancheIndex].address)
+
+        await tx2.wait();
 
         const userData: YieldExposureData = {
             baseTokenName: tokenName,
-            trancheIndex: 0,
-            amountCollateralDeposited: amount.toNumber(),
+            trancheIndex: trancheIndex,
+            amountCollateralDeposited: amount,
             numberOfCompounds: 1,
             ytcContractAddress: deployment.address,
         }
 
-        console.log(await calculateYieldExposure(userData, constants, signer))
+        const results = await calculateYieldExposure(userData, constants, signer);
+        console.log('eth gas fee', results.ethGasFees);
+        console.log('yt Exposure', results.ytExposure.toString())
+        console.log('remaining tokens', results.remainingTokens.toString())
     })
 
 })
