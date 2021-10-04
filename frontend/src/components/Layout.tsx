@@ -5,6 +5,7 @@ import {
 import Template from './Template';
 
 export const Layout = () => {
+
   return (
     <div>
         <Router>

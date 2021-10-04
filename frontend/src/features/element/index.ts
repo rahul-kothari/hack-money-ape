@@ -1,18 +1,17 @@
 // This is for element api calls to get information on tokens, tranches, pools, etc..
 import _ from 'lodash';
-import { Token, Tranche } from "../../types/manual/types";
-import { constants } from '../../constants/mainnet-constants';
+import { ConstantsObject, Token, Tranche } from "../../types/manual/types";
 import { ERC20 } from '../../hardhat/typechain/ERC20';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isTrancheActive } from '../calculator/calculatorAPI';
 
 // TODO this is a mock this should be replaced with a real function call
-export const getTranches = async (tokenAddress: string): Promise<Tranche[]> => {
+export const getTranches = async (tokenAddress: string, elementState: ConstantsObject): Promise<Tranche[]> => {
     // get the name of the token
-    const tokenName = _.findKey(constants.tokens, (value) => value === tokenAddress)
+    const tokenName = _.findKey(elementState.tokens, (value) => value === tokenAddress)
 
     if (tokenName){
-        const tranches = constants.tranches[tokenName];
+        const tranches = elementState.tranches[tokenName];
         if (tranches){
             return tranches;
         }
@@ -21,11 +20,11 @@ export const getTranches = async (tokenAddress: string): Promise<Tranche[]> => {
     return []
 }
 
-export const getActiveTranches = async (tokenAddress: string): Promise<Tranche[]> => {
-    const tokenName = _.findKey(constants.tokens, (value) => value === tokenAddress)
+export const getActiveTranches = async (tokenAddress: string, elementState: ConstantsObject): Promise<Tranche[]> => {
+    const tokenName = _.findKey(elementState.tokens, (value) => value === tokenAddress)
 
     if (tokenName){
-        const tranches = constants.tranches[tokenName]
+        const tranches = elementState.tranches[tokenName]
         if (tranches){
             return tranches.filter((tranche: Tranche) => {
                 return isTrancheActive(tranche)
@@ -37,8 +36,8 @@ export const getActiveTranches = async (tokenAddress: string): Promise<Tranche[]
 }
 
 // TODO this is a mock this should be replaced with a real function call
-export const getBaseTokens = async (): Promise<Token[]> => {
-    const tokens = constants.tokens;
+export const getBaseTokens = async (elementState: ConstantsObject): Promise<Token[]> => {
+    const tokens = elementState.tokens;
 
     return Object.entries(tokens).map(([key, value]: [string, string]) => {
         return {
@@ -48,11 +47,11 @@ export const getBaseTokens = async (): Promise<Token[]> => {
     })
 }
 
-export const getBaseTokensWithActiveTranches = async (): Promise<any> => {
-    const tokens = constants.tokens;
+export const getBaseTokensWithActiveTranches = async (elementState: ConstantsObject): Promise<any> => {
+    const tokens = elementState.tokens;
 
     const promises = Object.entries(tokens).map(async ([key, value]: [string, string]) => {
-        const tranches = await getActiveTranches(value)
+        const tranches = await getActiveTranches(value, elementState)
 
         return {
             name: key,

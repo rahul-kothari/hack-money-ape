@@ -1,31 +1,31 @@
-import { BigNumber, BigNumberish, ethers, Signer } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers, Signer } from "ethers";
 import YieldTokenCompounding from '../../artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json'
+import {ITranche as ITrancheType} from '../../hardhat/typechain/ITranche';
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json'
+import {ERC20 as ERC20Type} from '../../hardhat/typechain/ERC20';
 import { ConstantsObject, Tranche } from "../../types/manual/types";
+import _ from 'lodash';
 
-// const MILLISECONDS_PER_DAY = 1000*60*60*24;
+const MILLISECONDS_PER_DAY = 1000*60*60*24;
+const MILLISECONDS_PER_YEAR = MILLISECONDS_PER_DAY*365;
 
 export interface YieldExposureData {
-    baseTokenName: string;
+    baseTokenAddress: string;
     numberOfCompounds: number,
-    trancheIndex: number;
+    trancheAddress: string;
     amountCollateralDeposited: BigNumberish,
     ytcContractAddress: string;
 }
 
 export interface YTCOutput {
-    ytExposure: BigNumberish,
-    remainingTokens: BigNumberish,
+    ytExposure: number,
+    remainingTokens: number,
     ethGasFees: number,
-}
-
-export interface CalculatorData {
-    baseTokenName: string;
-    trancheIndex: number;
-    amountCollateralDeposited: number,
-    speculatedVariableRate: number,
-    ytcContractAddress: string;
+    baseTokensSpent: number,
+    trancheExpiration: number,
+    baseTokenName: string,
+    ytName: string,
 }
 
 //TODO this shouldn't really exist;
@@ -33,27 +33,43 @@ const mockValues: YTCOutput[] = [
     {
         ytExposure: 10, 
         ethGasFees: 0.15,
-        remainingTokens: 1000
+        remainingTokens: 1000,
+        baseTokensSpent: 100,
+        trancheExpiration: 1633148468,
+        baseTokenName: 'usdc',
+        ytName: 'yt-usdc',
     },
     {
         ytExposure: 19.8, 
         ethGasFees: 0.1,
-        remainingTokens: 1000
+        remainingTokens: 1000,
+        baseTokensSpent: 100,
+        trancheExpiration: 1633148468,
+        baseTokenName: 'dai',
+        ytName: 'yt-dai',
     },
     {
         ytExposure: 28.7, 
         ethGasFees: 0.11,
-        remainingTokens: 1000
+        remainingTokens: 1000,
+        baseTokensSpent: 100,
+        trancheExpiration: 1633148468,
+        baseTokenName: 'weth',
+        ytName: 'yt-weth',
     },
     {
         ytExposure: 37, 
         ethGasFees: 0.22,
-        remainingTokens: 1000
+        remainingTokens: 1000,
+        baseTokensSpent: 100,
+        trancheExpiration: 1633148468,
+        baseTokenName: 'wbtc',
+        ytName: 'yt-wbtc',
     }
 ]
 
 
-export const calculateMock = async (userData: CalculatorData): Promise<YTCOutput[]> => {
+export const calculateMock = async (userData: YieldExposureData): Promise<YTCOutput[]> => {
     return new Promise<YTCOutput[]>((resolve, reject) => {
         setTimeout(() => {
             resolve(mockValues)
@@ -61,19 +77,36 @@ export const calculateMock = async (userData: CalculatorData): Promise<YTCOutput
     })
 }
 
-export const calculateYieldExposure = async (userData: YieldExposureData, constants: ConstantsObject, signer: Signer): Promise<YTCOutput>=> {
+interface YieldCalculationParameters {
+    ytc: Contract;
+    trancheAddress: string;
+    balancerPoolId: string;
+    yieldTokenDecimals: number;
+    baseTokenDecimals: number;
+    trancheExpiration: number;
+    baseTokenName: string;
+    ytName: string;
+}
 
+const getYieldCalculationParameters = async (userData: YieldExposureData, constants: ConstantsObject, signer: Signer): Promise<YieldCalculationParameters> => {
     const ytcAbi = YieldTokenCompounding.abi;
     const erc20Abi = ERC20.abi;
     const trancheAbi = ITranche.abi;
 
     // Get data
+    const baseTokenName = getTokenNameByAddress(userData.baseTokenAddress, constants.tokens);
+    if (!baseTokenName){
+        throw new Error("Could not find base token name");
+    }
+
     const yieldTokenCompoundingAddress = userData.ytcContractAddress;
-    const tokens: any = constants.tokens;
-    const baseTokenAddress: string = tokens[userData.baseTokenName];
+    const baseTokenAddress: string = userData.baseTokenAddress;
 
     // Get specific tranche
-    const trancheDetails = constants.tranches[userData.baseTokenName][userData.trancheIndex];
+    const trancheDetails: Tranche | undefined = getTrancheByAddress(userData.trancheAddress, constants.tranches[baseTokenName]);
+    if (!trancheDetails){
+        throw new Error("Could not find tranche");
+    }
 
     // if it is expired throw an error
     if (!isTrancheActive(trancheDetails)){
@@ -85,114 +118,131 @@ export const calculateYieldExposure = async (userData: YieldExposureData, consta
     
     // Load contracts
     const ytc = new ethers.Contract(yieldTokenCompoundingAddress, ytcAbi, signer);
-    const tranche = new ethers.Contract(trancheAddress, trancheAbi, signer);
+    const tranche: ITrancheType = (new ethers.Contract(trancheAddress, trancheAbi, signer)) as ITrancheType;
+    const trancheExpiration = trancheDetails.expiration;
     const yieldTokenAddress = await tranche.interestToken();
-    const yieldToken = new ethers.Contract(yieldTokenAddress, erc20Abi, signer);
+    const yieldToken: ERC20Type = (new ethers.Contract(yieldTokenAddress, erc20Abi, signer)) as ERC20Type;
+    const ytName = await yieldToken.name();
     const yieldTokenDecimals = ethers.BigNumber.from(await yieldToken.decimals()).toNumber();
     const baseToken = new ethers.Contract(baseTokenAddress, erc20Abi, signer);
     const baseTokenDecimals = ethers.BigNumber.from(await baseToken.decimals()).toNumber();
-
-    // Call the method statically to calculate the estimated return
-    const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
-
-    // Estimate the required amount of gas, this is likely very imprecise
-    const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
-
-    const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
-
-    // Convert the result to a number
-    const [ytExposureDecimals, baseTokensSpentDecimals]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
-    const ytExposure = ytExposureDecimals.div(BigNumber.from(10).pow(yieldTokenDecimals));
-
-    const remainingTokensDecimals = BigNumber.from(userData.amountCollateralDeposited).sub(BigNumber.from(baseTokensSpentDecimals));
-
-    const remainingTokens = remainingTokensDecimals.div(BigNumber.from(10).pow(baseTokenDecimals));
 
     return {
-        ytExposure,
-        remainingTokens,
-        ethGasFees,
+        ytc,
+        trancheAddress,
+        trancheExpiration,
+        balancerPoolId,
+        yieldTokenDecimals,
+        baseTokenDecimals,
+        baseTokenName,
+        ytName,
     }
+
 }
 
 
-// Demo script to show how to build a YTC calculator!
-export const calculate = async (userData: CalculatorData, constants: ConstantsObject, signer: Signer) => {
+export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName}: YieldCalculationParameters, userData: YieldExposureData, signer: Signer): Promise<YTCOutput> => {
+    try{
+        // Call the method statically to calculate the estimated return
+        const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
 
-    const ytcAbi = YieldTokenCompounding.abi;
-    const erc20Abi = ERC20.abi;
-    const trancheAbi = ITranche.abi;
+        // Estimate the required amount of gas, this is likely very imprecise
+        const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
 
-    // Get data
-    const yieldTokenCompoundingAddress = userData.ytcContractAddress;
-    const tokens: any = constants.tokens;
-    const baseTokenAddress: string = tokens[userData.baseTokenName];
-    // Get specific tranche
-    
-    const trancheDetails = constants.tranches[userData.baseTokenName][userData.trancheIndex];
-    const trancheAddress = trancheDetails.address;
-    const balancerPoolId = trancheDetails.ptPool.poolId;    
-    
-    // Load contracts
-    const ytc = new ethers.Contract(yieldTokenCompoundingAddress, ytcAbi, signer);
-    const tranche = new ethers.Contract(trancheAddress, trancheAbi, signer);
-    const yieldTokenAddress = await tranche.interestToken();
-    const yieldToken = new ethers.Contract(yieldTokenAddress, erc20Abi, signer);
-    const yieldTokenDecimals = ethers.BigNumber.from(await yieldToken.decimals()).toNumber();
-    const baseToken = new ethers.Contract(baseTokenAddress, erc20Abi, signer);
-    const baseTokenDecimals = ethers.BigNumber.from(await baseToken.decimals()).toNumber();
+        const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
 
-    /**
-     * FORMULA: 
-     * Collateral Deposited = amount of base tokens deposited = `amountCollateralDeposited`
-     * Balance = final amount of base tokens left
-     * base tokens spent = Collateral Deposited - Balance
-     * term = days left in term /365
-     * yield exposure = number of YTs
-     * gross gain = (speculated variable rate * term) * Yield exposure + Balance
-     * Net gain = gross gain - collateral deposited - gas fee
-     *       = (speculated variable rate * term) * Yield exposure - base Tokens Spent - gas fee
-     * Adjusted APR = (Net Gain / (Collateral Deposited - Balance))*100 
-     *              = (Net Gain / (base tokens spent))*100 
-     */
-    // Calculate the expiration in milliseconds
-    // const trancheExpirationTimestamp = trancheDetails.expiration * 1000
-    // const daysLeftInTerm = Math.floor((trancheExpirationTimestamp - new Date().getTime())/MILLISECONDS_PER_DAY);
+        // Convert the result to a number
+        const [ytExposureDecimals, baseTokensSpentDecimals]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
+        const ytExposure = ytExposureDecimals.div(BigNumber.from(10).pow(yieldTokenDecimals)).toNumber();
 
-    // const term = daysLeftInTerm/365
-    
-    let values: YTCOutput[] = [];
-    for (let i=1; i<11; i++) {
-        // TODO: Gas fee estimation + tx fee + convert to base token amount
-        // let gasFee = ethers.utils.formatEther(ethers.BigNumber.from(await ytc.estimateGas.compound(i,trancheAddress, balancerPoolId, userData["amountCollateralDeposited"], "100")).toNumber());
-        // FIXME: Need to convert gasFee in baseToken amount!
-        const returnedVals = await ytc.callStatic.compound(i,trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
+        const remainingTokensDecimals = BigNumber.from(userData.amountCollateralDeposited).sub(BigNumber.from(baseTokensSpentDecimals));
 
-        const ethGasEstimate = await ytc.estimateGas.compound(i,trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
+        const remainingTokens = remainingTokensDecimals.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
 
-        const ethGasFees = await gasLimitToEthGasFee(signer, ethGasEstimate);
+        const baseTokensSpent = baseTokensSpentDecimals.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
 
-
-        const [ytExposureDecimals, baseTokensSpentDecimals] = returnedVals.map((val: any) => ethers.BigNumber.from(val).toNumber());
-        const ytExposure = ytExposureDecimals / (10**yieldTokenDecimals);
-        const baseTokensSpent = baseTokensSpentDecimals / (10**baseTokenDecimals);
-        const remainingTokens = userData.amountCollateralDeposited - baseTokensSpent;
-        // console.log("yt exposure, base token spent: ", ytExposure, baseTokensSpent);
-        // console.log("grossYtGain: ", userData["speculatedVariableRate"] * term * ytExposure)
-
-        // Add values to table.
-        values[i] = {
+        return {
             ytExposure,
+            remainingTokens,
             ethGasFees,
-            remainingTokens
+            baseTokensSpent,
+            trancheExpiration,
+            baseTokenName,
+            ytName,
+        }
+    } catch (error) {
+        console.log(
+            { ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName }
+        )
+        return {
+            ytExposure: 1,
+            remainingTokens: 1,
+            ethGasFees: 1,
+            baseTokensSpent: 1,
+            trancheExpiration: 1,
+            baseTokenName: '',
+            ytName: '',
         }
     }
-    return values;
 }
 
-export const calculateGain = (ytExposure: number, speculatedVariableRate: number, term: number, baseTokensSpent: number) => {
+export const calculateYieldExposures = async (userData: YieldExposureData, constants: ConstantsObject, compoundRange: [number, number], signer: Signer): Promise<YTCOutput[]> => {
 
-    const netGain = (speculatedVariableRate * term * ytExposure) - baseTokensSpent //- gasFee;
+    console.log('starting calculate yield exposures');
+    const yieldCalculationParameters = await getYieldCalculationParameters(userData, constants, signer);
+    console.log('yield calculation parameters', yieldCalculationParameters);
+
+    const promises =  _.range(...compoundRange).map((index) => {
+        console.log(index);
+        const data: YieldExposureData = { 
+            ...userData,
+            numberOfCompounds: index
+        }
+
+        return calculateYieldExposure(
+            yieldCalculationParameters,
+            data,
+            signer
+        )
+    })
+
+    return await Promise.all(promises)
+}
+
+export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number, ytcOutputs: YTCOutput[]) => {
+    const rates = ytcOutputs.map((ytcOutput) => {
+        return {
+            ...ytcOutput,
+            ...calculateGain(ytcOutput.ytExposure, speculatedVariableRate, ytcOutput.trancheExpiration, ytcOutput.baseTokensSpent)
+        }
+    })
+
+    return rates;
+}
+
+const getTrancheByAddress = (address: string, tranches: Tranche[]): Tranche | undefined => {
+    return _.find(tranches, (tranche) => {
+        return tranche.address === address
+    })
+}
+
+const getRemainingTrancheYears = (trancheExpiration: number): number => {
+    const ms = getRemainingTrancheTimeMs(trancheExpiration);
+
+    return ms/MILLISECONDS_PER_YEAR;
+}
+
+const getRemainingTrancheTimeMs = (trancheExpiration: number): number => {
+    const currentMs = (new Date()).getTime();
+    const trancheMs = trancheExpiration * 1000;
+
+    return trancheMs - currentMs;
+}
+
+export const calculateGain = (ytExposure: number, speculatedVariableRate: number, trancheExpiration: number, baseTokensSpent: number) => {
+    const termRemainingYears = getRemainingTrancheYears(trancheExpiration);
+
+    const netGain = (speculatedVariableRate * termRemainingYears * ytExposure) - baseTokensSpent //- gasFee;
     const finalApy = (netGain / baseTokensSpent)*100
 
     return {
@@ -222,6 +272,14 @@ export const isTrancheActive = (tranche: Tranche): boolean => {
     const expirationInMs = tranche.expiration * 1000
 
     return time <= expirationInMs;
+}
+
+export const getTokenNameByAddress = (address: string, tokens: {[name: string]: string}): string | undefined => {
+    const result = Object.entries(tokens).find(([key, value]) => (
+        value === address
+    ))
+
+    return result && result[0]
 }
 
 // // Grabs the pricefeed of the base asset compared to eth used for gas

@@ -1,21 +1,20 @@
 import { Button } from "@chakra-ui/react";
 
 export interface ApeProps {
-    principleToken: {
+    baseToken: {
         name: string,
-        expiry: number,
     };
     yieldToken: {
         name: string,
         expiry: number,
     };
-    principleTokenAmount: number;
+    baseTokenAmount: number;
     yieldTokenAmount: number;
 }
 
 export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
-    const {principleToken, yieldToken, principleTokenAmount, yieldTokenAmount} = props;
+    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount} = props;
 
     return (
         <div id="ape" className="py-5 flex flex-col gap-3">
@@ -25,17 +24,14 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                     </div>
                     <div id="asset-details" className="flex-grow text-left">
                         <div id="asset-name">
-                            {principleToken.name}
-                        </div>
-                        <div id="asset-date">
-                            {(new Date(principleToken.expiry * 1000)).toLocaleDateString()}
+                            {baseToken.name}
                         </div>
                     </div>
 
                 </div>
                 <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
                     <div id="amount-text" className="self-center text-lg">
-                        {principleTokenAmount}
+                        {baseTokenAmount}
                     </div>
                 </div>
             </div>

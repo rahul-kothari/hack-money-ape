@@ -1,6 +1,6 @@
 const fs = require("fs");
 const ethers = require('ethers');
-const {georli} = require('./constants/goerli-constants');
+const {georli} = require('../../constants/goerli-constants');
 
 const DEFAULT_ARTIFACTS_PATH = "./src/artifacts/contracts";
 

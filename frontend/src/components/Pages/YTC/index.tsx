@@ -1,37 +1,45 @@
 import { Flex, Text, Link } from "@chakra-ui/layout";
 import React, { useEffect, useState } from "react"
 import { getBaseTokensWithActiveTranches } from "../../../features/element";
+import { elementAddressesAtom } from "../../../recoil/element/atom";
 import { Token } from "../../../types/manual/types";
 // TODO move this to tyeps file
 import { Calculator } from "./Calculator";
 import { Ape, ApeProps } from "./Executor";
+import { useRecoilValue } from 'recoil';
+import { simulationResultsAtom } from '../../../recoil/simulationResults/atom';
+import { YTCOutput } from "../../../features/calculator/calculatorAPI";
 
 interface YTCProps {}
 
 export const YTC: React.FC<YTCProps> = (props) => {
 
-    const [simulatedResults, setSimulatedResults] = useState<ApeProps | undefined>(undefined)
     const [baseTokens, setBaseTokens] = useState<Token[]>([]);
+    const simulationResults: YTCOutput[] = useRecoilValue(simulationResultsAtom);
+    console.log(simulationResults);
+    const elementAddresses = useRecoilValue(elementAddressesAtom);
 
     useEffect(() => {
-        getBaseTokensWithActiveTranches().then((res) => {
+        getBaseTokensWithActiveTranches(elementAddresses).then((res) => {
             setBaseTokens(res);
         })
-    }, [])
+    }, [elementAddresses])
 
-    const handleSimulation = () => {
-        setSimulatedResults({
-            principleToken: {
-                name: 'ePT-CRV3USDC',
-                expiry: 1640057082,
+    // TODO this is a stopgap
+    const processSimulationResults = (results: YTCOutput[]): ApeProps => {
+        const result = results[0];
+
+        return {
+            baseToken: {
+                name: result.baseTokenName,
             },
             yieldToken: {
-                name: 'eYT-CRV3USDC',
-                expiry: 1671593082,
+                name: result.ytName,
+                expiry: result.trancheExpiration,
             },
-            principleTokenAmount: 34.0,
-            yieldTokenAmount: 0.9,
-        })
+            baseTokenAmount: result.remainingTokens,
+            yieldTokenAmount: result.ytExposure
+        }
     }
 
     return <div>
@@ -58,18 +66,19 @@ export const YTC: React.FC<YTCProps> = (props) => {
         </Flex>
         <Calculator
             tokens={baseTokens}
-            onSimulate={handleSimulation}
-            simulated={!!simulatedResults}
+            simulated={simulationResults.length > 0}
         />
         {
-            simulatedResults && <>
+            (simulationResults.length > 0) && <>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
                 </svg>
 
                 <Ape
                     {
-                        ...simulatedResults
+                        ...(processSimulationResults(
+                            simulationResults
+                        ))
                     }
                 />
             </>
