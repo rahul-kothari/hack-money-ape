@@ -32,6 +32,7 @@ const config: HardhatUserConfig = {
     artifacts: "./frontend/src/artifacts",
     tests: "./test",
     cache: "./cache",
+    deployments: "./frontend/src/hardhat/deployments"
 
   },
   networks: {
