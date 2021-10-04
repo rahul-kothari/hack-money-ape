@@ -1,16 +1,19 @@
 // Calculator is used to estimate the YTC output from the ytc contract
-import { calculateYieldExposure, YieldExposureData } from '../frontend/src/features/calculator/calculatorAPI';
+import { calculateYieldExposures, YieldExposureData } from '../frontend/src/features/calculator/calculatorAPI';
 import hre, { deployments } from 'hardhat';
 import ERC20 from '../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
 import YieldTokenCompounding from '../frontend/src/artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
-import {ERC20 as ERC20Type} from '../frontend/src/types/ERC20';
-import {YieldTokenCompounding as YieldTokenCompoundingType} from '../frontend/src/types/YieldTokenCompounding'
+import {ERC20 as ERC20Type} from '../frontend/src/hardhat/typechain/ERC20';
+import {YieldTokenCompounding as YieldTokenCompoundingType} from '../frontend/src/hardhat/typechain/YieldTokenCompounding'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { constants as mainnetConstants } from './mainnet-constants';
 import { constants as goerliConstants} from './goerli-constants';
 import { getAllTokens } from '../scripts/helpers/getTokens';
 import { Deployment } from 'hardhat-deploy/dist/types';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { expect } from 'chai';
+
+const MAX_UINT_HEX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
 if (hre.network.name == "goerli"){
     var constants = goerliConstants;
@@ -30,12 +33,13 @@ describe('calculate yield exposure test', () => {
         await getAllTokens();
         deployment = await hre.deployments.get('YieldTokenCompounding');
         signer = (await hre.ethers.getSigners())[0];
+        console.log('beforeAll complete')
     })
 
     it('should yield results', async () => {
 
         const tokenName = "lusd3crv-f"
-        const trancheIndex = 1;
+        const trancheAddress = constants.tranches[tokenName][1].address;
         const decimalAmount = 1000;
 
         const tokenAddress = constants.tokens[tokenName];
@@ -56,28 +60,30 @@ describe('calculate yield exposure test', () => {
 
         await tx.wait();
 
-
-
-        const allowance = await erc20Contract.allowance(signer.address, deployment.address);
-
         const yieldTokenCompoundingcontract: YieldTokenCompoundingType = (new hre.ethers.Contract(deployment.address, deployment.abi, signer)) as YieldTokenCompoundingType;
 
-        const tx2 = await yieldTokenCompoundingcontract.approveTranchePTOnBalancer(constants.tranches[tokenName][trancheIndex].address)
+        const allowanceTx1 = await yieldTokenCompoundingcontract.checkTranchePTAllowanceOnBalancer(trancheAddress)
+        
+        expect(allowanceTx1).to.equal(BigNumber.from(0));
+
+        const tx2 = await yieldTokenCompoundingcontract.approveTranchePTOnBalancer(trancheAddress)
 
         await tx2.wait();
 
+        const allowanceTx2 = await yieldTokenCompoundingcontract.checkTranchePTAllowanceOnBalancer(trancheAddress)
+        
+        expect(allowanceTx2).to.equal(BigNumber.from(MAX_UINT_HEX));
+
         const userData: YieldExposureData = {
-            baseTokenName: tokenName,
-            trancheIndex: trancheIndex,
+            baseTokenAddress: tokenAddress,
+            trancheAddress: trancheAddress,
             amountCollateralDeposited: amount,
             numberOfCompounds: 1,
             ytcContractAddress: deployment.address,
         }
 
-        const results = await calculateYieldExposure(userData, constants, signer);
-        console.log('eth gas fee', results.ethGasFees);
-        console.log('yt Exposure', results.ytExposure.toString())
-        console.log('remaining tokens', results.remainingTokens.toString())
+        const results = await calculateYieldExposures(userData, constants, [1,4], signer);
+        console.log(results);
     })
 
 })
