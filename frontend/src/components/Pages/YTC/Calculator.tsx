@@ -90,10 +90,16 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                     Yup.object({
                         amount: Yup.number()
                             .min(0.0000000000000000001)
-                            .max((balance ? balance : 0)),
+                            .max((balance ? balance : 0))
+                            .required(),
                         compounds: Yup.number()
                             .min(1)
                             .max(10)
+                            .required(),
+                        trancheAddress: Yup.string()
+                            .required(),
+                        tokenAddress: Yup.string()
+                            .required(),
                     })
                 }
             >
@@ -328,7 +334,7 @@ const Form: React.FC<FormProps> = (props) => {
                         placeholder={"0"}
                         onChange={formik.handleChange}
                         id="number-compounds"
-                        className="text-lg bg-indigo-100 min-w-0"
+                        className={`text-lg bg-indigo-100 min-w-0 ${formik.errors.compounds && "text-red-300"}`}
                     />
                 </Flex>
                 <Flex
@@ -349,7 +355,7 @@ const Form: React.FC<FormProps> = (props) => {
                         placeholder={"0.0"}
                         onChange={formik.handleChange}
                         id="amount-input"
-                        className={`text-lg text-right bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-400"}`}/>
+                        className={`text-lg text-right bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
                     <Text
                         id="amount-token-label"
                         fontSize="lg"
