@@ -47,7 +47,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
             const userData: YieldExposureData = {
                 baseTokenAddress: values.tokenAddress,
                 amountCollateralDeposited: values.amount,
-                numberOfCompounds: values.compounds || 1,
+                numberOfCompounds: values.compounds ? Math.floor(values.compounds) : 1,
                 trancheAddress: values.trancheAddress,
                 ytcContractAddress,
             }
@@ -89,13 +89,13 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                 validationSchema={
                     Yup.object({
                         amount: Yup.number()
-                            .min(0.0000000000000000001)
-                            .max((balance ? balance : 0))
-                            .required(),
+                            .min(0.0000000000000000001, 'Amount must be greater than 0')
+                            .max((balance ? balance : 0), 'Insufficient balance')
+                            .required('An amount of tokens is required'),
                         compounds: Yup.number()
-                            .min(1)
-                            .max(10)
-                            .required(),
+                            .min(1, 'Number of compounds must be 1 or greater')
+                            .max(10, 'Number of compounds must be 10 or fewer')
+                            .required('Choose a number of compounds between 1 and 10'),
                         trancheAddress: Yup.string()
                             .required(),
                         tokenAddress: Yup.string()
@@ -330,6 +330,7 @@ const Form: React.FC<FormProps> = (props) => {
                     <input
                         type="number"
                         name="compounds"
+                        onBlur={formik.handleBlur}
                         value={formik.values.compounds}
                         placeholder={"0"}
                         onChange={formik.handleChange}
@@ -351,6 +352,7 @@ const Form: React.FC<FormProps> = (props) => {
                     <input
                         type="number"
                         name="amount"
+                        onBlur={formik.handleBlur}
                         value={formik.values.amount}
                         placeholder={"0.0"}
                         onChange={formik.handleChange}

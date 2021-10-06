@@ -34,10 +34,10 @@ export const YTC: React.FC<YTCProps> = (props) => {
             },
             yieldToken: {
                 name: result.ytName,
-                expiry: result.trancheExpiration,
             },
             baseTokenAmount: result.remainingTokens,
-            yieldTokenAmount: result.ytExposure
+            yieldTokenAmount: result.ytExposure,
+            userData: result.inputs
         }
     }
 

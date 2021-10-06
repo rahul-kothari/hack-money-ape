@@ -1,4 +1,9 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
+import { executeYieldTokenCompounding, YieldExposureData } from "../../../features/calculator/calculatorAPI";
+import { elementAddressesAtom } from "../../../recoil/element/atom";
+import { useRecoilValue } from 'recoil';
+import { useContext, useState } from "react";
+import { SignerContext } from "../../../hardhat/SymfoniContext";
 
 export interface ApeProps {
     baseToken: {
@@ -6,15 +11,35 @@ export interface ApeProps {
     };
     yieldToken: {
         name: string,
-        expiry: number,
     };
     baseTokenAmount: number;
     yieldTokenAmount: number;
+    userData: YieldExposureData
 }
 
 export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
-    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount} = props;
+    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData} = props;
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const elementAddresses = useRecoilValue(elementAddressesAtom);
+    const [signer] = useContext(SignerContext);
+
+    // Execute the actual calculation transaction
+    const handleExecuteTransaction = () => {
+        if (signer){
+            setIsLoading(true);
+            executeYieldTokenCompounding(
+                userData,
+                yieldTokenAmount,
+                elementAddresses,
+                signer
+            ).then(() => {
+            }).finally(() => {
+                setIsLoading(false)
+            })
+        }
+    }
 
     return (
         <div id="ape" className="py-5 flex flex-col gap-3">
@@ -43,9 +68,9 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         <div id="asset-name" className="font-bold">
                             {yieldToken.name}
                         </div>
-                        <div id="asset-date">
+                        {/* <div id="asset-date">
                             {(new Date(yieldToken.expiry * 1000)).toLocaleDateString()}
-                        </div>
+                        </div> */}
                     </div>
 
                 </div>
@@ -63,8 +88,9 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 mt="4"
                 p="2"
                 textColor="gray.50"
+                onClick={handleExecuteTransaction}
             >
-                APE
+                {isLoading ? <Spinner/> : "APE"}
             </Button>
         </div>
     )

@@ -6,9 +6,12 @@ import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/E
 import {ERC20 as ERC20Type} from '../../hardhat/typechain/ERC20';
 import { ConstantsObject, Tranche } from "../../types/manual/types";
 import _ from 'lodash';
+import { YieldTokenCompounding as YieldTokenCompoundingType } from "../../hardhat/typechain/YieldTokenCompounding";
 
 const MILLISECONDS_PER_DAY = 1000*60*60*24;
 const MILLISECONDS_PER_YEAR = MILLISECONDS_PER_DAY*365;
+// TODO: Not sure how this will be calculated, as it's required in order to simulate in the first place
+const MINIMUM_OUTPUT = "0";
 
 export interface YieldExposureData {
     baseTokenAddress: string;
@@ -26,6 +29,7 @@ export interface YTCOutput {
     trancheExpiration: number,
     baseTokenName: string,
     ytName: string,
+    inputs: YieldExposureData,
 }
 
 interface YieldCalculationParameters {
@@ -93,10 +97,6 @@ const getYieldCalculationParameters = async (userData: YieldExposureData, consta
 
 
 export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName}: YieldCalculationParameters, userData: YieldExposureData, signer: Signer): Promise<YTCOutput> => {
-    // TODO: Not sure how this will be calculated, as it's required in order to simulate in the first place
-    const MINIMUM_OUTPUT = "0";
-
-    //
     const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), baseTokenDecimals);
 
     // Call the method statically to calculate the estimated return
@@ -124,6 +124,7 @@ export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpira
         trancheExpiration,
         baseTokenName,
         ytName,
+        inputs: userData,
     }
 }
 
@@ -156,6 +157,29 @@ export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number,
     })
 
     return rates;
+}
+
+export const executeYieldTokenCompounding = async (userData: YieldExposureData, expectedYieldTokens: number, constants: ConstantsObject, signer: Signer) => {
+    const yieldCalculationParameters = await getYieldCalculationParameters(userData, constants, signer);
+
+    const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), yieldCalculationParameters.baseTokenDecimals);
+    const expectedYieldTokensAbsolute = ethers.utils.parseUnits(expectedYieldTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
+
+
+    const ytc: YieldTokenCompoundingType = yieldCalculationParameters.ytc as YieldTokenCompoundingType;
+    console.log('this one?')
+
+    const transaction = await ytc.compound(userData.numberOfCompounds, userData.trancheAddress, yieldCalculationParameters.balancerPoolId, baseTokenAmountAbsolute, expectedYieldTokensAbsolute);
+
+    console.log('this one?')
+
+    console.log(transaction);
+
+    const transactionReceipt = await transaction.wait();
+
+    console.log(transactionReceipt);
+
+    return transactionReceipt;
 }
 
 const getTrancheByAddress = (address: string, tranches: Tranche[]): Tranche | undefined => {
