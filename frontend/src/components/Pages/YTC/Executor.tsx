@@ -4,6 +4,7 @@ import { elementAddressesAtom } from "../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
 import { useContext, useState } from "react";
 import { SignerContext } from "../../../hardhat/SymfoniContext";
+import { slippageToleranceAtom } from "../../../recoil/transactionSettings/atom";
 
 export interface ApeProps {
     baseToken: {
@@ -24,6 +25,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext);
+    const slippageTolerance = useRecoilValue(slippageToleranceAtom);
 
     // Execute the actual calculation transaction
     const handleExecuteTransaction = () => {
@@ -32,6 +34,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
             executeYieldTokenCompounding(
                 userData,
                 yieldTokenAmount,
+                slippageTolerance,
                 elementAddresses,
                 signer
             ).then(() => {

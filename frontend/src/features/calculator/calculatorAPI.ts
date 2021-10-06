@@ -159,25 +159,21 @@ export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number,
     return rates;
 }
 
-export const executeYieldTokenCompounding = async (userData: YieldExposureData, expectedYieldTokens: number, constants: ConstantsObject, signer: Signer) => {
+export const executeYieldTokenCompounding = async (userData: YieldExposureData, expectedYieldTokens: number, slippageTolerancePercentage: number, constants: ConstantsObject, signer: Signer) => {
     const yieldCalculationParameters = await getYieldCalculationParameters(userData, constants, signer);
 
     const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), yieldCalculationParameters.baseTokenDecimals);
-    const expectedYieldTokensAbsolute = ethers.utils.parseUnits(expectedYieldTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
+
+    // The minimum yield is the number of yield tokens that will be returned by the transaction
+    const minimumYieldTokens = expectedYieldTokens * (1 - slippageTolerancePercentage/100);
+    const minimumYieldAbsolute = ethers.utils.parseUnits(minimumYieldTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
 
 
     const ytc: YieldTokenCompoundingType = yieldCalculationParameters.ytc as YieldTokenCompoundingType;
-    console.log('this one?')
 
-    const transaction = await ytc.compound(userData.numberOfCompounds, userData.trancheAddress, yieldCalculationParameters.balancerPoolId, baseTokenAmountAbsolute, expectedYieldTokensAbsolute);
-
-    console.log('this one?')
-
-    console.log(transaction);
+    const transaction = await ytc.compound(userData.numberOfCompounds, userData.trancheAddress, yieldCalculationParameters.balancerPoolId, baseTokenAmountAbsolute, minimumYieldAbsolute);
 
     const transactionReceipt = await transaction.wait();
-
-    console.log(transactionReceipt);
 
     return transactionReceipt;
 }
