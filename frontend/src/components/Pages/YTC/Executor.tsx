@@ -22,9 +22,9 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 <div id="asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
                     <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
                     </div>
-                    <div id="asset-details" className="flex-grow text-left">
+                    <div id="asset-details" className="flex-grow text-left font-bold">
                         <div id="asset-name">
-                            {baseToken.name}
+                            {baseToken.name.toUpperCase()}
                         </div>
                     </div>
 
@@ -40,7 +40,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                     <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
                     </div>
                     <div id="asset-details" className="flex-grow text-left">
-                        <div id="asset-name">
+                        <div id="asset-name" className="font-bold">
                             {yieldToken.name}
                         </div>
                         <div id="asset-date">
