@@ -5,3 +5,8 @@ export const simulationResultsAtom = atom({
     key: 'simulationResults',
     default: [] as YTCOutput[],
 })
+
+export const isSimulatingAtom = atom({
+    key: 'isSimulating',
+    default: false,
+})

@@ -66,7 +66,6 @@ export const YTC: React.FC<YTCProps> = (props) => {
         </Flex>
         <Calculator
             tokens={baseTokens}
-            simulated={simulationResults.length > 0}
         />
         {
             (simulationResults.length > 0) && <>
