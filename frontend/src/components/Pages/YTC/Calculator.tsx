@@ -174,6 +174,8 @@ const Form: React.FC<FormProps> = (props) => {
         // add the token address as a query param
         if (value) {
             history.push(`/ytc?base_token=${value}`)
+            // amount should be set to zero on token change
+            formik.setFieldValue('amount', 0)
         }
         
         formik.handleChange(event);
