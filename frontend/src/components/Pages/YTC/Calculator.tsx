@@ -46,7 +46,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
         ){
             const userData: YieldExposureData = {
                 baseTokenAddress: values.tokenAddress,
-                amountCollateralDeposited: BigNumber.from(values.amount),
+                amountCollateralDeposited: values.amount,
                 numberOfCompounds: values.compounds || 1,
                 trancheAddress: values.trancheAddress,
                 ytcContractAddress,
