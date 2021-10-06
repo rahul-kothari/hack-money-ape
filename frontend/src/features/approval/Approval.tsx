@@ -33,7 +33,10 @@ const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
 
     const abstractHandleApprove = () => {
         handleApprove().then(() => {
-            setNotification("Token Approved")
+            setNotification({
+                text: approvalMessage,
+                type: "SUCCESS"
+            })
         })
     }
 

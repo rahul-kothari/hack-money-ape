@@ -62,7 +62,12 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                     })
                 }
             ).catch((error) => {
-                setNotification("Simulation Failed")
+                setNotification(
+                    {
+                        text: "Simulation Failed",
+                        type: "ERROR"
+                    }
+                )
             }).finally(() => {
                 setIsSimulating(false);
             })

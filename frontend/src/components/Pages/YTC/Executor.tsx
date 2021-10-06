@@ -41,7 +41,12 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 elementAddresses,
                 signer
             ).then((receipt) => {
-                setNotification('YTC Execution Succesful');
+                setNotification(
+                    {
+                        text: "YTC Execution Succesful",
+                        type: "SUCCESS"
+                    }
+);
             }).finally(() => {
                 setIsLoading(false)
             })

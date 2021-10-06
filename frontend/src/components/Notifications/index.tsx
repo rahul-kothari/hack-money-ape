@@ -5,21 +5,49 @@ import { useEffect } from "react";
 import { Box } from "@chakra-ui/layout";
 
 export const Notifications = () => {
-    const notificationText = useRecoilValue(notificationAtom)
+    const notification = useRecoilValue(notificationAtom)
     const toast = useToast();
 
     useEffect(() => {
-        if (notificationText){
+        if (notification){
             toast({
                 position: "bottom-right",
                 render: () => (
-                    <Box color="white" p={3} bg="blue.500">
-                        {notificationText}
-                    </Box>
+                    <NotificationBox
+                        text={notification.text}
+                        type={notification.type}
+                    />
                 ),
             })
         }
-    }, [notificationText])
+    }, [notification])
 
     return <></>
+}
+
+interface NotificationBoxProps {
+    text: string,
+    type: "ERROR" | "SUCCESS" | "GENERAL"
+}
+
+const NotificationBox: React.FC<NotificationBoxProps> = (props) => {
+    const {text, type} = props;
+
+    const color = (() => {
+        switch(type){
+            case "ERROR":
+                return "red.300"
+            case "SUCCESS":
+                return "green.300"
+            case "GENERAL":
+                return "indigo.400"
+            default:
+                return "indigo.400"
+        }
+    })()
+
+    return <Box color="white" p={3} bg={color}>
+        {text}
+    </Box>
+
 }
