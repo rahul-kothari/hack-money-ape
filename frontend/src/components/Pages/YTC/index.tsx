@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react"
 import { getBaseTokensWithActiveTranches } from "../../../features/element";
 import { elementAddressesAtom } from "../../../recoil/element/atom";
 import { Token } from "../../../types/manual/types";
-// TODO move this to tyeps file
 import { Calculator } from "./Calculator";
 import { Ape, ApeProps } from "./Executor";
 import { useRecoilValue } from 'recoil';

@@ -28,55 +28,6 @@ export interface YTCOutput {
     ytName: string,
 }
 
-//TODO this shouldn't really exist;
-const mockValues: YTCOutput[] = [
-    {
-        ytExposure: 10, 
-        ethGasFees: 0.15,
-        remainingTokens: 1000,
-        baseTokensSpent: 100,
-        trancheExpiration: 1633148468,
-        baseTokenName: 'usdc',
-        ytName: 'yt-usdc',
-    },
-    {
-        ytExposure: 19.8, 
-        ethGasFees: 0.1,
-        remainingTokens: 1000,
-        baseTokensSpent: 100,
-        trancheExpiration: 1633148468,
-        baseTokenName: 'dai',
-        ytName: 'yt-dai',
-    },
-    {
-        ytExposure: 28.7, 
-        ethGasFees: 0.11,
-        remainingTokens: 1000,
-        baseTokensSpent: 100,
-        trancheExpiration: 1633148468,
-        baseTokenName: 'weth',
-        ytName: 'yt-weth',
-    },
-    {
-        ytExposure: 37, 
-        ethGasFees: 0.22,
-        remainingTokens: 1000,
-        baseTokensSpent: 100,
-        trancheExpiration: 1633148468,
-        baseTokenName: 'wbtc',
-        ytName: 'yt-wbtc',
-    }
-]
-
-
-export const calculateMock = async (userData: YieldExposureData): Promise<YTCOutput[]> => {
-    return new Promise<YTCOutput[]>((resolve, reject) => {
-        setTimeout(() => {
-            resolve(mockValues)
-        }, 1000)
-    })
-}
-
 interface YieldCalculationParameters {
     ytc: Contract;
     trancheAddress: string;

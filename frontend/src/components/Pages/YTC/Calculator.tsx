@@ -52,7 +52,6 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                 ytcContractAddress,
             }
 
-            // TODO remove 1-5 hardcoding
             setIsSimulating(true);
             calculateYieldExposures(userData, elementAddresses, [userData.numberOfCompounds, userData.numberOfCompounds + 1], signer).then(
                 (results) => {

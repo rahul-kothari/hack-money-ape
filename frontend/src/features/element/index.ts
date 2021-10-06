@@ -6,7 +6,6 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { isTrancheActive } from '../calculator/calculatorAPI';
 import { ethers } from 'ethers';
 
-// TODO this is a mock this should be replaced with a real function call
 export const getTranches = async (tokenAddress: string, elementState: ConstantsObject): Promise<Tranche[]> => {
     // get the name of the token
     const tokenName = _.findKey(elementState.tokens, (value) => value === tokenAddress)
@@ -36,7 +35,6 @@ export const getActiveTranches = async (tokenAddress: string, elementState: Cons
     return []
 }
 
-// TODO this is a mock this should be replaced with a real function call
 export const getBaseTokens = async (elementState: ConstantsObject): Promise<Token[]> => {
     const tokens = elementState.tokens;
 
@@ -72,7 +70,6 @@ export const getBaseTokensWithActiveTranches = async (elementState: ConstantsObj
 }
 
 // TODO This might be better organized in a different file as it's not element related
-// TODO this is a mock this should be replaced with a real function call
 export const getBalance = async (currentAddress: string, contract: ERC20 | undefined): Promise<number> => {
     if (contract){
         const decimals = await contract.decimals();
@@ -85,8 +82,3 @@ export const getBalance = async (currentAddress: string, contract: ERC20 | undef
     }
     return 0;
 }
-
-// const getElementTokens = async (tokenAddress: string): Promise<void> => {
-//     await promiseTimeout(1000);
-//     return;
-// }
