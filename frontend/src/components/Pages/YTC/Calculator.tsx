@@ -11,6 +11,7 @@ import { CurrentAddressContext, ERC20Context, SignerContext, YieldTokenCompoundi
 import { elementAddressesAtom } from "../../../recoil/element/atom";
 import { isSimulatedSelector, isSimulatingAtom, simulationResultsAtom } from "../../../recoil/simulationResults/atom";
 import { Token, Tranche } from "../../../types/manual/types";
+import * as Yup from 'yup';
 
 interface CalculateProps {
     tokens: Token[];
@@ -31,6 +32,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
     const ytc = useContext(YieldTokenCompoundingContext)
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext)
+    const [balance, setBalance] = useState<number | undefined>(undefined);
 
     const handleSubmit = (values: FormFields, formikHelpers: FormikHelpers<FormFields>) => {
         const ytcContractAddress = ytc.instance?.address;
@@ -85,10 +87,22 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
             <Formik
                 initialValues={initialValues}
                 onSubmit={handleSubmit}
+                validationSchema={
+                    Yup.object({
+                        amount: Yup.number()
+                            .min(0.0000000000000000001)
+                            .max((balance ? balance : 0)),
+                        compounds: Yup.number()
+                            .min(1)
+                            .max(10)
+                    })
+                }
             >
                 <Form
                     tokens={tokens}
                     onChange={handleChange}
+                    balance={balance}
+                    setBalance={setBalance}
                 />
             </Formik>
         </Flex>
@@ -105,16 +119,17 @@ function useQuery() {
 interface FormProps {
     tokens: Token[];
     onChange: (e: React.ChangeEvent<any>) => void;
+    balance: number | undefined,
+    setBalance: React.Dispatch<React.SetStateAction<number | undefined>>
 }
 
 const Form: React.FC<FormProps> = (props) => {
 
-    const {tokens, onChange} = props;
+    const {tokens, onChange, balance, setBalance} = props;
 
     const erc20 = useContext(ERC20Context)
     const [currentAddress] = useContext(CurrentAddressContext)
     const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
-    const [balance, setBalance] = useState<number | undefined>(undefined);
     const elementAddresses = useRecoilValue(elementAddressesAtom)
     const history = useHistory();
     const query = useQuery();
@@ -335,7 +350,7 @@ const Form: React.FC<FormProps> = (props) => {
                         placeholder={"0.0"}
                         onChange={formik.handleChange}
                         id="amount-input"
-                        className="text-lg text-right bg-indigo-100 min-w-0"/>
+                        className={`text-lg text-right bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-400"}`}/>
                     <Text
                         id="amount-token-label"
                         fontSize="lg"
@@ -347,6 +362,7 @@ const Form: React.FC<FormProps> = (props) => {
             </Flex>
         </Flex>
         <ApproveAndSimulateButton
+            formErrors={formik.errors}
             tokenAddress={formik.values.tokenAddress}
             tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
             trancheAddress={formik.values.trancheAddress}
@@ -367,16 +383,14 @@ interface ApproveAndSimulateButtonProps {
     tokenAddress: string | undefined;
     tokenName: string | undefined;
     trancheAddress: string | undefined;
+    formErrors: {[fieldName: string]: string | undefined}
 }
 
 
 const ApproveAndSimulateButton: React.FC<ApproveAndSimulateButtonProps & ButtonProps> = (props) => {
     const ytc = useContext(YieldTokenCompoundingContext);
 
-    const isSimulating = useRecoilValue(isSimulatingAtom)
-    const isSimulated = useRecoilValue(isSimulatedSelector)
-
-    const { tokenAddress, tokenName, trancheAddress, ...rest} = props;
+    const { tokenAddress, tokenName, trancheAddress, formErrors, ...rest} = props;
 
     return <BalancerApproval
         trancheAddress={trancheAddress}
@@ -388,15 +402,42 @@ const ApproveAndSimulateButton: React.FC<ApproveAndSimulateButtonProps & ButtonP
             approvalAddress={ytc.instance?.address}
             {...rest}
         >
-            <Button
-                id="approve-calculate-button"
-                type="submit"
+            <SimulateButton 
+                formErrors={formErrors}
                 {...rest}
-            >
-                {
-                    isSimulating ? <Spinner/> : isSimulated ? "RE-SIMULATE" : "SIMULATE"
-                }
-            </Button>
+            />
         </ERC20Approval>
     </BalancerApproval>
+}
+
+interface SimulateButtonProps {
+    formErrors: {[fieldName: string]: string | undefined}
+}
+
+const SimulateButton: React.FC<SimulateButtonProps & ButtonProps> = (props) => {
+    const isSimulating = useRecoilValue(isSimulatingAtom)
+
+    const isSimulated = useRecoilValue(isSimulatedSelector)
+
+    const { formErrors, ...rest} = props;
+
+    const areNoErrors =  Object.values(formErrors).every((error) => {
+            return !error
+        })
+
+    return <Button
+        id="approve-calculate-button"
+        type="submit"
+        {...rest}
+        disabled={!areNoErrors}
+    >
+        {
+            isSimulating ? 
+                <Spinner/> : 
+                isSimulated ? 
+                    "RE-SIMULATE" :
+                    "SIMULATE"
+            
+        }
+    </Button>
 }
