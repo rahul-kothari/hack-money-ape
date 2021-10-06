@@ -1,9 +1,11 @@
 import { ButtonGroup } from "@chakra-ui/button";
 import { Popover, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger } from "@chakra-ui/popover";
 import React, { useState } from "react";
+import { useRecoilState } from "recoil";
+import { slippageToleranceAtom } from "../../recoil/transactionSettings/atom";
 
 export const WalletSettings = () => {
-    const [slippageTolerance, setSlippageTolerance] = useState(1);
+    const [slippageTolerance, setSlippageTolerance] = useRecoilState(slippageToleranceAtom);
 
     const handleSlippageChange = (percentage: number) => {
         setSlippageTolerance(percentage);
