@@ -2,7 +2,6 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "hardhat/console.sol";
 import "./balancer-core-v2/vault/interfaces/IVault.sol";
 import "./element-finance/ITranche.sol";
 import "./balancer-core-v2/lib/openzeppelin/IERC20.sol";
@@ -34,7 +33,6 @@ contract YieldTokenCompounding {
         uint256 _amount,
         uint256 _expectedYtOutput
     ) public returns (uint256, uint256) {
-        console.log("Starting the compound");
         require (_n > 0 && _n < 31, "n has to be between 1 to 255 inclusive.");
         // Step 1: Assume the user approves the contract for the base token [permit support is a nice to have in general but for simplicity fine to omit]
 
@@ -44,11 +42,9 @@ contract YieldTokenCompounding {
         uint256 initialBalance = IERC20(baseTokenAddress).balanceOf(msg.sender);
         //address(uint160(addr)) makes it of type address payable.
         address payable wrappedPositionAddress = address(uint160(address(tranche.position())));
-        console.log("Transfering the underlying");
         
         // tranche.underlying() = baseToken. Transfer base tokens from user to WP.
         tranche.underlying().transferFrom(msg.sender, wrappedPositionAddress, _amount);
-        console.log("Transferred the underlying");
 
         // Step 5: repeat steps 3-4 N times.
         uint256 ytBalance = _forLoop(_n, tranche, _balancerPoolId, baseTokenAddress, wrappedPositionAddress);
@@ -57,10 +53,8 @@ contract YieldTokenCompounding {
 
         // Step 6: Send the smart contract balance of yt to the user
         // Transfer YTs from this contract to the user
-        console.log("Transfering the interest tokens to the user");
         tranche.interestToken().transfer(msg.sender, ytBalance);
         // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.     
-        console.log("Transferred the interest tokens to the user");
         
         return (ytBalance, _baseTokensSpent(baseTokenAddress, initialBalance));   
     }
@@ -74,9 +68,7 @@ contract YieldTokenCompounding {
         internal returns(uint256) {
         // The amount of yts accrued so far.
         uint256 ytBalance = 0;
-        console.log("starting for loop");
         for (uint8 i = 0; i < _n; i++) {
-            console.log("For loop it", i);
             // Step 3: Smart contract calls prefundedDeposit on the tranche with destination of itself
             (uint256 pt, uint256 yt) = tranche.prefundedDeposit(address(this));
             ytBalance += yt;
@@ -102,7 +94,6 @@ contract YieldTokenCompounding {
         address payable _receiverAddress,
         uint256 _amount
     ) public returns (uint256) {
-        console.log("Swapping PTs for Base Tokens");
         // Swap PTs (tranche contract token) for base tokens
         IVault.SwapKind kind = IVault.SwapKind.GIVEN_IN;
         IAsset assetIn = IAsset(_trancheAddress);
@@ -116,7 +107,6 @@ contract YieldTokenCompounding {
             userData: bytes("")
         });
 
-        console.log("Selling from contract to wrapped position contract");
         // Sell from this contract to Wrapped Position contract /userAddress (for last compounding)
         IVault.FundManagement memory funds = IVault.FundManagement({
             sender: _fromAddress,
