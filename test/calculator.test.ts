@@ -1,6 +1,6 @@
 // Calculator is used to estimate the YTC output from the ytc contract
 import { calculateYieldExposures, YieldExposureData } from '../frontend/src/features/calculator/calculatorAPI';
-import hre, { deployments } from 'hardhat';
+import hre, { deployments, ethers } from 'hardhat';
 import ERC20 from '../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
 import YieldTokenCompounding from '../frontend/src/artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import {ERC20 as ERC20Type} from '../frontend/src/hardhat/typechain/ERC20';
@@ -40,7 +40,7 @@ describe('calculate yield exposure test', () => {
 
         const tokenName = "lusd3crv-f"
         const trancheAddress = constants.tranches[tokenName][1].address;
-        const decimalAmount = 1000;
+        const amountNormalized = 1000;
 
         const tokenAddress = constants.tokens[tokenName];
 
@@ -51,12 +51,12 @@ describe('calculate yield exposure test', () => {
 
         // Sending 1000 units of the token
         const decimals = await erc20Contract.decimals()
-        const amount = BigNumber.from(decimalAmount).mul(BigNumber.from(10).pow(decimals))
+        const amountAbsolute = ethers.utils.parseUnits(amountNormalized.toString(), decimals);
 
         console.log('deployment address', deployment.address);
 
         // approve the amount required for the test
-        const tx = await erc20Contract.approve(deployment.address, amount.mul(2))
+        const tx = await erc20Contract.approve(deployment.address, amountAbsolute.mul(2))
 
         await tx.wait();
 
@@ -77,7 +77,7 @@ describe('calculate yield exposure test', () => {
         const userData: YieldExposureData = {
             baseTokenAddress: tokenAddress,
             trancheAddress: trancheAddress,
-            amountCollateralDeposited: amount,
+            amountCollateralDeposited: amountAbsolute,
             numberOfCompounds: 1,
             ytcContractAddress: deployment.address,
         }

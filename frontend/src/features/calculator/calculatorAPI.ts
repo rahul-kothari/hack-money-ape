@@ -146,7 +146,7 @@ export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpira
     const MINIMUM_OUTPUT = "0";
 
     //
-    const baseTokenAmountAbsolute = BigNumber.from(userData.amountCollateralDeposited).mul(BigNumber.from(10).pow(baseTokenDecimals));
+    const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), baseTokenDecimals);
 
     // Call the method statically to calculate the estimated return
     const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, MINIMUM_OUTPUT);
@@ -158,13 +158,12 @@ export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpira
 
     // Convert the result to a number
     const [ytExposureAbsolute, baseTokensSpentAbsolute]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
-    const ytExposureNormalized = ytExposureAbsolute.div(BigNumber.from(10).pow(yieldTokenDecimals)).toNumber();
 
     const remainingTokensAbsolute = BigNumber.from(baseTokenAmountAbsolute).sub(BigNumber.from(baseTokensSpentAbsolute));
 
-    const remainingTokensNormalized = remainingTokensAbsolute.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
-
-    const baseTokensSpentNormalized = baseTokensSpentAbsolute.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
+    const ytExposureNormalized = parseFloat(ethers.utils.formatUnits(ytExposureAbsolute, yieldTokenDecimals))
+    const remainingTokensNormalized = parseFloat(ethers.utils.formatUnits(remainingTokensAbsolute, baseTokenDecimals))
+    const baseTokensSpentNormalized = parseFloat(ethers.utils.formatUnits(baseTokensSpentAbsolute, baseTokenDecimals))
 
     return {
         ytExposure: ytExposureNormalized,

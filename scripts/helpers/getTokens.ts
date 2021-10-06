@@ -1,6 +1,6 @@
-import hre, { deployments } from 'hardhat';
+import hre, { deployments, ethers } from 'hardhat';
 import ERC20 from '../../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
-import {ERC20 as ERC20Type} from '../../frontend/src/types/ERC20';
+import {ERC20 as ERC20Type} from '../../frontend/src/hardhat/typechain/ERC20';
 import { BigNumber } from '@ethersproject/bignumber';
 import { constants as mainnetConstants } from '../mainnet-constants';
 import { constants as goerliConstants} from '../goerli-constants';
@@ -12,7 +12,7 @@ if (hre.network.name == "goerli"){
     var constants = mainnetConstants;
 }
 
-export const getTokens = async (largeHolderAddress: string, tokenName: string, decimalAmount: number) => {
+export const getTokens = async (largeHolderAddress: string, tokenName: string, amountNormalized: number) => {
     const YTCDeployment = await hre.deployments.get('YieldTokenCompounding');
 
     const signer = (await hre.ethers.getSigners())[0];
@@ -34,17 +34,17 @@ export const getTokens = async (largeHolderAddress: string, tokenName: string, d
 
     // Sending 1000 units of the token
     const decimals = await erc20Contract.decimals()
-    const amount = BigNumber.from(decimalAmount).mul(BigNumber.from(10).pow(decimals))
+    const amountAbsolute = ethers.utils.parseUnits(amountNormalized.toString(), decimals);
 
     const balance = await erc20Contract.balanceOf(largeHolderSigner.address);
 
-    if (balance.sub(amount).isNegative()){
+    if (balance.sub(amountAbsolute).isNegative()){
       console.log(`The account ${largeHolderAddress} does not have enough ${tokenName} tokens`);
       return;
     }
 
     // Create the transfer transaction
-    const transaction = await erc20Contract.transfer(signer.address, amount);
+    const transaction = await erc20Contract.transfer(signer.address, amountAbsolute);
     await transaction.wait()
 
 }

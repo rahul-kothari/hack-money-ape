@@ -4,6 +4,7 @@ import { ConstantsObject, Token, Tranche } from "../../types/manual/types";
 import { ERC20 } from '../../hardhat/typechain/ERC20';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isTrancheActive } from '../calculator/calculatorAPI';
+import { ethers } from 'ethers';
 
 // TODO this is a mock this should be replaced with a real function call
 export const getTranches = async (tokenAddress: string, elementState: ConstantsObject): Promise<Tranche[]> => {
@@ -76,11 +77,11 @@ export const getBalance = async (currentAddress: string, contract: ERC20 | undef
     if (contract){
         const decimals = await contract.decimals();
 
-        const balance = await contract.balanceOf(currentAddress);
+        const balanceAbsolute = await contract.balanceOf(currentAddress);
 
-        const adjustedBalance = balance.div(BigNumber.from(10).pow(decimals));
+        const balanceNormalized = ethers.utils.formatUnits(balanceAbsolute, decimals);
 
-        return (adjustedBalance).toNumber();
+        return parseFloat(balanceNormalized);
     }
     return 0;
 }
