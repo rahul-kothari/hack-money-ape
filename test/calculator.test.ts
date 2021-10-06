@@ -82,6 +82,8 @@ describe('calculate yield exposure test', () => {
             ytcContractAddress: deployment.address,
         }
 
+        console.log(userData);
+
         const results = await calculateYieldExposures(userData, constants, [1,4], signer);
         console.log(results);
     })

@@ -1,15 +1,16 @@
 import { Box, Button, ButtonProps, Flex, Select, Text } from "@chakra-ui/react";
+import { BigNumber } from "ethers";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { Token, Tranche } from "../../../types/manual/types";
-import { ERC20Approval, BalancerApproval } from '../../../features/approval/Approval';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { BalancerApproval, ERC20Approval } from '../../../features/approval/Approval';
+import { calculateYieldExposures, YieldExposureData } from "../../../features/calculator/calculatorAPI";
 import { getActiveTranches, getBalance } from "../../../features/element";
 import { CurrentAddressContext, ERC20Context, SignerContext, YieldTokenCompoundingContext } from "../../../hardhat/SymfoniContext";
 import { elementAddressesAtom } from "../../../recoil/element/atom";
-import { useRecoilValue, useRecoilState } from 'recoil';
 import { simulationResultsAtom } from "../../../recoil/simulationResults/atom";
-import { calculateYieldExposures, YieldExposureData } from "../../../features/calculator/calculatorAPI";
+import { Token, Tranche } from "../../../types/manual/types";
 
 interface CalculateProps {
     tokens: Token[];
@@ -43,14 +44,16 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
         ){
             const userData: YieldExposureData = {
                 baseTokenAddress: values.tokenAddress,
-                amountCollateralDeposited: values.amount,
-                numberOfCompounds: values.compounds || 0,
+                amountCollateralDeposited: BigNumber.from(values.amount),
+                numberOfCompounds: values.compounds || 1,
                 trancheAddress: values.trancheAddress,
                 ytcContractAddress,
             }
 
-            // TODO remove 0-5 hardcoding
-            calculateYieldExposures(userData, elementAddresses, [1, 2], signer).then(
+            console.log('sumbitting form with: ', JSON.stringify(userData));
+
+            // TODO remove 1-5 hardcoding
+            calculateYieldExposures(userData, elementAddresses, [userData.numberOfCompounds, userData.numberOfCompounds + 1], signer).then(
                 (results) => {
                     setSimulationResults(() => {
                         return results;
@@ -65,7 +68,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
         tokenAddress: undefined,
         trancheAddress: undefined,
         amount: 0,
-        compounds: 0
+        compounds: 1
     }
 
     return (
@@ -375,6 +378,7 @@ const ApproveAndSimulateButton: React.FC<ApproveAndSimulateButtonProps & ButtonP
         >
             <Button
                 id="approve-calculate-button"
+                type="submit"
                 {...rest}
             >
                 {simulated ? "RE-SIMULATE" : "SIMULATE"}

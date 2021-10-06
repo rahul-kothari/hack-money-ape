@@ -122,7 +122,7 @@ const getYieldCalculationParameters = async (userData: YieldExposureData, consta
     const trancheExpiration = trancheDetails.expiration;
     const yieldTokenAddress = await tranche.interestToken();
     const yieldToken: ERC20Type = (new ethers.Contract(yieldTokenAddress, erc20Abi, signer)) as ERC20Type;
-    const ytName = await yieldToken.name();
+    const ytName = await yieldToken.symbol();
     const yieldTokenDecimals = ethers.BigNumber.from(await yieldToken.decimals()).toNumber();
     const baseToken = new ethers.Contract(baseTokenAddress, erc20Abi, signer);
     const baseTokenDecimals = ethers.BigNumber.from(await baseToken.decimals()).toNumber();
@@ -142,47 +142,38 @@ const getYieldCalculationParameters = async (userData: YieldExposureData, consta
 
 
 export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName}: YieldCalculationParameters, userData: YieldExposureData, signer: Signer): Promise<YTCOutput> => {
-    try{
-        // Call the method statically to calculate the estimated return
-        const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
+    // TODO: Not sure how this will be calculated, as it's required in order to simulate in the first place
+    const MINIMUM_OUTPUT = "0";
 
-        // Estimate the required amount of gas, this is likely very imprecise
-        const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, userData.amountCollateralDeposited, "100");
+    //
+    const baseTokenAmountAbsolute = BigNumber.from(userData.amountCollateralDeposited).mul(BigNumber.from(10).pow(baseTokenDecimals));
 
-        const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
+    // Call the method statically to calculate the estimated return
+    const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, MINIMUM_OUTPUT);
 
-        // Convert the result to a number
-        const [ytExposureDecimals, baseTokensSpentDecimals]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
-        const ytExposure = ytExposureDecimals.div(BigNumber.from(10).pow(yieldTokenDecimals)).toNumber();
+    // Estimate the required amount of gas, this is likely very imprecise
+    const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, MINIMUM_OUTPUT);
 
-        const remainingTokensDecimals = BigNumber.from(userData.amountCollateralDeposited).sub(BigNumber.from(baseTokensSpentDecimals));
+    const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
 
-        const remainingTokens = remainingTokensDecimals.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
+    // Convert the result to a number
+    const [ytExposureAbsolute, baseTokensSpentAbsolute]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
+    const ytExposureNormalized = ytExposureAbsolute.div(BigNumber.from(10).pow(yieldTokenDecimals)).toNumber();
 
-        const baseTokensSpent = baseTokensSpentDecimals.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
+    const remainingTokensAbsolute = BigNumber.from(baseTokenAmountAbsolute).sub(BigNumber.from(baseTokensSpentAbsolute));
 
-        return {
-            ytExposure,
-            remainingTokens,
-            ethGasFees,
-            baseTokensSpent,
-            trancheExpiration,
-            baseTokenName,
-            ytName,
-        }
-    } catch (error) {
-        console.log(
-            { ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName }
-        )
-        return {
-            ytExposure: 1,
-            remainingTokens: 1,
-            ethGasFees: 1,
-            baseTokensSpent: 1,
-            trancheExpiration: 1,
-            baseTokenName: '',
-            ytName: '',
-        }
+    const remainingTokensNormalized = remainingTokensAbsolute.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
+
+    const baseTokensSpentNormalized = baseTokensSpentAbsolute.div(BigNumber.from(10).pow(baseTokenDecimals)).toNumber();
+
+    return {
+        ytExposure: ytExposureNormalized,
+        remainingTokens: remainingTokensNormalized,
+        ethGasFees,
+        baseTokensSpent: baseTokensSpentNormalized,
+        trancheExpiration,
+        baseTokenName,
+        ytName,
     }
 }
 
