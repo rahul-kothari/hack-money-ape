@@ -6,7 +6,8 @@
   "scripts": {
     "node": "npx hardhat node --watch",
     "test": "npx hardhat test --deploy-fixture",
-    "frontend": "cd frontend && npm run start"
+    "frontend": "cd frontend && npm run start",
+    "build-backend": "npx hardhat compile && npx hardhat deploy && npx hardhat typechain && npx hardhat react"
   },
   "browserslist": {
     "production": [
