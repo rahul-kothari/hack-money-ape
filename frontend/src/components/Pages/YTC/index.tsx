@@ -16,7 +16,6 @@ export const YTC: React.FC<YTCProps> = (props) => {
 
     const [baseTokens, setBaseTokens] = useState<Token[]>([]);
     const simulationResults: YTCOutput[] = useRecoilValue(simulationResultsAtom);
-    console.log(simulationResults);
     const elementAddresses = useRecoilValue(elementAddressesAtom);
 
     useEffect(() => {

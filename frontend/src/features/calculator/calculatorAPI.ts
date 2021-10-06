@@ -179,12 +179,9 @@ export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpira
 
 export const calculateYieldExposures = async (userData: YieldExposureData, constants: ConstantsObject, compoundRange: [number, number], signer: Signer): Promise<YTCOutput[]> => {
 
-    console.log('starting calculate yield exposures');
     const yieldCalculationParameters = await getYieldCalculationParameters(userData, constants, signer);
-    console.log('yield calculation parameters', yieldCalculationParameters);
 
     const promises =  _.range(...compoundRange).map((index) => {
-        console.log(index);
         const data: YieldExposureData = { 
             ...userData,
             numberOfCompounds: index

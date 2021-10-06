@@ -50,8 +50,6 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                 ytcContractAddress,
             }
 
-            console.log('sumbitting form with: ', JSON.stringify(userData));
-
             // TODO remove 1-5 hardcoding
             setIsSimulating(true);
             calculateYieldExposures(userData, elementAddresses, [userData.numberOfCompounds, userData.numberOfCompounds + 1], signer).then(

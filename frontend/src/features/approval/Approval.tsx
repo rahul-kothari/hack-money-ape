@@ -145,8 +145,6 @@ export const BalancerApproval: React.FC<BalancerApprovalProps> = (props) => {
     const [provider] = useContext(ProviderContext);
     const ytc = useContext(YieldTokenCompoundingContext);
 
-    console.log(ytc.instance?.address);
-
     const { trancheAddress, children, ...rest} = props;
 
 

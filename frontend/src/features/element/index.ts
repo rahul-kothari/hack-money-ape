@@ -80,8 +80,6 @@ export const getBalance = async (currentAddress: string, contract: ERC20 | undef
 
         const adjustedBalance = balance.div(BigNumber.from(10).pow(decimals));
 
-        console.log(adjustedBalance);
-
         return (adjustedBalance).toNumber();
     }
     return 0;
