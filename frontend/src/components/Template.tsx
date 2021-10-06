@@ -3,6 +3,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 import Footer from './Footer';
 import Header from './Header';
+import { Notifications } from './Notifications';
 import { Decollateralize } from './Pages/Decollateralize';
 import { Ladder } from './Pages/Ladder';
 import { YTC } from './Pages/YTC';
@@ -44,6 +45,7 @@ export const Template: React.FC<Props> = (props: Props) => {
             </Box>
             {/* </div> */}
             <Footer/>
+            <Notifications/>
         </Flex>
     )
 }

@@ -3,11 +3,14 @@ import { Button, ButtonProps, Spinner } from '@chakra-ui/react'
 import { checkApproval, sendApproval } from './approvalAPI';
 import { ProviderContext, ERC20Context, CurrentAddressContext, YieldTokenCompoundingContext } from '../../hardhat/SymfoniContext';
 import { BigNumber, providers } from 'ethers';
+import { notificationAtom } from '../../recoil/notifications/atom';
+import { useRecoilState } from 'recoil';
 
 const MAX_UINT_HEX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
 type AbstractApprovalProps = {
     approveText: string,
+    approvalMessage: string,
     children: ReactElement,
     isLoading: boolean,
     isApproved: boolean,
@@ -17,7 +20,7 @@ type AbstractApprovalProps = {
 } & ButtonProps;
 
 const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
-    const {approveText, children, handleCheckApproval, handleApprove, provider, isLoading, isApproved, ...rest} = props;
+    const {approveText, approvalMessage, children, handleCheckApproval, handleApprove, provider, isLoading, isApproved, ...rest} = props;
 
 
     useEffect(() => {
@@ -26,6 +29,13 @@ const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
         }
     }, [provider, handleCheckApproval])
 
+    const [notification, setNotification] = useRecoilState(notificationAtom)
+
+    const abstractHandleApprove = () => {
+        handleApprove().then(() => {
+            setNotification("Token Approved")
+        })
+    }
 
     if (!provider){
         return <Button
@@ -48,7 +58,7 @@ const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
     }
     return <Button
         {...rest}
-        onClick = {handleApprove}
+        onClick = {abstractHandleApprove}
     >
         {approveText}
     </Button>
@@ -122,6 +132,7 @@ export const ERC20Approval: React.FC<ERC20ApprovalProps> = (props) => {
 
     return <AbstractApproval
         isLoading={isLoading}
+        approvalMessage={`${tokenName?.toUpperCase()} approved`}
         isApproved={isApproved}
         handleApprove={handleApprove}
         handleCheckApproval={handleCheckApproval}
@@ -196,6 +207,7 @@ export const BalancerApproval: React.FC<BalancerApprovalProps> = (props) => {
         handleApprove={handleApprove}
         handleCheckApproval={handleCheckApproval}
         approveText="Approve Balancer Pool"
+        approvalMessage="Balancer Pool Approved"
         provider={provider}
         {...rest}
     >

@@ -5,6 +5,8 @@ import { useRecoilValue } from 'recoil';
 import { useContext, useState } from "react";
 import { SignerContext } from "../../../hardhat/SymfoniContext";
 import { slippageToleranceAtom } from "../../../recoil/transactionSettings/atom";
+import { notificationAtom } from "../../../recoil/notifications/atom";
+import { useRecoilState } from 'recoil';
 
 export interface ApeProps {
     baseToken: {
@@ -26,6 +28,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext);
     const slippageTolerance = useRecoilValue(slippageToleranceAtom);
+    const [notification, setNotification] = useRecoilState(notificationAtom);
 
     // Execute the actual calculation transaction
     const handleExecuteTransaction = () => {
@@ -37,7 +40,8 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 slippageTolerance,
                 elementAddresses,
                 signer
-            ).then(() => {
+            ).then((receipt) => {
+                setNotification('YTC Execution Succesful');
             }).finally(() => {
                 setIsLoading(false)
             })

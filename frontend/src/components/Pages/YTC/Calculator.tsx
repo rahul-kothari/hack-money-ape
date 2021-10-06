@@ -12,6 +12,7 @@ import { elementAddressesAtom } from "../../../recoil/element/atom";
 import { isSimulatedSelector, isSimulatingAtom, simulationResultsAtom } from "../../../recoil/simulationResults/atom";
 import { Token, Tranche } from "../../../types/manual/types";
 import * as Yup from 'yup';
+import { notificationAtom } from "../../../recoil/notifications/atom";
 
 interface CalculateProps {
     tokens: Token[];
@@ -26,6 +27,7 @@ export interface FormFields {
 
 export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
     const {tokens} = props;
+    const [notification, setNotification] = useRecoilState(notificationAtom);
 
     const setSimulationResults = useRecoilState(simulationResultsAtom)[1];
     const setIsSimulating = useRecoilState(isSimulatingAtom)[1];
@@ -59,7 +61,9 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                         return results;
                     })
                 }
-            ).finally(() => {
+            ).catch((error) => {
+                setNotification("Simulation Failed")
+            }).finally(() => {
                 setIsSimulating(false);
             })
         }
