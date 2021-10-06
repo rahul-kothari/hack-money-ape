@@ -3,6 +3,8 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 import Footer from './Footer';
 import Header from './Header';
+import { Decollateralize } from './Pages/Decollateralize';
+import { Ladder } from './Pages/Ladder';
 import { YTC } from './Pages/YTC';
 
 interface Props {
@@ -30,10 +32,10 @@ export const Template: React.FC<Props> = (props: Props) => {
                         <YTC/>
                     </Route>
                     <Route path="/decollateralize">
-                        Decollateralize
+                        <Decollateralize/>
                     </Route>
                     <Route path="/ladder">
-                        Ladder
+                        <Ladder/>
                     </Route>
                     <Route path="/">
                         Home
