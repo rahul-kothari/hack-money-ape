@@ -7,10 +7,10 @@ import Navbar from '../Navbar';
 
 export const Header = () => {
     return (
-        <div id="header" className="flex flex-col items-center p-3 justify-between md:flex-row md:items-center">
+        <div id="header" className="flex flex-col items-center p-2 px-5 justify-between md:flex-row md:items-center">
             <div id="Logo" className="p-2 flex flex-row justify-center md:justify-start md:flex-1">
                 <Link to="/">
-                    <img src={apeImage} alt={"APY"} className="h-24"/>
+                    <img src={apeImage} alt={"APY"} className="h-20"/>
                 </Link>
             </div>
             <Navbar/>

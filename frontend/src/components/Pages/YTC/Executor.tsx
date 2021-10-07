@@ -1,4 +1,4 @@
-import { Button, Divider, Spinner } from "@chakra-ui/react";
+import { Button, Text, Spinner } from "@chakra-ui/react";
 import { executeYieldTokenCompounding, YieldExposureData } from "../../../features/calculator/calculatorAPI";
 import { elementAddressesAtom } from "../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
@@ -19,17 +19,20 @@ export interface ApeProps {
     baseTokenAmount: number;
     yieldTokenAmount: number;
     userData: YieldExposureData
+    estimatedGas: number;
 }
 
 export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
-    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData} = props;
+    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData, estimatedGas} = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const setSimulationResults = useRecoilState(simulationResultsAtom)[1];
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext);
     const slippageTolerance = useRecoilValue(slippageToleranceAtom);
     const setNotification = useRecoilState(notificationAtom)[1];
+
+    const minimumReturn = yieldTokenAmount * (1-(slippageTolerance/100))
 
     // Execute the actual calculation transaction
     const handleExecuteTransaction = () => {
@@ -50,7 +53,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         linkText: "View on Explorer",
                         link: `https://etherscan.io/tx/${receipt.transactionHash}`
                     }
-);
+            );
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -59,31 +62,31 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
     return (
         <div id="ape" className="py-5 flex flex-col gap-3">
-            <div id="ape-params" className="flex flex-col p-2 gap-1 shadow-lg rounded-2xl border bg-indigo-100">
+            <div id="ape-params" className="flex flex-col p-4 gap-3 shadow-lg rounded-2xl border bg-indigo-100">
+                <Text fontSize="large" fontWeight="extrabold">Output</Text>
                 <div id="outputs" className="flex flex-col gap-1">
-                    <div id="form" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg">
-                        <div id="asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
-                            <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
-                            </div>
+                    <div id="base-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between">
+                        <div id="base-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
+                            {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
+                            </div> */}
                             <div id="asset-details" className="flex-grow text-left font-bold">
-                                <div id="asset-name">
+                                <div id="base-token-asset-name">
                                     {baseToken.name.toUpperCase()}
                                 </div>
                             </div>
-
                         </div>
-                        <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
-                            <div id="amount-text" className="self-center text-lg">
+                        <div id="base-token-amount" className="h-16 rounded-r-full flex px-3">
+                            <div id="base-token-amount-text" className="self-center text-lg">
                                 {baseTokenAmount}
                             </div>
                         </div>
                     </div>
-                    <div id="form" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg">
-                        <div id="asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
-                            <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
-                            </div>
-                            <div id="asset-details" className="flex-grow text-left">
-                                <div id="asset-name" className="font-bold">
+                    <div id="y-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between">
+                        <div id="y-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
+                            {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50"> */}
+                            {/* </div> */}
+                            <div id="y-token-asset-details" className="flex-grow text-left">
+                                <div id="y-token-asset-name" className="font-bold">
                                     {yieldToken.name}
                                 </div>
                                 {/* <div id="asset-date">
@@ -92,17 +95,26 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                             </div>
 
                         </div>
-                        <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
+                        <div id="y-token-amount" className="h-16 rounded-r-full flex px-3">
                             <div id="amount-text" className="self-center text-lg">
                                 {yieldTokenAmount}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="ape-details">
-                    <div>Slippage Percentage</div>
-                    <div>Minimum Return</div>
-                    <div>Estimated Gas Cost</div>
+                <div id="ape-details" className="">
+                    <DetailItem
+                        name="Slippage Tolerance:"
+                        value={`%${slippageTolerance}`}
+                    />
+                    <DetailItem
+                        name="Minimum YT Received:"
+                        value={`${minimumReturn}`}
+                    />
+                    <DetailItem
+                        name="Estimated Gas Cost:"
+                        value={`${estimatedGas} ETH`}
+                    />
                     <div></div>
                 </div>
             </div>
@@ -120,4 +132,18 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
             </Button>
         </div>
     )
+}
+
+interface DetailItemProps {
+    name: string,
+    value: string,
+}
+
+const DetailItem: React.FC<DetailItemProps> = (props) => {
+    const {name, value} = props;
+
+    return <div className="flex flex-row justify-between">
+        <Text>{name}</Text>
+        <Text>{value}</Text>
+    </div>
 }

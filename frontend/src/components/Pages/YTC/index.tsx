@@ -36,7 +36,8 @@ export const YTC: React.FC<YTCProps> = (props) => {
             },
             baseTokenAmount: result.remainingTokens,
             yieldTokenAmount: result.ytExposure,
-            userData: result.inputs
+            userData: result.inputs,
+            estimatedGas: result.ethGasFees,
         }
     }
 

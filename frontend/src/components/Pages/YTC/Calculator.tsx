@@ -243,7 +243,7 @@ const Form: React.FC<FormProps> = (props) => {
             gridGap={6}
         >
             <Select
-                width="36"
+                width="40"
                 name="tokenAddress"
                 rounded="full"
                 variant="filled"
@@ -259,7 +259,7 @@ const Form: React.FC<FormProps> = (props) => {
                 })}
             </Select>
             <Select
-                width="36"
+                width="40"
                 name="trancheAddress"
                 rounded="full"
                 variant="filled"
@@ -281,13 +281,14 @@ const Form: React.FC<FormProps> = (props) => {
             id="parameters"
             flexDir="column"
             alignItems="stretch"
-            p={6}
+            p={4}
             gridGap={3}
             w="full"
             bgColor="indigo.100"
             rounded="2xl"
             shadow="lg"
         >
+            <Text fontSize="large" fontWeight="extrabold" >Input</Text>
             <Flex
                 id="table-headers"
                 flexDir="row"
@@ -338,15 +339,16 @@ const Form: React.FC<FormProps> = (props) => {
                 flexDir="row"
                 justify="space-between"
                 alignItems="center"
+                gridGap={3}
             >
                 <Flex
                     id="compounds"
                     p={2}
                     rounded="xl"
                     w="50%"
-                    _hover={{
-                        shadow: "inner"
-                    }}
+                    // _hover={{
+                        shadow= "inner"
+                    // }}
                 >
 
                     <input
@@ -367,9 +369,9 @@ const Form: React.FC<FormProps> = (props) => {
                     rounded="xl"
                     gridGap={2}
                     w="50%"
-                    _hover={{
-                        shadow: "inner"
-                    }}
+                    // _hover={{
+                        shadow= "inner"
+                    // }}
                 >
                     <input
                         type="number"
