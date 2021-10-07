@@ -1,4 +1,4 @@
-import { Button, Spinner } from "@chakra-ui/react";
+import { Button, Divider, Spinner } from "@chakra-ui/react";
 import { executeYieldTokenCompounding, YieldExposureData } from "../../../features/calculator/calculatorAPI";
 import { elementAddressesAtom } from "../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
@@ -42,6 +42,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 elementAddresses,
                 signer
             ).then((receipt) => {
+                setSimulationResults([]);
                 setNotification(
                     {
                         text: "YTC Execution Succesful",
@@ -52,48 +53,57 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 );
             }).finally(() => {
                 setIsLoading(false)
-                setSimulationResults([]);
             })
         }
     }
 
     return (
         <div id="ape" className="py-5 flex flex-col gap-3">
-            <div id="form" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400">
-                <div id="asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
-                    <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
-                    </div>
-                    <div id="asset-details" className="flex-grow text-left font-bold">
-                        <div id="asset-name">
-                            {baseToken.name.toUpperCase()}
+            <div id="ape-params" className="flex flex-col p-2 gap-1 shadow-lg rounded-2xl border bg-indigo-100">
+                <div id="outputs" className="flex flex-col gap-1">
+                    <div id="form" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg">
+                        <div id="asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
+                            <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
+                            </div>
+                            <div id="asset-details" className="flex-grow text-left font-bold">
+                                <div id="asset-name">
+                                    {baseToken.name.toUpperCase()}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
+                            <div id="amount-text" className="self-center text-lg">
+                                {baseTokenAmount}
+                            </div>
                         </div>
                     </div>
+                    <div id="form" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg">
+                        <div id="asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
+                            <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
+                            </div>
+                            <div id="asset-details" className="flex-grow text-left">
+                                <div id="asset-name" className="font-bold">
+                                    {yieldToken.name}
+                                </div>
+                                {/* <div id="asset-date">
+                                    {(new Date(yieldToken.expiry * 1000)).toLocaleDateString()}
+                                </div> */}
+                            </div>
 
-                </div>
-                <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
-                    <div id="amount-text" className="self-center text-lg">
-                        {baseTokenAmount}
-                    </div>
-                </div>
-            </div>
-            <div id="form" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400">
-                <div id="asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
-                    <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
-                    </div>
-                    <div id="asset-details" className="flex-grow text-left">
-                        <div id="asset-name" className="font-bold">
-                            {yieldToken.name}
                         </div>
-                        {/* <div id="asset-date">
-                            {(new Date(yieldToken.expiry * 1000)).toLocaleDateString()}
-                        </div> */}
+                        <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
+                            <div id="amount-text" className="self-center text-lg">
+                                {yieldTokenAmount}
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-                <div id="amount" className="h-16 flex-grow rounded-r-full flex px-3">
-                    <div id="amount-text" className="self-center text-lg">
-                        {yieldTokenAmount}
-                    </div>
+                <div id="ape-details">
+                    <div>Slippage Percentage</div>
+                    <div>Minimum Return</div>
+                    <div>Estimated Gas Cost</div>
+                    <div></div>
                 </div>
             </div>
             <Button
