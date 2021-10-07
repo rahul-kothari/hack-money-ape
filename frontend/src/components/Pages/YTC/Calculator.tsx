@@ -143,6 +143,7 @@ const Form: React.FC<FormProps> = (props) => {
     const erc20 = useContext(ERC20Context)
     const [currentAddress] = useContext(CurrentAddressContext)
     const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
+    const [simulationResults] = useRecoilValue(simulationResultsAtom);
     const elementAddresses = useRecoilValue(elementAddressesAtom)
     const history = useHistory();
     const query = useQuery();
@@ -171,6 +172,24 @@ const Form: React.FC<FormProps> = (props) => {
         return token?.name || undefined;
     }
 
+    const updateBalance = () => {
+        if (tokenAddress){
+            const tokenContract = erc20.factory?.attach(tokenAddress);
+            getBalance(currentAddress, tokenContract).then((res) => {
+                setBalance(res);
+            })
+        }
+    }
+
+    const updateTokens = () => {
+        if (tokenAddress){
+            getActiveTranches(tokenAddress, elementAddresses).then((res) => {
+                setTranches(res);
+                setFieldValue('trancheAddress', res[0]?.address);
+            })
+        } 
+    }
+
     // if there is a token specified in the query params we want to set the value of the form to it
     useEffect(() => {
         if (tokens.length >= 1){
@@ -180,18 +199,13 @@ const Form: React.FC<FormProps> = (props) => {
     }, [getTokenAddress, tokens, setFieldValue])
 
     useEffect(() => {
-        // if the token is selected then put it in
-        if (tokenAddress){
-            getActiveTranches(tokenAddress, elementAddresses).then((res) => {
-                setTranches(res);
-                setFieldValue('trancheAddress', res[0]?.address);
-            })
-            const tokenContract = erc20.factory?.attach(tokenAddress);
-            getBalance(currentAddress, tokenContract).then((res) => {
-                setBalance(res);
-            })
-        } 
+        updateTokens();
+        updateBalance();
     }, [tokenAddress, elementAddresses, erc20.factory, currentAddress, setFieldValue, setBalance])
+
+    useEffect(() => {
+        updateBalance();
+    }, [simulationResults])
 
 
     // custom handler for token input change, as it needs to be added as a query param

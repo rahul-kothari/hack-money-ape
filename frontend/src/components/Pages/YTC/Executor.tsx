@@ -7,6 +7,7 @@ import { SignerContext } from "../../../hardhat/SymfoniContext";
 import { slippageToleranceAtom } from "../../../recoil/transactionSettings/atom";
 import { notificationAtom } from "../../../recoil/notifications/atom";
 import { useRecoilState } from 'recoil';
+import { simulationResultsAtom } from "../../../recoil/simulationResults/atom";
 
 export interface ApeProps {
     baseToken: {
@@ -24,7 +25,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
     const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData} = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    const setSimulationResults = useRecoilState(simulationResultsAtom)[1];
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext);
     const slippageTolerance = useRecoilValue(slippageToleranceAtom);
@@ -51,6 +52,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 );
             }).finally(() => {
                 setIsLoading(false)
+                setSimulationResults([]);
             })
         }
     }

@@ -97,8 +97,16 @@ const getYieldCalculationParameters = async (userData: YieldExposureData, consta
 
 
 export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName}: YieldCalculationParameters, userData: YieldExposureData, signer: Signer): Promise<YTCOutput> => {
+    console.log('Calculating Yield Exposure');
     const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), baseTokenDecimals);
 
+    console.log({
+        numberOfCompounds: userData.numberOfCompounds,
+        trancheAddress,
+        balancerPoolId,
+        baseTokenAmountAbsolute,
+        MINIMUM_OUTPUT
+    })
     // Call the method statically to calculate the estimated return
     const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, MINIMUM_OUTPUT);
 
@@ -163,11 +171,14 @@ export const executeYieldTokenCompounding = async (userData: YieldExposureData, 
     const yieldCalculationParameters = await getYieldCalculationParameters(userData, constants, signer);
 
     const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), yieldCalculationParameters.baseTokenDecimals);
+    const expectedYieldTokensAbsolute = ethers.utils.parseUnits(expectedYieldTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
 
-    // The minimum yield is the number of yield tokens that will be returned by the transaction
-    const minimumYieldTokens = expectedYieldTokens * (1 - slippageTolerancePercentage/100);
-    const minimumYieldAbsolute = ethers.utils.parseUnits(minimumYieldTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
+    // The maximum number of yTokens that can be lost due to slippage
+    const maximumSlippageTokens = expectedYieldTokens * (slippageTolerancePercentage/100);
+    const maximumSlippageTokensAbsolute = ethers.utils.parseUnits(maximumSlippageTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
 
+    // The minimum number of yTokens that should be received
+    const minimumYieldAbsolute = expectedYieldTokensAbsolute.sub(maximumSlippageTokensAbsolute);
 
     const ytc: YieldTokenCompoundingType = yieldCalculationParameters.ytc as YieldTokenCompoundingType;
 
