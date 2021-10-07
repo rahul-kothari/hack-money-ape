@@ -175,7 +175,15 @@ export const executeYieldTokenCompounding = async (userData: YieldExposureData, 
 
     // The maximum number of yTokens that can be lost due to slippage
     const maximumSlippageTokens = expectedYieldTokens * (slippageTolerancePercentage/100);
-    const maximumSlippageTokensAbsolute = ethers.utils.parseUnits(maximumSlippageTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
+
+    let maximumSlippageTokensAbsolute;
+    try {
+        // If there are too many decimals parsing the units will fail, thus we cut it to 8 decimals
+        maximumSlippageTokensAbsolute = ethers.utils.parseUnits((maximumSlippageTokens).toString(), yieldCalculationParameters.yieldTokenDecimals);
+    } catch {
+        maximumSlippageTokensAbsolute = ethers.utils.parseUnits((maximumSlippageTokens.toFixed(6)), yieldCalculationParameters.yieldTokenDecimals)
+    }
+    console.log(maximumSlippageTokensAbsolute);
 
     // The minimum number of yTokens that should be received
     const minimumYieldAbsolute = expectedYieldTokensAbsolute.sub(maximumSlippageTokensAbsolute);
