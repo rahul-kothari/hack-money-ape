@@ -74,7 +74,6 @@ export const getBalance = async (currentAddress: string, contract: ERC20 | undef
         const decimals = await contract.decimals();
 
         const balanceAbsolute = await contract.balanceOf(currentAddress);
-
         const balanceNormalized = ethers.utils.formatUnits(balanceAbsolute, decimals);
 
         return parseFloat(balanceNormalized);

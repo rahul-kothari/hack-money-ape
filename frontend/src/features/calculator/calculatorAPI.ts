@@ -40,6 +40,7 @@ interface YieldCalculationParameters {
     baseTokenDecimals: number;
     trancheExpiration: number;
     baseTokenName: string;
+    baseTokenAmountAbsolute: BigNumber;
     ytName: string;
 }
 
@@ -79,8 +80,17 @@ const getYieldCalculationParameters = async (userData: YieldExposureData, consta
     const yieldToken: ERC20Type = (new ethers.Contract(yieldTokenAddress, erc20Abi, signer)) as ERC20Type;
     const ytName = await yieldToken.symbol();
     const yieldTokenDecimals = ethers.BigNumber.from(await yieldToken.decimals()).toNumber();
-    const baseToken = new ethers.Contract(baseTokenAddress, erc20Abi, signer);
+    const baseToken: ERC20Type = new ethers.Contract(baseTokenAddress, erc20Abi, signer) as ERC20Type;
     const baseTokenDecimals = ethers.BigNumber.from(await baseToken.decimals()).toNumber();
+
+    const baseTokenBalance = await baseToken.balanceOf(await signer.getAddress());
+    const amountCollateralDespositedAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), baseTokenDecimals);
+
+    // if the suggested amount is greater than the total amount, return the total amount instead
+    let amount = amountCollateralDespositedAbsolute;
+    if (amountCollateralDespositedAbsolute.sub(baseTokenBalance).gt(0)){
+        amount = baseTokenBalance;
+    }
 
     return {
         ytc,
@@ -90,23 +100,14 @@ const getYieldCalculationParameters = async (userData: YieldExposureData, consta
         yieldTokenDecimals,
         baseTokenDecimals,
         baseTokenName,
+        baseTokenAmountAbsolute: amount,
         ytName,
     }
 
 }
 
 
-export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName}: YieldCalculationParameters, userData: YieldExposureData, signer: Signer): Promise<YTCOutput> => {
-    console.log('Calculating Yield Exposure');
-    const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), baseTokenDecimals);
-
-    console.log({
-        numberOfCompounds: userData.numberOfCompounds,
-        trancheAddress,
-        balancerPoolId,
-        baseTokenAmountAbsolute,
-        MINIMUM_OUTPUT
-    })
+export const calculateYieldExposure = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytName, baseTokenAmountAbsolute}: YieldCalculationParameters, userData: YieldExposureData, signer: Signer): Promise<YTCOutput> => {
     // Call the method statically to calculate the estimated return
     const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, MINIMUM_OUTPUT);
 
@@ -170,7 +171,6 @@ export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number,
 export const executeYieldTokenCompounding = async (userData: YieldExposureData, expectedYieldTokens: number, slippageTolerancePercentage: number, constants: ConstantsObject, signer: Signer) => {
     const yieldCalculationParameters = await getYieldCalculationParameters(userData, constants, signer);
 
-    const baseTokenAmountAbsolute = ethers.utils.parseUnits(userData.amountCollateralDeposited.toString(), yieldCalculationParameters.baseTokenDecimals);
     const expectedYieldTokensAbsolute = ethers.utils.parseUnits(expectedYieldTokens.toString(), yieldCalculationParameters.yieldTokenDecimals);
 
     // The maximum number of yTokens that can be lost due to slippage
@@ -182,7 +182,7 @@ export const executeYieldTokenCompounding = async (userData: YieldExposureData, 
 
     const ytc: YieldTokenCompoundingType = yieldCalculationParameters.ytc as YieldTokenCompoundingType;
 
-    const transaction = await ytc.compound(userData.numberOfCompounds, userData.trancheAddress, yieldCalculationParameters.balancerPoolId, baseTokenAmountAbsolute, minimumYieldAbsolute);
+    const transaction = await ytc.compound(userData.numberOfCompounds, userData.trancheAddress, yieldCalculationParameters.balancerPoolId, yieldCalculationParameters.baseTokenAmountAbsolute, minimumYieldAbsolute);
 
     const transactionReceipt = await transaction.wait();
 
@@ -250,8 +250,3 @@ export const getTokenNameByAddress = (address: string, tokens: {[name: string]: 
 
     return result && result[0]
 }
-
-// // Grabs the pricefeed of the base asset compared to eth used for gas
-// const ethToBaseAsset = async (provider: ethers.providers.Web3Provider, baseTokenContract: Contract): Promise<BigNumber> => {
-
-// }
