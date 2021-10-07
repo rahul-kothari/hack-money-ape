@@ -62,60 +62,61 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
     return (
         <div id="ape" className="py-5 flex flex-col gap-3">
-            <div id="ape-params" className="flex flex-col p-4 gap-3 shadow-lg rounded-2xl border bg-indigo-100">
+            <div id="ape-params" className="shadow-lg rounded-2xl bg-indigo-100 px-4 py-1">
                 <Text fontSize="large" fontWeight="extrabold">Output</Text>
-                <div id="outputs" className="flex flex-col gap-1">
-                    <div id="base-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between">
-                        <div id="base-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
-                            {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
-                            </div> */}
-                            <div id="asset-details" className="flex-grow text-left font-bold">
-                                <div id="base-token-asset-name">
-                                    {baseToken.name.toUpperCase()}
-                                </div>
-                            </div>
-                        </div>
-                        <div id="base-token-amount" className="h-16 rounded-r-full flex px-3">
-                            <div id="base-token-amount-text" className="self-center text-lg">
-                                {baseTokenAmount}
-                            </div>
-                        </div>
-                    </div>
-                    <div id="y-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between">
-                        <div id="y-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row p-3 items-center gap-2">
-                            {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50"> */}
-                            {/* </div> */}
-                            <div id="y-token-asset-details" className="flex-grow text-left">
-                                <div id="y-token-asset-name" className="font-bold">
-                                    {yieldToken.name}
-                                </div>
-                                {/* <div id="asset-date">
-                                    {(new Date(yieldToken.expiry * 1000)).toLocaleDateString()}
+                <div className="flex flex-col gap-3 py-2">
+                    <div id="outputs" className="flex flex-col gap-1">
+                        <div id="base-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between items-center">
+                            <div id="base-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row px-3 items-center">
+                                {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
                                 </div> */}
+                                <div id="asset-details" className="flex-grow text-left font-bold">
+                                    <div id="base-token-asset-name">
+                                        {baseToken.name.toUpperCase()}
+                                    </div>
+                                </div>
                             </div>
-
+                            <div id="base-token-amount" className="h-16 rounded-r-full flex px-3">
+                                <div id="base-token-amount-text" className="self-center text-lg">
+                                    {baseTokenAmount}
+                                </div>
+                            </div>
                         </div>
-                        <div id="y-token-amount" className="h-16 rounded-r-full flex px-3">
-                            <div id="amount-text" className="self-center text-lg">
-                                {yieldTokenAmount}
+                        <div id="y-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between items-center">
+                            <div id="y-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row px-3 items-center">
+                                {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50"> */}
+                                {/* </div> */}
+                                <div id="y-token-asset-details" className="flex-grow text-left">
+                                    <div id="y-token-asset-name" className="font-bold">
+                                        {yieldToken.name}
+                                    </div>
+                                    {/* <div id="asset-date">
+                                        {(new Date(yieldToken.expiry * 1000)).toLocaleDateString()}
+                                    </div> */}
+                                </div>
+
+                            </div>
+                            <div id="y-token-amount" className="h-16 rounded-r-full flex px-3">
+                                <div id="amount-text" className="self-center text-lg">
+                                    {yieldTokenAmount}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div id="ape-details" className="">
-                    <DetailItem
-                        name="Slippage Tolerance:"
-                        value={`%${slippageTolerance}`}
-                    />
-                    <DetailItem
-                        name="Minimum YT Received:"
-                        value={`${minimumReturn}`}
-                    />
-                    <DetailItem
-                        name="Estimated Gas Cost:"
-                        value={`${estimatedGas} ETH`}
-                    />
-                    <div></div>
+                    <div id="ape-details" className="">
+                        <DetailItem
+                            name="Slippage Tolerance:"
+                            value={`%${slippageTolerance}`}
+                        />
+                        <DetailItem
+                            name="Minimum YT Received:"
+                            value={`${minimumReturn}`}
+                        />
+                        <DetailItem
+                            name="Estimated Gas Cost:"
+                            value={`${estimatedGas} ETH`}
+                        />
+                    </div>
                 </div>
             </div>
             <Button

@@ -281,57 +281,63 @@ const Form: React.FC<FormProps> = (props) => {
             id="parameters"
             flexDir="column"
             alignItems="stretch"
-            p={4}
-            gridGap={3}
-            w="full"
             bgColor="indigo.100"
             rounded="2xl"
             shadow="lg"
+            px={4}
+            py={1}
         >
             <Text fontSize="large" fontWeight="extrabold" >Input</Text>
             <Flex
-                id="table-headers"
-                flexDir="row"
-                justify="space-between"
-                fontSize="sm"
+                flexDir="column"
+                alignItems="stretch"
+                gridGap={3}
+                w="full"
             >
                 <Flex
-                    id="compounds-header"
-                    alignItems="center"
-                    fontSize="sm"
-                >
-                    Compounds
-                </Flex>
-                <Flex
-                    id="amount-header"
+                    id="table-headers"
                     flexDir="row"
-                    gridGap={2}
-                    alignItems="center"
+                    justify="space-between"
                     fontSize="sm"
                 >
+                    <Flex
+                        id="compounds-header"
+                        alignItems="center"
+                        fontSize="sm"
+                    >
+                        Compounds
+                    </Flex>
+                    <Flex
+                        id="amount-header"
+                        flexDir="row"
+                        gridGap={2}
+                        alignItems="center"
+                        fontSize="sm"
+                    >
 
-                        <Button
-                            id="max"
-                            onClick={handleMax}
-                            bg="gray.300"
-                            rounded="xl"
-                            fontSize="sm"
-                            py={0}
-                            h="20px"
-                            px={2}
-                            _hover={
-                                {
-                                    bg: "gray.400"
+                            <Button
+                                id="max"
+                                onClick={handleMax}
+                                bg="gray.300"
+                                rounded="xl"
+                                fontSize="sm"
+                                py={0}
+                                h="20px"
+                                px={2}
+                                _hover={
+                                    {
+                                        bg: "gray.400"
+                                    }
                                 }
-                            }
-                        >
-                            MAX
-                        </Button>
-                        <Box
-                            id="balance"
-                        >
-                            Balance: {balance}                        
-                        </Box>
+                            >
+                                MAX
+                            </Button>
+                            <Box
+                                id="balance"
+                            >
+                                Balance: {balance}                        
+                            </Box>
+                    </Flex>
                 </Flex>
             </Flex>
             <Flex
@@ -345,10 +351,10 @@ const Form: React.FC<FormProps> = (props) => {
                     id="compounds"
                     p={2}
                     rounded="xl"
-                    w="50%"
-                    // _hover={{
-                        shadow= "inner"
-                    // }}
+                    w="30%"
+                    _hover={{
+                        shadow: "inner"
+                    }}
                 >
 
                     <input
@@ -368,10 +374,11 @@ const Form: React.FC<FormProps> = (props) => {
                     p={2}
                     rounded="xl"
                     gridGap={2}
-                    w="50%"
-                    // _hover={{
-                        shadow= "inner"
-                    // }}
+                    w="65%"
+                    flexGrow={1}
+                    _hover={{
+                        shadow: "inner"
+                    }}
                 >
                     <input
                         type="number"
