@@ -172,23 +172,28 @@ const Form: React.FC<FormProps> = (props) => {
         return token?.name || undefined;
     }
 
-    const updateBalance = () => {
-        if (tokenAddress){
-            const tokenContract = erc20.factory?.attach(tokenAddress);
-            getBalance(currentAddress, tokenContract).then((res) => {
-                setBalance(res);
-            })
-        }
-    }
+    const updateBalance = useCallback(
+        () => {
+            if (tokenAddress){
+                const tokenContract = erc20.factory?.attach(tokenAddress);
+                getBalance(currentAddress, tokenContract).then((res) => {
+                    setBalance(res);
+                })
+            }
+        }, [tokenAddress, currentAddress, erc20.factory, setBalance]
+    )
+    
 
-    const updateTokens = () => {
-        if (tokenAddress){
-            getActiveTranches(tokenAddress, elementAddresses).then((res) => {
-                setTranches(res);
-                setFieldValue('trancheAddress', res[0]?.address);
-            })
-        } 
-    }
+    const updateTokens = useCallback (
+        () => {
+            if (tokenAddress){
+                getActiveTranches(tokenAddress, elementAddresses).then((res) => {
+                    setTranches(res);
+                    setFieldValue('trancheAddress', res[0]?.address);
+                })
+            } 
+        }, [tokenAddress, setTranches, setFieldValue, elementAddresses]
+    )
 
     // if there is a token specified in the query params we want to set the value of the form to it
     useEffect(() => {
@@ -201,11 +206,11 @@ const Form: React.FC<FormProps> = (props) => {
     useEffect(() => {
         updateTokens();
         updateBalance();
-    }, [tokenAddress, elementAddresses, erc20.factory, currentAddress, setFieldValue, setBalance])
+    }, [tokenAddress, elementAddresses, erc20.factory, currentAddress, setFieldValue, setBalance, updateTokens, updateBalance])
 
     useEffect(() => {
         updateBalance();
-    }, [simulationResults])
+    }, [simulationResults, updateBalance])
 
 
     // custom handler for token input change, as it needs to be added as a query param
