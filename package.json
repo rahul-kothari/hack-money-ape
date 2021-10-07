@@ -7,7 +7,8 @@
     "node": "npx hardhat node --watch",
     "test": "npx hardhat test --deploy-fixture",
     "frontend": "cd frontend && npm run start",
-    "build-backend": "npx hardhat compile && npx hardhat deploy && npx hardhat typechain && npx hardhat react"
+    "deploy:hardhat": "npx hardhat compile && npx hardhat typechain && npx hardhat deploy && npx hardhat react",
+    "deploy:goerli": "npx hardhat compile --network goerli && npx hardhat deploy --network goerli && npx hardhat typechain --network goerli && npx hardhat react --network goerli"
   },
   "browserslist": {
     "production": [

@@ -28,6 +28,7 @@ const config: HardhatUserConfig = {
     providerPriority: ["web3modal", "hardhat"],
   },
   paths: {
+    react: "./frontend/src/hardhat",
     sources: "./contracts",
     artifacts: "./frontend/src/artifacts",
     tests: "./test",

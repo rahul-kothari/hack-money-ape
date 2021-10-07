@@ -7,13 +7,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {deploy} = hre.deployments;
   console.log(`Deploying contracts using ${signer.address}`);
 
-  // give 100 eth to the account 
-  await hre.network.provider.send('hardhat_setBalance', [
-    signer.address,
-    "0x21E19E0C9BAB2400000"
-  ])
 
-  let data = JSON.parse(fs.readFileSync("./constants/mainnet-constants.json").toString());
+  if (hre.network.name === "hardhat"){
+    // give 100 eth to the account 
+    await hre.network.provider.send('hardhat_setBalance', [
+      signer.address,
+      "0x21E19E0C9BAB2400000"
+    ])
+  }
+
+  if (hre.network.name === "goerli"){
+    var data = JSON.parse(fs.readFileSync("./constants/goerli-constants.json").toString());
+  } else {
+    var data = JSON.parse(fs.readFileSync("./constants/mainnet-constants.json").toString());
+  }
+
   // const bytecodeHash = ethers.utils.solidityKeccak256(["bytes"], [data.trancheBytecode]);
   const balVault = data.balancerVault;
   // const trancheFactory = data.trancheFactory;

@@ -27,8 +27,9 @@ node_modules
 
 #Hardhat files
 cache
-artifacts
-src/types
+frontend/src/artifacts
+frontend/src/hardhat/
+
 
 #VS Code
 .vscode
