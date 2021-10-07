@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useContext, useEffect, useState } fro
 import { Button, ButtonProps, Spinner } from '@chakra-ui/react'
 import { checkApproval, sendApproval } from './approvalAPI';
 import { ProviderContext, ERC20Context, CurrentAddressContext, YieldTokenCompoundingContext } from '../../hardhat/SymfoniContext';
-import { BigNumber, providers } from 'ethers';
+import { BigNumber, ContractReceipt, providers } from 'ethers';
 import { notificationAtom } from '../../recoil/notifications/atom';
 import { useRecoilState } from 'recoil';
 
@@ -13,14 +13,15 @@ type AbstractApprovalProps = {
     approvalMessage: string,
     children: ReactElement,
     isLoading: boolean,
+    setIsLoading: (bool: boolean) => void,
     isApproved: boolean,
     provider: providers.Provider | undefined,
     handleCheckApproval: () => Promise<void>,
-    handleApprove: () => Promise<void>
+    handleApprove: () => Promise<ContractReceipt>
 } & ButtonProps;
 
 const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
-    const {approveText, approvalMessage, children, handleCheckApproval, handleApprove, provider, isLoading, isApproved, ...rest} = props;
+    const {approveText, approvalMessage, children, handleCheckApproval, handleApprove, provider, isLoading, isApproved, setIsLoading, ...rest} = props;
 
 
     useEffect(() => {
@@ -29,14 +30,24 @@ const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
         }
     }, [provider, handleCheckApproval])
 
-    const [notification, setNotification] = useRecoilState(notificationAtom)
+    const setNotification = useRecoilState(notificationAtom)[1];
 
     const abstractHandleApprove = () => {
-        handleApprove().then(() => {
+        handleApprove().then((receipt) => {
+            console.log(receipt);
             setNotification({
                 text: approvalMessage,
-                type: "SUCCESS"
+                type: "SUCCESS",
+                linkText: "View on Explorer",
+                link: `https://etherscan.io/tx/${receipt.transactionHash}`
             })
+        }).catch(() => {
+            setNotification({
+                type: "ERROR",
+                text: "Token Approval Failed"
+            })
+        }).finally(() => {
+            setIsLoading(false);
         })
     }
 
@@ -107,28 +118,20 @@ export const ERC20Approval: React.FC<ERC20ApprovalProps> = (props) => {
         [currentAddress, amount, approvalAddress, erc20.factory, provider, tokenAddress],
     )
 
-    const handleApprove = useCallback(
+    const handleApprove: () => Promise<ContractReceipt> = useCallback(
         async () => {
             if (approvalAddress && tokenAddress && provider) {
                 setIsLoading(true);
+
                 // send the approval request
-                // This does not resolve based on the approval being successful
-                // Rather it resolves on the approval happening in the wallet
                 const tokenContract = erc20.factory?.attach(tokenAddress);
                 if (tokenContract){
-                    sendApproval(
-                        amount,
-                        approvalAddress,
-                        tokenContract
-                    ).then(() => {
-                        handleCheckApproval();
-                    }).catch((error: Error) => {
-                        console.error(error);
-                    }).finally(() => {
-                        setIsLoading(false);
-                    })
-                }
+                    const receipt = await sendApproval(amount, approvalAddress, tokenContract)
+                    handleCheckApproval();
+                    return receipt;
+                } 
             }
+            throw new Error('Could not connect to token contract')
         },
         [amount, tokenAddress, approvalAddress, handleCheckApproval, erc20.factory, provider]
     )
@@ -137,6 +140,7 @@ export const ERC20Approval: React.FC<ERC20ApprovalProps> = (props) => {
         isLoading={isLoading}
         approvalMessage={`${tokenName?.toUpperCase()} approved`}
         isApproved={isApproved}
+        setIsLoading={setIsLoading}
         handleApprove={handleApprove}
         handleCheckApproval={handleCheckApproval}
         approveText={`Approve ${tokenName?.toUpperCase()}`}
@@ -180,17 +184,18 @@ export const BalancerApproval: React.FC<BalancerApprovalProps> = (props) => {
         [trancheAddress, ytc],
     )
 
-    const handleApprove = useCallback(
+    const handleApprove: () => Promise<ContractReceipt> = useCallback(
         async () => {
             if (trancheAddress){
                 setIsLoading(true);
                 const tx = await ytc.instance?.approveTranchePTOnBalancer(trancheAddress);
                 if (tx){
-                    await tx.wait();
+                    const receipt = await tx.wait();
                     handleCheckApproval()
+                    return receipt;
                 }
-                setIsLoading(false);
             }
+            throw new Error('Could not approve balancer pool');
         },
         [trancheAddress, handleCheckApproval, ytc],
     )
@@ -207,6 +212,7 @@ export const BalancerApproval: React.FC<BalancerApprovalProps> = (props) => {
     return <AbstractApproval
         isLoading={isLoading}
         isApproved={isApproved}
+        setIsLoading={setIsLoading}
         handleApprove={handleApprove}
         handleCheckApproval={handleCheckApproval}
         approveText="Approve Balancer Pool"

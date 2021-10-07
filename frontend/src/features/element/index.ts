@@ -2,7 +2,6 @@
 import _ from 'lodash';
 import { ConstantsObject, Token, Tranche } from "../../types/manual/types";
 import { ERC20 } from '../../hardhat/typechain/ERC20';
-import { BigNumber } from '@ethersproject/bignumber';
 import { isTrancheActive } from '../calculator/calculatorAPI';
 import { ethers } from 'ethers';
 

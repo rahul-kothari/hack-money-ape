@@ -28,7 +28,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext);
     const slippageTolerance = useRecoilValue(slippageToleranceAtom);
-    const [notification, setNotification] = useRecoilState(notificationAtom);
+    const setNotification = useRecoilState(notificationAtom)[1];
 
     // Execute the actual calculation transaction
     const handleExecuteTransaction = () => {
@@ -44,7 +44,9 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 setNotification(
                     {
                         text: "YTC Execution Succesful",
-                        type: "SUCCESS"
+                        type: "SUCCESS",
+                        linkText: "View on Explorer",
+                        link: `https://etherscan.io/tx/${receipt.transactionHash}`
                     }
 );
             }).finally(() => {

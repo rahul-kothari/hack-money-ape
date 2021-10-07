@@ -18,7 +18,7 @@ function App() {
     fetchElementState(chainName).then((json) => {
       setElementState(json);
     })
-  }, [])
+  }, [chainName, setElementState])
 
   return (
     <div className="App">

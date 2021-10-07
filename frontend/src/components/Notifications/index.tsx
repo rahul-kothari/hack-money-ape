@@ -2,7 +2,7 @@ import { useToast } from "@chakra-ui/toast";
 import { notificationAtom } from "../../recoil/notifications/atom";
 import { useRecoilValue } from "recoil";
 import { useEffect } from "react";
-import { Box } from "@chakra-ui/layout";
+import { Box, Link, Text } from "@chakra-ui/layout";
 
 export const Notifications = () => {
     const notification = useRecoilValue(notificationAtom)
@@ -16,22 +16,26 @@ export const Notifications = () => {
                     <NotificationBox
                         text={notification.text}
                         type={notification.type}
+                        link={notification.link}
+                        linkText={notification.linkText}
                     />
                 ),
             })
         }
-    }, [notification])
+    }, [notification, toast])
 
     return <></>
 }
 
-interface NotificationBoxProps {
+export interface NotificationBoxProps {
     text: string,
     type: "ERROR" | "SUCCESS" | "GENERAL"
+    linkText?: string,
+    link?: string,
 }
 
 const NotificationBox: React.FC<NotificationBoxProps> = (props) => {
-    const {text, type} = props;
+    const {text, type, link, linkText} = props;
 
     const color = (() => {
         switch(type){
@@ -47,7 +51,17 @@ const NotificationBox: React.FC<NotificationBoxProps> = (props) => {
     })()
 
     return <Box color="white" p={3} bg={color}>
-        {text}
+        <Text>
+            {text}
+        </Text>
+        { linkText && <Link
+            href={link}
+            isExternal
+            fontSize="xs"
+            textColor="indigo.400"
+        >
+            {linkText}
+        </Link>}
     </Box>
 
 }

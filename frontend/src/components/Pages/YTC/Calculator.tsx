@@ -1,5 +1,4 @@
 import { Box, Button, ButtonProps, Flex, Select, Spinner, Text } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -27,7 +26,7 @@ export interface FormFields {
 
 export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
     const {tokens} = props;
-    const [notification, setNotification] = useRecoilState(notificationAtom);
+    const setNotification = useRecoilState(notificationAtom)[1];
 
     const setSimulationResults = useRecoilState(simulationResultsAtom)[1];
     const setIsSimulating = useRecoilState(isSimulatingAtom)[1];
@@ -192,7 +191,7 @@ const Form: React.FC<FormProps> = (props) => {
                 setBalance(res);
             })
         } 
-    }, [tokenAddress, elementAddresses, erc20.factory, currentAddress, setFieldValue])
+    }, [tokenAddress, elementAddresses, erc20.factory, currentAddress, setFieldValue, setBalance])
 
 
     // custom handler for token input change, as it needs to be added as a query param

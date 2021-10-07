@@ -1,4 +1,3 @@
-import { Flex, Text, Link } from "@chakra-ui/layout";
 import React, { useEffect, useState } from "react"
 import { getBaseTokensWithActiveTranches } from "../../../features/element";
 import { elementAddressesAtom } from "../../../recoil/element/atom";
@@ -43,8 +42,8 @@ export const YTC: React.FC<YTCProps> = (props) => {
 
     return <div>
         <Title
-            title="Yield token Compounding"
-            infoLinkText="What is Yield Token Compounding"
+            title="Yield Token Compounding"
+            infoLinkText="What is Yield Token Compounding?"
             infoLink="https://medium.com/element-finance/intro-to-yield-token-compounding-40a75a11e18c#:~:text=Element%20lets%20you%20put%20otherwise,Yield%20Token%20Compounding%20(YTC)."
         />
         <Calculator
