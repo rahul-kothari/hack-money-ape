@@ -8,6 +8,7 @@ import { slippageToleranceAtom } from "../../../recoil/transactionSettings/atom"
 import { notificationAtom } from "../../../recoil/notifications/atom";
 import { useRecoilState } from 'recoil';
 import { simulationResultsAtom } from "../../../recoil/simulationResults/atom";
+import { BaseTokenPriceFeed, YTPriceFeed } from "../../Prices";
 
 export interface ApeProps {
     baseToken: {
@@ -80,6 +81,12 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                                 <div id="base-token-amount-text" className="self-center text-lg">
                                     {baseTokenAmount}
                                 </div>
+                                <div id="base-token-dollar-value" className="">
+                                    <BaseTokenPriceFeed
+                                        amount={baseTokenAmount}
+                                        baseTokenName={baseToken.name}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div id="y-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between items-center">
@@ -99,6 +106,12 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                             <div id="y-token-amount" className="h-16 rounded-r-full flex px-3">
                                 <div id="amount-text" className="self-center text-lg">
                                     {yieldTokenAmount}
+                                </div>
+                                <div id="yield-token-dollar-value" className="">
+                                    <YTPriceFeed
+                                        amount={yieldTokenAmount}
+                                        baseTokenName={baseToken.name}
+                                    />
                                 </div>
                             </div>
                         </div>

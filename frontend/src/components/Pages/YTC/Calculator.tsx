@@ -12,6 +12,7 @@ import { isSimulatedSelector, isSimulatingAtom, simulationResultsAtom } from "..
 import { Token, Tranche } from "../../../types/manual/types";
 import * as Yup from 'yup';
 import { notificationAtom } from "../../../recoil/notifications/atom";
+import { BaseTokenPriceFeed } from "../../Prices";
 
 interface CalculateProps {
     tokens: Token[];
@@ -374,33 +375,48 @@ const Form: React.FC<FormProps> = (props) => {
                     />
                 </Flex>
                 <Flex
-                    id="amount"
-                    flexDir="row"
+                    flexDir="column"
+                    id="amount-col"
                     p={2}
-                    rounded="xl"
-                    gridGap={2}
                     w="65%"
                     flexGrow={1}
-                    _hover={{
-                        shadow: "inner"
-                    }}
                 >
-                    <input
-                        type="number"
-                        name="amount"
-                        onBlur={formik.handleBlur}
-                        value={formik.values.amount}
-                        placeholder={"0.0"}
-                        onChange={formik.handleChange}
-                        id="amount-input"
-                        className={`text-lg text-right bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
-                    <Text
-                        id="amount-token-label"
-                        fontSize="lg"
-                        whiteSpace="nowrap"
+                    <Flex
+                        id="amount-row"
+                        flexDir="row"
+                        rounded="xl"
+                        gridGap={2}
+                        _hover={{
+                            shadow: "inner"
+                        }}
                     >
-                        {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
-                    </Text>
+                        <input
+                            type="number"
+                            name="amount"
+                            onBlur={formik.handleBlur}
+                            value={formik.values.amount}
+                            placeholder={"0.0"}
+                            onChange={formik.handleChange}
+                            id="amount-input"
+                            className={`text-lg text-right bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
+                        <Text
+                            id="amount-token-label"
+                            fontSize="lg"
+                            whiteSpace="nowrap"
+                        >
+                            {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
+                        </Text>
+                    </Flex>
+                    <Flex
+                        alignSelf="end"
+                        fontSize="sm"
+                        textColor="gray.500"
+                    >
+                        <BaseTokenPriceFeed
+                            baseTokenName = {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
+                            amount = {formik.values.amount}
+                        />
+                    </Flex>
                 </Flex>
             </Flex>
         </Flex>
