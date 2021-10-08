@@ -384,8 +384,10 @@ const Form: React.FC<FormProps> = (props) => {
                     <Flex
                         id="amount-row"
                         flexDir="row"
+                        justifyContent="end"
                         rounded="xl"
                         gridGap={2}
+                        p={1}
                         _hover={{
                             shadow: "inner"
                         }}
@@ -398,7 +400,7 @@ const Form: React.FC<FormProps> = (props) => {
                             placeholder={"0.0"}
                             onChange={formik.handleChange}
                             id="amount-input"
-                            className={`text-lg text-right bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
+                            className={`text-lg text-right flex-grow bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
                         <Text
                             id="amount-token-label"
                             fontSize="lg"
