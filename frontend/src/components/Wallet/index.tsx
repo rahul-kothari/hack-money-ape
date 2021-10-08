@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
 import { ProviderContext, CurrentAddressContext, SymfoniContext } from "../../hardhat/SymfoniContext";
+import { chainNameAtom } from '../../recoil/chain/atom';
+import { useRecoilState } from 'recoil';
 
 interface Props {
 }
@@ -11,16 +13,16 @@ export const Wallet = (props: Props) => {
     const [currentAddress] = useContext(CurrentAddressContext)
     const {init} = useContext(SymfoniContext);
 
-    const [networkName, setNetworkName] = useState("");
+    const [chainName, setChainName] = useRecoilState(chainNameAtom);
 
     // Set the network name when connected
     useEffect(() => {
         provider?.getNetwork().then(
             ({name}) => {
                 if (name === "homestead"){
-                    setNetworkName('mainnet')
+                    setChainName('mainnet')
                 } else {
-                    setNetworkName(name);
+                    setChainName(name);
                 }
             }
         )
@@ -53,7 +55,7 @@ export const Wallet = (props: Props) => {
                         <Text
                             pr={2}
                         >
-                            {networkName}
+                            {chainName}
                         </Text>
                     </Flex>
                     <Button

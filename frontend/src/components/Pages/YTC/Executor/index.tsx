@@ -1,14 +1,14 @@
 import { Button, Text, Spinner } from "@chakra-ui/react";
-import { executeYieldTokenCompounding, YieldExposureData } from "../../../features/calculator/calculatorAPI";
-import { elementAddressesAtom } from "../../../recoil/element/atom";
+import { executeYieldTokenCompounding, YieldExposureData } from "../../../../features/calculator/calculatorAPI";
+import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
 import { useContext, useState } from "react";
-import { SignerContext } from "../../../hardhat/SymfoniContext";
-import { slippageToleranceAtom } from "../../../recoil/transactionSettings/atom";
-import { notificationAtom } from "../../../recoil/notifications/atom";
+import { SignerContext } from "../../../../hardhat/SymfoniContext";
+import { slippageToleranceAtom } from "../../../../recoil/transactionSettings/atom";
+import { notificationAtom } from "../../../../recoil/notifications/atom";
 import { useRecoilState } from 'recoil';
-import { simulationResultsAtom } from "../../../recoil/simulationResults/atom";
-import { BaseTokenPriceFeed, YTPriceFeed } from "../../Prices";
+import { simulationResultsAtom } from "../../../../recoil/simulationResults/atom";
+import { BaseTokenPriceTag, YTPriceTag } from "../../../Prices";
 
 export interface ApeProps {
     baseToken: {
@@ -82,7 +82,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                                     {baseTokenAmount}
                                 </div>
                                 <div id="base-token-dollar-value" className="">
-                                    <BaseTokenPriceFeed
+                                    <BaseTokenPriceTag
                                         amount={baseTokenAmount}
                                         baseTokenName={baseToken.name}
                                     />
@@ -108,7 +108,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                                     {yieldTokenAmount}
                                 </div>
                                 <div id="yield-token-dollar-value" className="">
-                                    <YTPriceFeed
+                                    <YTPriceTag
                                         amount={yieldTokenAmount}
                                         baseTokenName={baseToken.name}
                                     />

@@ -5,7 +5,7 @@ interface PriceFeedProps {
     amount: number | undefined;
 }
 
-const PriceFeed: React.FC<PriceFeedProps> = (props) => {
+const PriceTag: React.FC<PriceFeedProps> = (props) => {
 
     const { price, amount } = props;
 
@@ -24,36 +24,34 @@ const PriceFeed: React.FC<PriceFeedProps> = (props) => {
     )
 }
 
-interface YTPriceFeedProps {
+interface YTPriceTagProps {
     amount: number | undefined;
     baseTokenName: string | undefined;
 }
 
-export const YTPriceFeed: React.FC<YTPriceFeedProps> = (props) => {
+export const YTPriceTag: React.FC<YTPriceTagProps> = (props) => {
     const {amount} = props;
 
     return (
-        <PriceFeed
+        <PriceTag
             price={10}
             amount={amount}
         />
     )
 }
 
-interface BaseTokenPriceFeedProps {
+interface BaseTokenPriceTagProps {
     amount: number | undefined;
     baseTokenName: string | undefined;
 }
 
-export const BaseTokenPriceFeed: React.FC<BaseTokenPriceFeedProps> = (props) => {
+export const BaseTokenPriceTag: React.FC<BaseTokenPriceTagProps> = (props) => {
     const {amount} = props;
 
     return (
-        <PriceFeed
+        <PriceTag
             price={100}
             amount={amount}
         />
     )
 }
-
-export default PriceFeed

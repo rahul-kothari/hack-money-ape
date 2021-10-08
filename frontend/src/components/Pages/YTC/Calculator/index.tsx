@@ -3,16 +3,16 @@ import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { BalancerApproval, ERC20Approval } from '../../../features/approval/Approval';
-import { calculateYieldExposures, YieldExposureData } from "../../../features/calculator/calculatorAPI";
-import { getActiveTranches, getBalance } from "../../../features/element";
-import { CurrentAddressContext, ERC20Context, SignerContext, YieldTokenCompoundingContext } from "../../../hardhat/SymfoniContext";
-import { elementAddressesAtom } from "../../../recoil/element/atom";
-import { isSimulatedSelector, isSimulatingAtom, simulationResultsAtom } from "../../../recoil/simulationResults/atom";
-import { Token, Tranche } from "../../../types/manual/types";
+import { BalancerApproval, ERC20Approval } from '../../../../features/approval/Approval';
+import { calculateYieldExposures, YieldExposureData } from "../../../../features/calculator/calculatorAPI";
+import { getActiveTranches, getBalance } from "../../../../features/element";
+import { CurrentAddressContext, ERC20Context, SignerContext, YieldTokenCompoundingContext } from "../../../../hardhat/SymfoniContext";
+import { elementAddressesAtom } from "../../../../recoil/element/atom";
+import { isSimulatedSelector, isSimulatingAtom, simulationResultsAtom } from "../../../../recoil/simulationResults/atom";
+import { Token, Tranche } from "../../../../types/manual/types";
 import * as Yup from 'yup';
-import { notificationAtom } from "../../../recoil/notifications/atom";
-import { BaseTokenPriceFeed } from "../../Prices";
+import { notificationAtom } from "../../../../recoil/notifications/atom";
+import { BaseTokenPriceTag } from "../../../Prices";
 
 interface CalculateProps {
     tokens: Token[];
@@ -414,7 +414,7 @@ const Form: React.FC<FormProps> = (props) => {
                         fontSize="sm"
                         textColor="gray.500"
                     >
-                        <BaseTokenPriceFeed
+                        <BaseTokenPriceTag
                             baseTokenName = {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
                             amount = {formik.values.amount}
                         />
