@@ -1,4 +1,4 @@
-import { Button, Text, Spinner } from "@chakra-ui/react";
+import { Button, Text, Spinner, Flex } from "@chakra-ui/react";
 import { executeYieldTokenCompounding, YieldExposureData } from "../../../../features/calculator/calculatorAPI";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
@@ -9,6 +9,7 @@ import { notificationAtom } from "../../../../recoil/notifications/atom";
 import { useRecoilState } from 'recoil';
 import { simulationResultsAtom } from "../../../../recoil/simulationResults/atom";
 import { BaseTokenPriceTag, YTPriceTag } from "../../../Prices";
+import Card from "../../../Reusable/Card";
 
 export interface ApeProps {
     baseToken: {
@@ -62,60 +63,40 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
     }
 
     return (
-        <div id="ape" className="py-5 flex flex-col gap-3">
-            <div id="ape-params" className="shadow-lg rounded-2xl bg-indigo-100 px-4 py-1">
+        <Flex
+            id="ape"
+            py={5}
+            flexDir="column"
+            gridGap={3}
+        >
+            <Card>
                 <Text fontSize="large" fontWeight="extrabold">Output</Text>
-                <div className="flex flex-col gap-3 py-2">
-                    <div id="outputs" className="flex flex-col gap-1">
-                        <div id="base-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between items-center">
-                            <div id="base-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row px-3 items-center">
-                                {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50">
-                                </div> */}
-                                <div id="asset-details" className="flex-grow text-left font-bold">
-                                    <div id="base-token-asset-name">
-                                        {baseToken.name.toUpperCase()}
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="base-token-amount" className="h-16 rounded-r-full flex px-3">
-                                <div id="base-token-amount-text" className="self-center text-lg">
-                                    {baseTokenAmount}
-                                </div>
-                                <div id="base-token-dollar-value" className="">
-                                    <BaseTokenPriceTag
-                                        amount={baseTokenAmount}
-                                        baseTokenName={baseToken.name}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div id="y-token" className="flex flex-row w-full bg-gray-200 rounded-2xl border border-gray-400 shadow-lg justify-between items-center">
-                            <div id="y-token-asset" className="h-16 rounded-l-full border-r border-gray-600 flex flex-row px-3 items-center">
-                                {/* <div id="proxy-asset-icon" className="w-8 h-8 bg-gray-50"> */}
-                                {/* </div> */}
-                                <div id="y-token-asset-details" className="flex-grow text-left">
-                                    <div id="y-token-asset-name" className="font-bold">
-                                        {yieldToken.name}
-                                    </div>
-                                    {/* <div id="asset-date">
-                                        {(new Date(yieldToken.expiry * 1000)).toLocaleDateString()}
-                                    </div> */}
-                                </div>
-
-                            </div>
-                            <div id="y-token-amount" className="h-16 rounded-r-full flex px-3">
-                                <div id="amount-text" className="self-center text-lg">
-                                    {yieldTokenAmount}
-                                </div>
-                                <div id="yield-token-dollar-value" className="">
-                                    <YTPriceTag
-                                        amount={yieldTokenAmount}
-                                        baseTokenName={baseToken.name}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <Flex
+                    flexDir='column'
+                    gridGap={3}
+                    py={2}
+                >
+                    <Flex
+                        id="outputs"
+                        flexDir='column'
+                        gridGap={1}
+                    >
+                        <TokenResult
+                            tokenType="BaseToken"
+                            token={{
+                                name: baseToken.name,
+                                amount: baseTokenAmount
+                            }}
+                        />
+                        <TokenResult
+                            tokenType="YToken"
+                            token={{
+                                name: yieldToken.name,
+                                amount: yieldTokenAmount
+                            }}
+                            baseTokenName={baseToken.name}
+                        />
+                    </Flex>
                     <div id="ape-details" className="">
                         <DetailItem
                             name="Slippage Tolerance:"
@@ -129,9 +110,13 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                             name="Estimated Gas Cost:"
                             value={`${estimatedGas} ETH`}
                         />
+                        <DetailItem
+                            name="Estimated APY:"
+                            value={`%${""}`}
+                        />
                     </div>
-                </div>
-            </div>
+                </Flex>
+            </Card>
             <Button
                 id="approve-calculate-button"
                 className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400"
@@ -144,7 +129,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
             >
                 {isLoading ? <Spinner/> : "APE"}
             </Button>
-        </div>
+        </Flex>
     )
 }
 
@@ -160,4 +145,89 @@ const DetailItem: React.FC<DetailItemProps> = (props) => {
         <Text>{name}</Text>
         <Text>{value}</Text>
     </div>
+}
+
+interface TokenResultProps {
+    token: {
+        name: string,
+        amount: number,
+    };
+    baseTokenName?: string,
+    tokenType: "YToken" | "BaseToken";
+}
+
+const TokenResult: React.FC<TokenResultProps> = (props) => {
+    const { token, tokenType } = props;
+
+    return <Flex
+        id="base-token"
+        flexDir="row"
+        width="full"
+        bgColor="gray.200"
+        rounded="2xl"
+        shadow="lg"
+        justify="space-between"
+        className="border border-gray-600"
+    >
+        <Flex
+            id="base-token-asset"
+            flexDir="row"
+            height={16}
+            px={3}
+            alignItems="center"
+            className="border-r border-gray-600"
+        >
+            <Flex
+                id="asset-details"
+                flexGrow={1}
+                textAlign="left"
+                fontWeight="bold"
+            >
+                <Flex
+                    id="base-token-asset-name"
+                >
+                    {token.name.toUpperCase()}
+                </Flex>
+            </Flex>
+        </Flex>
+        <Flex
+            id="base-token-amount"
+            height={16}
+            rounded="full"
+            flexDir="row"
+            px={3}
+        >
+            <Flex
+                flexDir="column"
+                justify="end"
+                align="end"
+            >
+                <Flex
+                    id="base-token-amount-text"
+                    fontSize="lg"
+                    justifySelf="center"
+                >
+                    {token.amount}
+                </Flex>
+                <Flex
+                    id="base-token-dollar-value"
+                >
+                    {
+                        tokenType === "BaseToken"
+                            && <BaseTokenPriceTag
+                                amount={token.amount}
+                                baseTokenName={token.name}
+                            />
+                    }
+                    {
+                        tokenType === "YToken"
+                            && <YTPriceTag
+                                amount={token.amount}
+                                baseTokenName={props.baseTokenName}
+                            />
+                    }
+                </Flex>
+            </Flex>
+        </Flex>
+    </Flex>
 }

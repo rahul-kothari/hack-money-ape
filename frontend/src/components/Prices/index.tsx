@@ -1,3 +1,4 @@
+import { Flex } from '@chakra-ui/layout';
 import React from 'react'
 
 interface PriceFeedProps {
@@ -18,9 +19,12 @@ const PriceTag: React.FC<PriceFeedProps> = (props) => {
 
 
     return (
-        <>
+        <Flex
+            textColor="gray.500"
+            fontSize="sm"
+        >
             ~${value}
-        </>
+        </Flex>
     )
 }
 
@@ -34,7 +38,7 @@ export const YTPriceTag: React.FC<YTPriceTagProps> = (props) => {
 
     return (
         <PriceTag
-            price={10}
+            price={0.1}
             amount={amount}
         />
     )
@@ -50,7 +54,7 @@ export const BaseTokenPriceTag: React.FC<BaseTokenPriceTagProps> = (props) => {
 
     return (
         <PriceTag
-            price={100}
+            price={1}
             amount={amount}
         />
     )

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Text, Flex } from '@chakra-ui/react'
 import { ProviderContext, CurrentAddressContext, SymfoniContext } from "../../hardhat/SymfoniContext";
 import { chainNameAtom } from '../../recoil/chain/atom';
@@ -26,7 +26,7 @@ export const Wallet = (props: Props) => {
                 }
             }
         )
-    }, [provider])
+    }, [provider, setChainName])
 
     const handleConnect = async () => {
         init();

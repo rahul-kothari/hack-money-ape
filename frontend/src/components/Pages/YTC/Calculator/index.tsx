@@ -13,6 +13,7 @@ import { Token, Tranche } from "../../../../types/manual/types";
 import * as Yup from 'yup';
 import { notificationAtom } from "../../../../recoil/notifications/atom";
 import { BaseTokenPriceTag } from "../../../Prices";
+import Card from "../../../Reusable/Card";
 
 interface CalculateProps {
     tokens: Token[];
@@ -283,16 +284,7 @@ const Form: React.FC<FormProps> = (props) => {
                 }
             </Select>
         </Flex>
-        <Flex
-            id="parameters"
-            flexDir="column"
-            alignItems="stretch"
-            bgColor="indigo.100"
-            rounded="2xl"
-            shadow="lg"
-            px={4}
-            py={1}
-        >
+        <Card>
             <Text fontSize="large" fontWeight="extrabold" >Input</Text>
             <Flex
                 flexDir="column"
@@ -421,7 +413,7 @@ const Form: React.FC<FormProps> = (props) => {
                     </Flex>
                 </Flex>
             </Flex>
-        </Flex>
+        </Card>
         <ApproveAndSimulateButton
             formErrors={formik.errors}
             tokenAddress={formik.values.tokenAddress}

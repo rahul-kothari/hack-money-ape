@@ -1,7 +1,5 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { ProviderContext, SymfoniContext } from '../../../hardhat/SymfoniContext'
-import {useRecoilState} from 'recoil';
-import { chainNameAtom } from '../../../recoil/chain/atom';
 import { Button } from '@chakra-ui/button';
 import { useHistory } from 'react-router';
 import { Flex } from '@chakra-ui/layout';
@@ -12,7 +10,7 @@ interface Props {
 }
 
 const Home = (props: Props) => {
-    const [provider, setProvider] = useContext(ProviderContext);
+    const [provider] = useContext(ProviderContext);
     const history = useHistory();
     const { init } = useContext(SymfoniContext);
 
@@ -41,6 +39,7 @@ const Home = (props: Props) => {
                 {
                     !provider ?
                         <Button
+                            rounded="full"
                             onClick={handleConnect}
                             bg={'indigo.500'}
                             color="white"
@@ -53,6 +52,7 @@ const Home = (props: Props) => {
                         </Button>
                         :
                         <Button
+                            rounded="full"
                             onClick={handleStart}
                             bg={'indigo.500'}
                             color="white"
