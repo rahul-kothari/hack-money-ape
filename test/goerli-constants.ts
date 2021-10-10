@@ -1,6 +1,6 @@
-import { ConstantsObject } from "../frontend/src/types/manual/types";
+import { ElementAddresses } from "../frontend/src/types/manual/types";
 
-export const constants: ConstantsObject = {
+export const constants: ElementAddresses = {
 	tokens: {
 		usdc: "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
 		weth: "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",

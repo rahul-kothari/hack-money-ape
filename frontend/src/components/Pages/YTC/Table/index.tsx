@@ -2,7 +2,7 @@ import React from 'react'
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
 import { Table, Tr, Td, Th, Thead, Text, Flex} from '@chakra-ui/react';
-import { YTCOutput } from '../../../../features/calculator/calculatorAPI';
+import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 
 interface TableProps {
     onSelect: (index: number) => void;
@@ -36,7 +36,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                     <Th isNumeric>
                         YT Exposure
                     </Th>
-                    <Th isNumeric>
+                    <Th >
                         Cost
                     </Th>
                     <Th isNumeric>

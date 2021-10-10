@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil'
-import { YTCOutput } from '../../features/calculator/calculatorAPI'
+import { YTCOutput } from '../../features/ytc/ytcHelpers'
 
 export const simulationResultsAtom = atom({
     key: 'simulationResults',

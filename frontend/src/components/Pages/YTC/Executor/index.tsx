@@ -1,5 +1,6 @@
 import { Button, Text, Spinner, Flex } from "@chakra-ui/react";
-import { executeYieldTokenCompounding, YieldExposureData } from "../../../../features/calculator/calculatorAPI";
+import { YTCInput } from "../../../../features/ytc/ytcHelpers";
+import { executeYieldTokenCompounding } from "../../../../features/ytc/executeYieldTokenCompounding";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
 import { useContext, useState } from "react";
@@ -20,7 +21,7 @@ export interface ApeProps {
     };
     baseTokenAmount: number;
     yieldTokenAmount: number;
-    userData: YieldExposureData
+    userData: YTCInput
     estimatedGas: number;
 }
 

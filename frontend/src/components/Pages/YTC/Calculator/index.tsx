@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { BalancerApproval, ERC20Approval } from '../../../../features/approval/Approval';
-import { calculateYieldExposures, YieldExposureData } from "../../../../features/calculator/calculatorAPI";
+import { YTCInput } from "../../../../features/ytc/ytcHelpers";
 import { getActiveTranches, getBalance } from "../../../../features/element";
 import { CurrentAddressContext, ERC20Context, SignerContext, YieldTokenCompoundingContext } from "../../../../hardhat/SymfoniContext";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 import { notificationAtom } from "../../../../recoil/notifications/atom";
 import { BaseTokenPriceTag } from "../../../Prices";
 import Card from "../../../Reusable/Card";
+import { simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYTC";
 
 interface CalculateProps {
     tokens: Token[];
@@ -47,7 +48,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                 !!ytcContractAddress &&
                 !!signer
         ){
-            const userData: YieldExposureData = {
+            const userData: YTCInput = {
                 baseTokenAddress: values.tokenAddress,
                 amountCollateralDeposited: values.amount,
                 numberOfCompounds: values.compounds ? Math.floor(values.compounds) : 1,
@@ -56,7 +57,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
             }
 
             setIsSimulating(true);
-            calculateYieldExposures(userData, elementAddresses, [1, 8], signer).then(
+            simulateYTCForCompoundRange(userData, elementAddresses, [1, 8], signer).then(
                 (results) => {
                     setSimulationResults(() => {
                         return results;

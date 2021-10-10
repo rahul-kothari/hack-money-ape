@@ -6,7 +6,7 @@ import { Calculator } from "./Calculator";
 import { Ape, ApeProps } from "./Executor";
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../recoil/simulationResults/atom';
-import { YTCOutput } from "../../../features/calculator/calculatorAPI";
+import { YTCOutput } from "../../../features/ytc/ytcHelpers";
 import { Title } from "../../Title";
 import ResultsTable from "./Table";
 

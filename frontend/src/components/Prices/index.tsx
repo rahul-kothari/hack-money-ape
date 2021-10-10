@@ -40,6 +40,7 @@ export const YTPriceTag: React.FC<YTPriceTagProps> = (props) => {
     const baseReserves = "0";
     const ytReserves = "0";
 
+    // eslint-disable-next-line
     const price = calcSpotPriceYt(baseReserves, ytReserves);
 
     const {amount} = props;

@@ -1,5 +1,5 @@
 // Calculator is used to estimate the YTC output from the ytc contract
-import { calculateYieldExposures, YieldExposureData } from '../frontend/src/features/calculator/calculatorAPI';
+import { calculateYieldExposures, YTCInput } from '../frontend/src/features/ytc/ytcHelpers';
 import hre, { deployments, ethers } from 'hardhat';
 import ERC20 from '../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
 import YieldTokenCompounding from '../frontend/src/artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
@@ -74,7 +74,7 @@ describe('calculate yield exposure test', () => {
         
         expect(allowanceTx2).to.equal(BigNumber.from(MAX_UINT_HEX));
 
-        const userData: YieldExposureData = {
+        const userData: YTCInput = {
             baseTokenAddress: tokenAddress,
             trancheAddress: trancheAddress,
             amountCollateralDeposited: amountAbsolute,

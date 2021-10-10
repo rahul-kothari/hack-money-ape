@@ -1,11 +1,13 @@
 // This is for element api calls to get information on tokens, tranches, pools, etc..
 import _ from 'lodash';
-import { ConstantsObject, Token, Tranche } from "../../types/manual/types";
+import { ElementAddresses, Token, Tranche } from "../../types/manual/types";
 import { ERC20 } from '../../hardhat/typechain/ERC20';
-import { isTrancheActive } from '../calculator/calculatorAPI';
+import { isTrancheActive } from '../ytc/ytcHelpers';
 import { ethers } from 'ethers';
+const MILLISECONDS_PER_DAY = 1000*60*60*24;
+const MILLISECONDS_PER_YEAR = MILLISECONDS_PER_DAY*365;
 
-export const getTranches = async (tokenAddress: string, elementState: ConstantsObject): Promise<Tranche[]> => {
+export const getTranches = async (tokenAddress: string, elementState: ElementAddresses): Promise<Tranche[]> => {
     // get the name of the token
     const tokenName = _.findKey(elementState.tokens, (value) => value === tokenAddress)
 
@@ -19,7 +21,7 @@ export const getTranches = async (tokenAddress: string, elementState: ConstantsO
     return []
 }
 
-export const getActiveTranches = async (tokenAddress: string, elementState: ConstantsObject): Promise<Tranche[]> => {
+export const getActiveTranches = async (tokenAddress: string, elementState: ElementAddresses): Promise<Tranche[]> => {
     const tokenName = _.findKey(elementState.tokens, (value) => value === tokenAddress)
 
     if (tokenName){
@@ -34,7 +36,7 @@ export const getActiveTranches = async (tokenAddress: string, elementState: Cons
     return []
 }
 
-export const getBaseTokens = async (elementState: ConstantsObject): Promise<Token[]> => {
+export const getBaseTokens = async (elementState: ElementAddresses): Promise<Token[]> => {
     const tokens = elementState.tokens;
 
     return Object.entries(tokens).map(([key, value]: [string, string]) => {
@@ -45,7 +47,7 @@ export const getBaseTokens = async (elementState: ConstantsObject): Promise<Toke
     })
 }
 
-export const getBaseTokensWithActiveTranches = async (elementState: ConstantsObject): Promise<any> => {
+export const getBaseTokensWithActiveTranches = async (elementState: ElementAddresses): Promise<any> => {
     const tokens = elementState.tokens;
 
     const promises = Object.entries(tokens).map(async ([key, value]: [string, string]) => {
@@ -79,4 +81,23 @@ export const getBalance = async (currentAddress: string, contract: ERC20 | undef
         return parseFloat(balanceNormalized);
     }
     return 0;
+}
+
+export const getTrancheByAddress = (address: string, tranches: Tranche[]): Tranche | undefined => {
+    return _.find(tranches, (tranche) => {
+        return tranche.address === address
+    })
+}
+
+export const getRemainingTrancheYears = (trancheExpiration: number): number => {
+    const ms = getRemainingTrancheTimeMs(trancheExpiration);
+
+    return ms/MILLISECONDS_PER_YEAR;
+}
+
+export const getRemainingTrancheTimeMs = (trancheExpiration: number): number => {
+    const currentMs = (new Date()).getTime();
+    const trancheMs = trancheExpiration * 1000;
+
+    return trancheMs - currentMs;
 }

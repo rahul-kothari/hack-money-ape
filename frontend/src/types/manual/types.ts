@@ -22,7 +22,7 @@ export interface Tranche {
     convergentCurvePoolFactory: string,
 }
 
-export interface ConstantsObject {
+export interface ElementAddresses {
 	tokens: {[name: string]: string};
 	wrappedPositions: {[name: string]: {[name: string]: string}};
 	vaults: {[name: string]: {[name: string]: string}};
