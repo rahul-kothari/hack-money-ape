@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/layout';
 import React from 'react'
+import { calcSpotPriceYt } from '../../utils/element/calcSpotPrice';
 
 interface PriceFeedProps {
     price: number | undefined;
@@ -34,6 +35,13 @@ interface YTPriceTagProps {
 }
 
 export const YTPriceTag: React.FC<YTPriceTagProps> = (props) => {
+    // get balancer pool reserves
+
+    const baseReserves = "0";
+    const ytReserves = "0";
+
+    const price = calcSpotPriceYt(baseReserves, ytReserves);
+
     const {amount} = props;
 
     return (
