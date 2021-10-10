@@ -36,7 +36,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                     <Th isNumeric>
                         YT Exposure
                     </Th>
-                    <Th >
+                    <Th isNumeric>
                         Cost
                     </Th>
                     <Th isNumeric>
@@ -70,6 +70,10 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
         <Tr
             onClick={onSelect}
             bgColor={isSelected ? "indigo.300" : "inherit"}
+            cursor="pointer"
+            _hover={{
+                bgColor:"indigo.50"
+            }}
         >
             <Td isNumeric>
                 {output.inputs.numberOfCompounds}
