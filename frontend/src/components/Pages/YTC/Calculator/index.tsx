@@ -56,7 +56,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
             }
 
             setIsSimulating(true);
-            calculateYieldExposures(userData, elementAddresses, [userData.numberOfCompounds, userData.numberOfCompounds + 1], signer).then(
+            calculateYieldExposures(userData, elementAddresses, [1, 8], signer).then(
                 (results) => {
                     setSimulationResults(() => {
                         return results;

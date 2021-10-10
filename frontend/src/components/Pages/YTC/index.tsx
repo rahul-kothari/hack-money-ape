@@ -8,12 +8,14 @@ import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../recoil/simulationResults/atom';
 import { YTCOutput } from "../../../features/calculator/calculatorAPI";
 import { Title } from "../../Title";
+import ResultsTable from "./Table";
 
 interface YTCProps {}
 
 export const YTC: React.FC<YTCProps> = (props) => {
 
     const [baseTokens, setBaseTokens] = useState<Token[]>([]);
+    const [resultIndex, setResultIndex] = useState<number | undefined>(undefined);
     const simulationResults: YTCOutput[] = useRecoilValue(simulationResultsAtom);
     const elementAddresses = useRecoilValue(elementAddressesAtom);
 
@@ -24,9 +26,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
     }, [elementAddresses])
 
     // TODO this is a stopgap
-    const processSimulationResults = (results: YTCOutput[]): ApeProps => {
-        const result = results[0];
-
+    const processSimulationResult = (result: YTCOutput): ApeProps => {
         return {
             baseToken: {
                 name: result.baseTokenName,
@@ -56,13 +56,25 @@ export const YTC: React.FC<YTCProps> = (props) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
                 </svg>
 
-                <Ape
-                    {
-                        ...(processSimulationResults(
-                            simulationResults
-                        ))
-                    }
+                <ResultsTable
+                    selected={resultIndex}
+                    onSelect={setResultIndex}
                 />
+                {
+                    (resultIndex !== undefined ) && <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+                        </svg>
+                        <Ape
+                        {
+                            ...(processSimulationResult(
+                                simulationResults[resultIndex]
+                            ))
+                        }
+                        />
+                    </>
+
+                }
             </>
         }
     </div>
