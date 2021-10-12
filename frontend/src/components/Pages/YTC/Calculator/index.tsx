@@ -103,10 +103,10 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                             .min(0.0000000000000000001, 'Amount must be greater than 0')
                             .max((balance ? balance : 0), 'Insufficient balance')
                             .required('An amount of tokens is required'),
-                        compounds: Yup.number()
-                            .min(1, 'Number of compounds must be 1 or greater')
-                            .max(10, 'Number of compounds must be 10 or fewer')
-                            .required('Choose a number of compounds between 1 and 10'),
+                        // compounds: Yup.number()
+                        //     .min(1, 'Number of compounds must be 1 or greater')
+                        //     .max(10, 'Number of compounds must be 10 or fewer')
+                        //     .required('Choose a number of compounds between 1 and 10'),
                         trancheAddress: Yup.string()
                             .required(),
                         tokenAddress: Yup.string()
@@ -286,132 +286,81 @@ const Form: React.FC<FormProps> = (props) => {
             </Select>
         </Flex>
         <Card>
-            <Text fontSize="large" fontWeight="extrabold" >Input</Text>
+            <Text fontSize="large" fontWeight="extrabold">Select Initial Collateral</Text>
             <Flex
+                id="amount-card"
                 flexDir="column"
-                alignItems="stretch"
-                gridGap={3}
-                w="full"
+                alignItems="end"
             >
                 <Flex
-                    id="table-headers"
+                    id="amount-header"
                     flexDir="row"
-                    justify="space-between"
+                    gridGap={2}
+                    alignItems="center"
                     fontSize="sm"
                 >
-                    <Flex
-                        id="compounds-header"
-                        alignItems="center"
-                        fontSize="sm"
-                    >
-                        Compounds
-                    </Flex>
-                    <Flex
-                        id="amount-header"
-                        flexDir="row"
-                        gridGap={2}
-                        alignItems="center"
-                        fontSize="sm"
-                    >
 
-                            <Button
-                                id="max"
-                                onClick={handleMax}
-                                bg="gray.300"
-                                rounded="xl"
-                                fontSize="sm"
-                                py={0}
-                                h="20px"
-                                px={2}
-                                _hover={
-                                    {
-                                        bg: "gray.400"
-                                    }
+                        <Button
+                            id="max"
+                            onClick={handleMax}
+                            bg="gray.300"
+                            rounded="xl"
+                            fontSize="sm"
+                            py={0}
+                            h="20px"
+                            px={2}
+                            _hover={
+                                {
+                                    bg: "gray.400"
                                 }
-                            >
-                                MAX
-                            </Button>
-                            <Box
-                                id="balance"
-                            >
-                                Balance: {balance}                        
-                            </Box>
-                    </Flex>
+                            }
+                        >
+                            MAX
+                        </Button>
+                        <Box
+                            id="balance"
+                        >
+                            Balance: {balance}                        
+                        </Box>
                 </Flex>
-            </Flex>
-            <Flex
-                id="table-inputs"
-                flexDir="row"
-                justify="space-between"
-                alignItems="center"
-                gridGap={3}
-            >
                 <Flex
-                    id="compounds"
-                    p={2}
+                    id="amount-row"
+                    flexDir="row"
+                    justifyContent="end"
                     rounded="xl"
-                    w="30%"
+                    gridGap={2}
+                    p={1}
                     _hover={{
                         shadow: "inner"
                     }}
                 >
-
                     <input
                         type="number"
-                        name="compounds"
+                        name="amount"
                         onBlur={formik.handleBlur}
-                        value={formik.values.compounds}
-                        placeholder={"0"}
+                        value={formik.values.amount}
+                        placeholder={"0.0"}
                         onChange={formik.handleChange}
-                        id="number-compounds"
-                        className={`text-lg bg-indigo-100 min-w-0 ${formik.errors.compounds && "text-red-300"}`}
-                    />
+                        id="amount-input"
+                        className={`text-2xl text-right flex-grow bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
+                    <Text
+                        id="amount-token-label"
+                        fontSize="2xl"
+                        whiteSpace="nowrap"
+                        color="gray.500"
+                    >
+                        {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
+                    </Text>
                 </Flex>
                 <Flex
-                    flexDir="column"
-                    id="amount-col"
-                    p={2}
-                    w="65%"
-                    flexGrow={1}
+                    alignSelf="end"
+                    fontSize="sm"
+                    textColor="gray.500"
                 >
-                    <Flex
-                        id="amount-row"
-                        flexDir="row"
-                        justifyContent="end"
-                        rounded="xl"
-                        gridGap={2}
-                        p={1}
-                        _hover={{
-                            shadow: "inner"
-                        }}
-                    >
-                        <input
-                            type="number"
-                            name="amount"
-                            onBlur={formik.handleBlur}
-                            value={formik.values.amount}
-                            placeholder={"0.0"}
-                            onChange={formik.handleChange}
-                            id="amount-input"
-                            className={`text-lg text-right flex-grow bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
-                        <Text
-                            id="amount-token-label"
-                            fontSize="lg"
-                            whiteSpace="nowrap"
-                        >
-                            {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
-                        </Text>
-                    </Flex>
-                    <Flex
-                        alignSelf="end"
-                        fontSize="sm"
-                        textColor="gray.500"
-                    >
-                        <BaseTokenPriceTag
-                            baseTokenName = {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
-                            amount = {formik.values.amount}
-                        />
-                    </Flex>
+                    <BaseTokenPriceTag
+                        baseTokenName = {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
+                        amount = {formik.values.amount}
+                    />
                 </Flex>
             </Flex>
         </Card>

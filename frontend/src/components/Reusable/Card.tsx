@@ -14,7 +14,7 @@ const Card: React.FC<Props> = (props) => {
             rounded="2xl"
             shadow="lg"
             px={4}
-            py={1}
+            py={2}
         >
             {props.children}
         </Flex>

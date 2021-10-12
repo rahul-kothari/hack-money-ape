@@ -14,5 +14,11 @@ export default extendTheme({
         800: "#3730A3",
         900: "#312E81"
     },
+    complementaryTeal: {
+      300: "#a863f1",
+    },
+    complementaryPurple: {
+      300: "#63f1ef"
+    }
   },
 })

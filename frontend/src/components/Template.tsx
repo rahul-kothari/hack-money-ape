@@ -15,7 +15,7 @@ interface Props {
 export const Template: React.FC<Props> = (props: Props) => {
     return (
         <Flex
-            bg="gray.100"
+            bg="#f4f4f5"
             flexDir="column"
             justify="space-between"
             minH="100vh"

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
-import { Table, Tr, Td, Th, Thead, Text, Flex} from '@chakra-ui/react';
+import { Table, Tr, Td, Th, Thead, Text, Flex } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
+import Card from '../../../Reusable/Card';
 
 interface TableProps {
     onSelect: (index: number) => void;
@@ -15,43 +16,49 @@ const ResultsTable: React.FC<TableProps> = (props) => {
 
     const simulationResults = useRecoilValue(simulationResultsAtom);
 
+    const tableRef = useRef<HTMLTableElement>(null);
+
+    useEffect(() => {
+        if (tableRef.current){
+            tableRef.current.scrollIntoView({behavior: 'smooth'})
+        }
+    }, [tableRef])
+
     return (
         <Flex
-            bgColor="indigo.100"
-            flexDir="column"
-            shadow="lg"
-            rounded="2xl"
-            p={2}
-            my={5}
-            fontSize="sm"
+            id="results-table"
+            py={5}
         >
-            <Text fontSize="large" fontWeight="extrabold">Select Number of Compounds</Text>
-            <Table
-                variant="simple"
-                size="sm"
-            >
-                <Thead>
-                    <Th isNumeric>
-                    </Th>
-                    <Th isNumeric>
-                        YT Exposure
-                    </Th>
-                    <Th isNumeric>
-                        Cost
-                    </Th>
-                    <Th isNumeric>
-                        APY
-                    </Th>
-                </Thead>
-                {simulationResults.map((result: YTCOutput, index) => {
-                    return <ResultsTableRow
-                                output={result}
-                                key={result.inputs.numberOfCompounds}
-                                isSelected={index === selected}
-                                onSelect={() => {onSelect(index)}}
-                            />
-                })}
-            </Table>
+            <Card>
+                <Text fontSize="large" fontWeight="extrabold">Select Number of Compounds</Text>
+                <Table
+                    ref={tableRef}
+                    variant="simple"
+                    size="sm"
+                >
+                    <Thead>
+                        <Th isNumeric>
+                        </Th>
+                        <Th isNumeric>
+                            Yield Tokens
+                        </Th>
+                        <Th isNumeric>
+                            Remaining <br></br>{simulationResults[0].baseTokenName}
+                        </Th>
+                        <Th isNumeric>
+                            Net Gain
+                        </Th>
+                    </Thead>
+                    {simulationResults.map((result: YTCOutput, index) => {
+                        return <ResultsTableRow
+                                    output={result}
+                                    key={result.inputs.numberOfCompounds}
+                                    isSelected={index === selected}
+                                    onSelect={() => {onSelect(index)}}
+                                />
+                    })}
+                </Table>
+            </Card>
         </Flex>
     )
 }
@@ -82,10 +89,10 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
                 {Math.trunc(output.ytExposure)}
             </Td>
             <Td isNumeric>
-                {Math.trunc(output.baseTokensSpent)}
+                {Math.trunc(output.remainingTokens)}
             </Td>
             <Td isNumeric>
-                %10
+                {output.gain?.netGain || "100"}
             </Td>
         </Tr>
     )

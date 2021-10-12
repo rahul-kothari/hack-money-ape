@@ -3,7 +3,7 @@ import { YTCInput } from "../../../../features/ytc/ytcHelpers";
 import { executeYieldTokenCompounding } from "../../../../features/ytc/executeYieldTokenCompounding";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SignerContext } from "../../../../hardhat/SymfoniContext";
 import { slippageToleranceAtom } from "../../../../recoil/transactionSettings/atom";
 import { notificationAtom } from "../../../../recoil/notifications/atom";
@@ -37,6 +37,15 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
     const minimumReturn = yieldTokenAmount * (1-(slippageTolerance/100))
 
+
+    const executorRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if(executorRef.current){
+            executorRef.current.scrollIntoView({behavior: 'smooth'})
+        }
+    }, [executorRef])
+
     // Execute the actual calculation transaction
     const handleExecuteTransaction = () => {
         if (signer){
@@ -65,6 +74,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
     return (
         <Flex
+            ref={executorRef}
             id="ape"
             py={5}
             flexDir="column"
@@ -160,6 +170,16 @@ interface TokenResultProps {
 const TokenResult: React.FC<TokenResultProps> = (props) => {
     const { token, tokenType } = props;
 
+    let tokenNameElement;
+    const tokenName = token.name.split('-')
+
+    if (tokenName.length > 1){
+        tokenNameElement = <> {tokenName[0]} <br></br> {tokenName[1]} </>
+    } else {
+        tokenNameElement = tokenName[0]
+    }
+
+
     return <Flex
         id="base-token"
         flexDir="row"
@@ -187,7 +207,7 @@ const TokenResult: React.FC<TokenResultProps> = (props) => {
                 <Flex
                     id="base-token-asset-name"
                 >
-                    {token.name.toUpperCase()}
+                    {tokenNameElement}
                 </Flex>
             </Flex>
         </Flex>
