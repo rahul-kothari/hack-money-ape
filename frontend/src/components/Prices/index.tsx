@@ -1,6 +1,7 @@
 import { Flex } from '@chakra-ui/layout';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { calcSpotPriceYt } from '../../utils/element/calcSpotPrice';
+import { CoingeckoTokenName, getRelativePriceFromCoingecko, isCoingeckoToken } from '../../features/prices/coingecko';
 
 interface PriceFeedProps {
     price: number | undefined;
@@ -59,11 +60,27 @@ interface BaseTokenPriceTagProps {
 }
 
 export const BaseTokenPriceTag: React.FC<BaseTokenPriceTagProps> = (props) => {
-    const {amount} = props;
+    const {amount, baseTokenName} = props;
+
+    const [price, setPrice] = useState<number>(0);
+
+    useEffect(() => {
+        if(baseTokenName){
+            if (isCoingeckoToken(baseTokenName?.toLowerCase())){
+                getRelativePriceFromCoingecko(baseTokenName?.toLowerCase(), "usd").then((value: number) => {
+                    setPrice(value)
+                })
+            } else {
+                console.log('not a coingeckot tpoken')
+                // TODO implement alternative pricing for non-coingecko tokens
+            }
+        }
+    }, [baseTokenName])
+
 
     return (
         <PriceTag
-            price={1}
+            price={price}
             amount={amount}
         />
     )

@@ -15,6 +15,7 @@ import { notificationAtom } from "../../../../recoil/notifications/atom";
 import { BaseTokenPriceTag } from "../../../Prices";
 import Card from "../../../Reusable/Card";
 import { simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYTC";
+import { getVariableAPY } from '../../../../features/prices/yearn';
 
 interface CalculateProps {
     tokens: Token[];
@@ -37,6 +38,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext)
     const [balance, setBalance] = useState<number | undefined>(undefined);
+    const [variableApy, setVariableApy] = useState<number | undefined>(undefined);
 
     const handleSubmit = (values: FormFields, formikHelpers: FormikHelpers<FormFields>) => {
         const ytcContractAddress = ytc.instance?.address;
@@ -54,6 +56,7 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                 numberOfCompounds: values.compounds ? Math.floor(values.compounds) : 1,
                 trancheAddress: values.trancheAddress,
                 ytcContractAddress,
+                variableApy,
             }
 
             setIsSimulating(true);
@@ -119,6 +122,8 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
                     onChange={handleChange}
                     balance={balance}
                     setBalance={setBalance}
+                    variableApy={variableApy}
+                    setVariableApy={setVariableApy}
                 />
             </Formik>
         </Flex>
@@ -137,16 +142,19 @@ interface FormProps {
     onChange: (e: React.ChangeEvent<any>) => void;
     balance: number | undefined,
     setBalance: React.Dispatch<React.SetStateAction<number | undefined>>
+    variableApy: number | undefined,
+    setVariableApy: React.Dispatch<React.SetStateAction<number | undefined>>
 }
 
 const Form: React.FC<FormProps> = (props) => {
 
-    const {tokens, onChange, balance, setBalance} = props;
+    const {tokens, onChange, balance, setBalance, variableApy, setVariableApy} = props;
 
     const erc20 = useContext(ERC20Context)
     const [currentAddress] = useContext(CurrentAddressContext)
     const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
     const [simulationResults] = useRecoilValue(simulationResultsAtom);
+    const [fixedRate, setFixedRate] = useState<number | undefined>(undefined)
     const elementAddresses = useRecoilValue(elementAddressesAtom)
     const history = useHistory();
     const query = useQuery();
@@ -154,6 +162,7 @@ const Form: React.FC<FormProps> = (props) => {
 
     const tokenAddress = formik.values.tokenAddress;
     const setFieldValue = formik.setFieldValue;
+
 
     const getTokenAddress = useCallback(
         () => {
@@ -165,15 +174,16 @@ const Form: React.FC<FormProps> = (props) => {
         [tokens],
     )
 
-    const getTokenNameByAddress = (tokenAddress: string | undefined): string | undefined => {
-        if (!tokenAddress){
-            return undefined;
-        }
-        const token: Token | undefined = tokens.find((token) => {
-            return token.address === tokenAddress;
-        })
-        return token?.name || undefined;
-    }
+    const getTokenNameByAddress = useCallback(
+        (tokenAddress: string | undefined): string | undefined => {
+            if (!tokenAddress){
+                return undefined;
+            }
+            const token: Token | undefined = tokens.find((token) => {
+                return token.address === tokenAddress;
+            })
+            return token?.name || undefined;
+    }, [tokens])
 
     const updateBalance = useCallback(
         () => {
@@ -214,6 +224,21 @@ const Form: React.FC<FormProps> = (props) => {
     useEffect(() => {
         updateBalance();
     }, [simulationResults, updateBalance])
+
+    // update variable apy
+    useEffect(() => {
+        const tokenName = getTokenNameByAddress(tokenAddress);
+        if (tokenName){
+            getVariableAPY(tokenName, elementAddresses).then((apy) => {
+                setVariableApy(apy);
+            }).catch((error) => {
+                console.error(error)
+            })
+        }
+    }, [elementAddresses, tokenAddress, getTokenNameByAddress])
+    // update fixed apy
+    useEffect(() => {
+    })
 
 
     // custom handler for token input change, as it needs to be added as a query param

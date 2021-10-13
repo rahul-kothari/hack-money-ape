@@ -13,6 +13,7 @@ export interface YTCInput {
     trancheAddress: string;
     amountCollateralDeposited: BigNumberish,
     ytcContractAddress: string;
+    variableApy?: number;
 }
 
 export interface YTCGain {
@@ -132,6 +133,8 @@ export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number,
 // param speculatedVariableRate
 export const calculateGain = (ytExposure: number, speculatedVariableRate: number, trancheExpiration: number, baseTokensSpent: number): YTCGain => {
     const termRemainingYears = getRemainingTrancheYears(trancheExpiration);
+
+    console.log(speculatedVariableRate, termRemainingYears, ytExposure, baseTokensSpent)
 
     const netGain = (speculatedVariableRate * termRemainingYears * ytExposure) - baseTokensSpent //- gasFee;
     const finalApy = (netGain / baseTokensSpent)*100

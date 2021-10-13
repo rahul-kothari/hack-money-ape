@@ -1,7 +1,7 @@
 import { BigNumber, ethers, Signer } from "ethers";
 import _ from "lodash";
 import { ElementAddresses } from "../../types/manual/types";
-import { getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
+import { calculateGain, getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
 
 // Simulates a single yield token compounding execution to determine what the output would be
 // No actual transaction is executed
@@ -27,6 +27,12 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
     const remainingTokensNormalized = parseFloat(ethers.utils.formatUnits(remainingTokensAbsolute, baseTokenDecimals))
     const baseTokensSpentNormalized = parseFloat(ethers.utils.formatUnits(baseTokensSpentAbsolute, baseTokenDecimals))
 
+    let gain = undefined;
+    if (userData.variableApy){
+        gain = calculateGain(ytExposureNormalized, userData.variableApy, trancheExpiration, baseTokensSpentNormalized);
+    }
+
+
     return {
         ytExposure: ytExposureNormalized,
         remainingTokens: remainingTokensNormalized,
@@ -34,6 +40,7 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
         baseTokensSpent: baseTokensSpentNormalized,
         trancheExpiration,
         baseTokenName,
+        gain,
         ytName,
         inputs: userData,
     }
