@@ -1,7 +1,11 @@
 import { Flex } from '@chakra-ui/layout';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { calcSpotPriceYt } from '../../utils/element/calcSpotPrice';
 import { CoingeckoTokenName, getRelativePriceFromCoingecko, isCoingeckoToken } from '../../features/prices/coingecko';
+import { getPriceOfCurveLP, isCurveToken } from '../../features/prices/curve';
+import { SignerContext } from '../../hardhat/SymfoniContext';
+import { elementAddressesAtom } from '../../recoil/element/atom';
+import {useRecoilValue} from 'recoil';
 
 interface PriceFeedProps {
     price: number | undefined;
@@ -63,16 +67,21 @@ export const BaseTokenPriceTag: React.FC<BaseTokenPriceTagProps> = (props) => {
     const {amount, baseTokenName} = props;
 
     const [price, setPrice] = useState<number>(0);
+    const [signer] = useContext(SignerContext);
+    const elementAddresses = useRecoilValue(elementAddressesAtom);
 
     useEffect(() => {
         if(baseTokenName){
-            if (isCoingeckoToken(baseTokenName?.toLowerCase())){
+            if (isCoingeckoToken(baseTokenName.toLowerCase())){
                 getRelativePriceFromCoingecko(baseTokenName?.toLowerCase(), "usd").then((value: number) => {
                     setPrice(value)
                 })
             } else {
-                console.log('not a coingeckot tpoken')
-                // TODO implement alternative pricing for non-coingecko tokens
+                if (isCurveToken(baseTokenName.toLowerCase()) && signer){
+                    getPriceOfCurveLP(baseTokenName.toLowerCase(), elementAddresses, signer).then((value: number) => {
+                        setPrice(value)
+                    })
+                }
             }
         }
     }, [baseTokenName])
