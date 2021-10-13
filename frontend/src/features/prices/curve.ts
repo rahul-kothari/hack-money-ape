@@ -23,9 +23,6 @@ const CURVE_SWAP_ADDRESSES: {[tokenName: string]: string} = {
 }
 
 export const getPriceOfCurveLP = async (tokenName: string, elementAddreses: ElementAddresses, signer: Signer) => {
-
-    const tokenAddress: string = elementAddreses.tokens[tokenName];
-
     const swapAddress = CURVE_SWAP_ADDRESSES[tokenName];
 
     if (!swapAddress){
@@ -47,7 +44,6 @@ const getBasePrice = async (tokenName: string): Promise<number> => {
             var ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
             var wbtcPrice = await getRelativePriceFromCoingecko("wbtc", "usd")
             var usdtPrice = await getRelativePriceFromCoingecko("usdt", "usd")
-            console.log(ethPrice, wbtcPrice, usdtPrice)
             // TODO where is this multiple coming from?
             basePrice = (ethPrice * wbtcPrice * usdtPrice) / (1000000*0.11260245)
             break;

@@ -14,6 +14,7 @@ export interface YTCInput {
     amountCollateralDeposited: BigNumberish,
     ytcContractAddress: string;
     variableApy?: number;
+    baseTokenPrice?: number;
 }
 
 export interface YTCGain {

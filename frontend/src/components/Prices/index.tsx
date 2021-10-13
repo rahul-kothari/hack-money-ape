@@ -6,6 +6,7 @@ import { getPriceOfCurveLP, isCurveToken } from '../../features/prices/curve';
 import { SignerContext } from '../../hardhat/SymfoniContext';
 import { elementAddressesAtom } from '../../recoil/element/atom';
 import {useRecoilValue} from 'recoil';
+import { getTokenPrice } from '../../features/prices';
 
 interface PriceFeedProps {
     price: number | undefined;
@@ -25,12 +26,9 @@ const PriceTag: React.FC<PriceFeedProps> = (props) => {
 
 
     return (
-        <Flex
-            textColor="gray.500"
-            fontSize="sm"
-        >
-            ~${value}
-        </Flex>
+        <>
+            {(parseFloat(value) >= 0) ? `~ $${value}` : `~ -$${Math.abs(parseFloat(value))}`}
+        </>
     )
 }
 
@@ -72,17 +70,11 @@ export const BaseTokenPriceTag: React.FC<BaseTokenPriceTagProps> = (props) => {
 
     useEffect(() => {
         if(baseTokenName){
-            if (isCoingeckoToken(baseTokenName.toLowerCase())){
-                getRelativePriceFromCoingecko(baseTokenName?.toLowerCase(), "usd").then((value: number) => {
-                    setPrice(value)
-                })
-            } else {
-                if (isCurveToken(baseTokenName.toLowerCase()) && signer){
-                    getPriceOfCurveLP(baseTokenName.toLowerCase(), elementAddresses, signer).then((value: number) => {
-                        setPrice(value)
-                    })
-                }
-            }
+            getTokenPrice(baseTokenName, elementAddresses, signer).then((value) => {
+                setPrice(value);
+            }).catch((error) => {
+                console.error(error);
+            })
         }
     }, [baseTokenName])
 
