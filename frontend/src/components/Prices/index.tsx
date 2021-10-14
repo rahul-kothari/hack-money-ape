@@ -5,6 +5,7 @@ import { elementAddressesAtom } from '../../recoil/element/atom';
 import {useRecoilValue} from 'recoil';
 import { getTokenPrice } from '../../features/prices';
 import { shortenNumber } from '../../utils/shortenNumber';
+import { getYTCSpotPrice } from '../../features/element/ytcSpot';
 
 interface PriceFeedProps {
     price: number | undefined;
@@ -33,22 +34,28 @@ const PriceTag: React.FC<PriceFeedProps> = (props) => {
 interface YTPriceTagProps {
     amount: number | undefined;
     baseTokenName: string | undefined;
+    trancheAddress: string | undefined;
 }
 
 export const YTPriceTag: React.FC<YTPriceTagProps> = (props) => {
-    // get balancer pool reserves
+    const {amount, baseTokenName, trancheAddress} = props;
 
-    const baseReserves = "0";
-    const ytReserves = "0";
+    const [price, setPrice] = useState<number>(0);
+    const [signer] = useContext(SignerContext);
+    const elementAddresses = useRecoilValue(elementAddressesAtom);
 
-    // eslint-disable-next-line
-    const price = calcSpotPriceYt(baseReserves, ytReserves);
+    useEffect(() => {
+        if (baseTokenName && trancheAddress && signer){
+            getYTCSpotPrice(baseTokenName, trancheAddress, elementAddresses, signer).then((price) => {
+                setPrice(price);
+            })
+        }
+    })
 
-    const {amount} = props;
 
     return (
         <PriceTag
-            price={0.1}
+            price={price}
             amount={amount}
         />
     )

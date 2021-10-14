@@ -97,6 +97,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                     >
                         <TokenResult
                             tokenType="BaseToken"
+                            trancheAddress={userData.trancheAddress}
                             token={{
                                 name: baseToken.name,
                                 amount: baseTokenAmount
@@ -104,6 +105,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         />
                         <TokenResult
                             tokenType="YToken"
+                            trancheAddress={userData.trancheAddress}
                             token={{
                                 name: yieldToken.name,
                                 amount: yieldTokenAmount
@@ -155,6 +157,7 @@ interface TokenResultProps {
     };
     baseTokenName?: string,
     tokenType: "YToken" | "BaseToken";
+    trancheAddress: string,
 }
 
 const TokenResult: React.FC<TokenResultProps> = (props) => {
@@ -236,6 +239,7 @@ const TokenResult: React.FC<TokenResultProps> = (props) => {
                             && <YTPriceTag
                                 amount={token.amount}
                                 baseTokenName={props.baseTokenName}
+                                trancheAddress={props.trancheAddress}
                             />
                     }
                 </Flex>
