@@ -14,9 +14,9 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
     const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
 
     // Estimate the required amount of gas, this is likely very imprecise
-    const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
+    // const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
 
-    const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
+    // const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
 
     // Convert the result to a number
     const [ytExposureAbsolute, baseTokensSpentAbsolute]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
@@ -36,7 +36,7 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
     return {
         ytExposure: ytExposureNormalized,
         remainingTokens: remainingTokensNormalized,
-        ethGasFees,
+        ethGasFees: 0,
         baseTokensSpent: baseTokensSpentNormalized,
         trancheExpiration,
         baseTokenName,
