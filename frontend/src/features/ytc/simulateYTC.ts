@@ -1,6 +1,7 @@
 import { BigNumber, ethers, Signer } from "ethers";
 import _ from "lodash";
 import { ElementAddresses } from "../../types/manual/types";
+import { getTokenPrice } from "../prices";
 import { calculateGain, getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
 
 // Simulates a single yield token compounding execution to determine what the output would be
@@ -14,9 +15,11 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
     const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
 
     // Estimate the required amount of gas, this is likely very imprecise
-    // const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
+    const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
 
-    // const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
+    const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
+
+    const gasFeesInBaseToken = await ethToBaseToken(baseTokenName, ethGasFees, signer);
 
     // Convert the result to a number
     const [ytExposureAbsolute, baseTokensSpentAbsolute]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
@@ -29,14 +32,14 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
 
     let gain = undefined;
     if (userData.variableApy){
-        gain = calculateGain(ytExposureNormalized, userData.variableApy, trancheExpiration, baseTokensSpentNormalized);
+        gain = calculateGain(ytExposureNormalized, userData.variableApy, trancheExpiration, baseTokensSpentNormalized, gasFeesInBaseToken);
     }
 
 
     return {
         ytExposure: ytExposureNormalized,
         remainingTokens: remainingTokensNormalized,
-        ethGasFees: 0,
+        ethGasFees: ethGasFees,
         baseTokensSpent: baseTokensSpentNormalized,
         trancheExpiration,
         baseTokenName,
@@ -85,4 +88,12 @@ const gasLimitToEthGasFee = async (signer: ethers.Signer, gasAmountEstimate: eth
     const gasCostEth: string = ethers.utils.formatEther(gasCostWei);
     
     return parseFloat(gasCostEth);
+}
+
+const ethToBaseToken = async (baseTokenName: string, amountEth: number, signer: Signer) => {
+    const baseTokenPrice = await getTokenPrice(baseTokenName, signer);
+    const ethPrice =  await getTokenPrice("eth", signer);
+
+    return (ethPrice/baseTokenPrice) * amountEth;
+
 }

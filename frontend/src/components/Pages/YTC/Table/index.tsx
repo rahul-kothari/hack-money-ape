@@ -8,7 +8,7 @@ import { BaseTokenPriceTag } from '../../../Prices';
 import { shortenNumber } from '../../../../utils/shortenNumber';
 
 interface TableProps {
-    onSelect: (index: number) => void;
+    onSelect: (index: number | undefined) => void;
     selected: number | undefined;
 }
 
@@ -25,6 +25,12 @@ const ResultsTable: React.FC<TableProps> = (props) => {
             tableRef.current.scrollIntoView({behavior: 'smooth'})
         }
     }, [tableRef])
+
+    useEffect(() => {
+        return () => {
+            onSelect(undefined)
+        }
+    }, [onSelect])
 
     return (
         <Flex
@@ -45,10 +51,13 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                             Yield Tokens
                         </Th>
                         <Th isNumeric>
-                            Remaining <br></br>{simulationResults[0].baseTokenName}
+                            Tokens Spent
                         </Th>
                         <Th isNumeric>
                             Net Gain
+                        </Th>
+                        <Th isNumeric>
+                            APY
                         </Th>
                     </Thead>
                     {simulationResults.map((result: YTCOutput, index) => {
@@ -93,10 +102,13 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
                 {shortenNumber(output.ytExposure)}
             </Td>
             <Td isNumeric>
-                {shortenNumber(output.remainingTokens)}
+                {shortenNumber(output.baseTokensSpent)}
             </Td>
             <Td isNumeric>
                 {output.gain ? <BaseTokenPriceTag amount={output.gain.netGain} baseTokenName={baseTokenName}/> : "?"}
+            </Td>
+            <Td isNumeric>
+                {output.gain ? `%${shortenNumber(output.gain.finalApy)}` : "?"}
             </Td>
         </Tr>
     )

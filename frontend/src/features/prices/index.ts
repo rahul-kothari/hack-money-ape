@@ -3,12 +3,14 @@ import { getRelativePriceFromCoingecko, isCoingeckoToken } from "./coingecko"
 import { getPriceOfCurveLP, isCurveToken } from "./curve"
 
 export const getTokenPrice = async (baseTokenName: string, signer: Signer | undefined): Promise<number> => {
-    if (isCoingeckoToken(baseTokenName.toLowerCase())){
-        return getRelativePriceFromCoingecko(baseTokenName?.toLowerCase(), "usd")
+    const baseTokenNameLowercase = baseTokenName.toLowerCase();
+
+    if (isCoingeckoToken(baseTokenNameLowercase)){
+        return getRelativePriceFromCoingecko(baseTokenNameLowercase, "usd")
     } else {
-        if (isCurveToken(baseTokenName.toLowerCase()) && signer){
-            return getPriceOfCurveLP(baseTokenName.toLowerCase(), signer)
+        if (isCurveToken(baseTokenNameLowercase) && signer){
+            return getPriceOfCurveLP(baseTokenNameLowercase, signer)
         }
     }
-    throw new Error(`Could not get token price for ${baseTokenName}`);
+    throw new Error(`Could not get token price for ${baseTokenNameLowercase}`);
 }

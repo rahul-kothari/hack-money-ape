@@ -4,6 +4,7 @@ import { SignerContext } from '../../hardhat/SymfoniContext';
 import { elementAddressesAtom } from '../../recoil/element/atom';
 import {useRecoilValue} from 'recoil';
 import { getTokenPrice } from '../../features/prices';
+import { shortenNumber } from '../../utils/shortenNumber';
 
 interface PriceFeedProps {
     price: number | undefined;
@@ -16,15 +17,15 @@ const PriceTag: React.FC<PriceFeedProps> = (props) => {
 
     let value: string;
     if (price && amount){
-        value = Math.floor(price * amount).toString();
+        value = shortenNumber(price * amount);
     } else {
-        value = ""
+        value = "0"
     }
 
 
     return (
         <>
-            {(parseFloat(value) >= 0) ? `~ $${value}` : `~ -$${Math.abs(parseFloat(value))}`}
+            {(parseFloat(value) >= 0) ? `$${value}` : `-$${Math.abs(parseFloat(value))}`}
         </>
     )
 }

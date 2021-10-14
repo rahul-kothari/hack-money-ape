@@ -125,7 +125,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         />
                         <DetailItem
                             name="Estimated APY:"
-                            value={`%${estimatedApy}`}
+                            value={estimatedApy ? `%${shortenNumber(estimatedApy)}` : "?"}
                         />
                     </div>
                 </Flex>
@@ -234,6 +234,7 @@ const TokenResult: React.FC<TokenResultProps> = (props) => {
                 </Flex>
                 <Flex
                     id="base-token-dollar-value"
+                    textColor="gray.500"
                 >
                     {
                         tokenType === "BaseToken"

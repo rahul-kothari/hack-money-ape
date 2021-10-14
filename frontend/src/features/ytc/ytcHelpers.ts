@@ -115,31 +115,28 @@ export const getYTCParameters = async (userData: YTCInput, elementAddresses: Ele
 
 
 
-// Calculates the expected gains from a set of yield token compound simulation, at a specific average variable rate
-// param speculatedVariableRate, the estimated average yield of the underlying vault over the course of the term
-// param ytcOutputs, a set of yield token compounding simulation results to have gains calculated upon
-// Returns YTCOutput[], an aray of yield token compounding results augmented with gain information
-export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number, ytcOutputs: YTCOutput[]): YTCOutput[] => {
-    const rates = ytcOutputs.map((ytcOutput) => {
-        return {
-            ...ytcOutput,
-            gain: calculateGain(ytcOutput.ytExposure, speculatedVariableRate, ytcOutput.trancheExpiration, ytcOutput.baseTokensSpent)
-        }
-    })
+// // Calculates the expected gains from a set of yield token compound simulation, at a specific average variable rate
+// // param speculatedVariableRate, the estimated average yield of the underlying vault over the course of the term
+// // param ytcOutputs, a set of yield token compounding simulation results to have gains calculated upon
+// // Returns YTCOutput[], an aray of yield token compounding results augmented with gain information
+// export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number, ytcOutputs: YTCOutput[]): YTCOutput[] => {
+//     const rates = ytcOutputs.map((ytcOutput) => {
+//         return {
+//             ...ytcOutput,
+//             gain: calculateGain(ytcOutput.ytExposure, speculatedVariableRate, ytcOutput.trancheExpiration, ytcOutput.baseTokensSpent, 0)
+//         }
+//     })
 
-    return rates;
-}
+//     return rates;
+// }
 
 // Calculates the expected gains from a yield token compound simulation
 // param speculatedVariableRate
-export const calculateGain = (ytExposure: number, speculatedVariableRate: number, trancheExpiration: number, baseTokensSpent: number): YTCGain => {
+export const calculateGain = (ytExposure: number, speculatedVariableRate: number, trancheExpiration: number, baseTokensSpent: number, estimatedBaseTokensGas: number): YTCGain => {
     const termRemainingYears = getRemainingTrancheYears(trancheExpiration);
 
-    console.log(speculatedVariableRate, termRemainingYears, ytExposure, baseTokensSpent)
-
-    const netGain = (speculatedVariableRate * termRemainingYears * ytExposure) - baseTokensSpent //- gasFee;
+    const netGain = (speculatedVariableRate * termRemainingYears * ytExposure) - baseTokensSpent - estimatedBaseTokensGas;
     const finalApy = (netGain / baseTokensSpent)*100
-    console.log('finalApy', finalApy)
 
     return {
         netGain,
