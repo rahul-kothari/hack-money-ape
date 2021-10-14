@@ -2,7 +2,6 @@ import { BigNumber, ethers, Signer } from "ethers";
 import _ from "lodash";
 import { GAS_LIMITS } from "../../constants/gasLimits";
 import { ElementAddresses } from "../../types/manual/types";
-import { getTokenPrice } from "../prices";
 import { calculateGain, getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
 
 // Simulates a single yield token compounding execution to determine what the output would be
@@ -11,7 +10,7 @@ import { calculateGain, getYTCParameters, YTCInput, YTCOutput, YTCParameters } f
 // param userData, user input data for simulating the transaction
 // param signer, Signer of the transaction
 // returns YTCOutput, contains both input data, and the results fo the simulation, including yield exposure, gas fees, tokens spent, remaining tokens etc.
-export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytSymbol: ytName, baseTokenAmountAbsolute}: YTCParameters, userData: YTCInput, signer: Signer): Promise<YTCOutput> => {
+export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytSymbol: ytName, baseTokenAmountAbsolute, ethToBaseTokenRate}: YTCParameters, userData: YTCInput, signer: Signer): Promise<YTCOutput> => {
     // Call the method statically to calculate the estimated return
     const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
 
@@ -22,7 +21,7 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
 
     const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
 
-    const gasFeesInBaseToken = await ethToBaseToken(baseTokenName, ethGasFees, signer);
+    const gasFeesInBaseToken = ethToBaseTokenRate * ethGasFees;
 
     // Convert the result to a number
     const [ytExposureAbsolute, baseTokensSpentAbsolute]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
@@ -91,12 +90,4 @@ const gasLimitToEthGasFee = async (signer: ethers.Signer, gasAmountEstimate: eth
     const gasCostEth: string = ethers.utils.formatEther(gasCostWei);
     
     return parseFloat(gasCostEth);
-}
-
-const ethToBaseToken = async (baseTokenName: string, amountEth: number, signer: Signer) => {
-    const baseTokenPrice = await getTokenPrice(baseTokenName, signer);
-    const ethPrice =  await getTokenPrice("eth", signer);
-
-    return (ethPrice/baseTokenPrice) * amountEth;
-
 }

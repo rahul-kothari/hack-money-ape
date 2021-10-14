@@ -6,6 +6,7 @@ import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/E
 import {ERC20 as ERC20Type} from '../../hardhat/typechain/ERC20';
 import { ElementAddresses, Tranche } from "../../types/manual/types";
 import { getRemainingTrancheYears, getTrancheByAddress } from "../element";
+import { getTokenPrice } from "../prices";
 
 export interface YTCInput {
     baseTokenAddress: string;
@@ -44,6 +45,7 @@ export interface YTCParameters {
     baseTokenName: string;
     baseTokenAmountAbsolute: BigNumber;
     ytSymbol: string;
+    ethToBaseTokenRate: number;
 }
 
 // helper function to retrieve parameters required for running the YTC transaction
@@ -99,6 +101,8 @@ export const getYTCParameters = async (userData: YTCInput, elementAddresses: Ele
         amount = baseTokenBalance;
     }
 
+    const ethToBaseToken = await ethToBaseTokenRate(baseTokenName, signer);
+
     return {
         ytc,
         trancheAddress,
@@ -109,6 +113,7 @@ export const getYTCParameters = async (userData: YTCInput, elementAddresses: Ele
         baseTokenName,
         baseTokenAmountAbsolute: amount,
         ytSymbol,
+        ethToBaseTokenRate: ethToBaseToken,
     }
 
 }
@@ -158,4 +163,12 @@ export const getTokenNameByAddress = (address: string, tokens: {[name: string]: 
     ))
 
     return result && result[0]
+}
+
+const ethToBaseTokenRate = async (baseTokenName: string, signer: Signer) => {
+    const baseTokenPrice = await getTokenPrice(baseTokenName, signer);
+    const ethPrice =  await getTokenPrice("eth", signer);
+
+    return (ethPrice/baseTokenPrice);
+
 }

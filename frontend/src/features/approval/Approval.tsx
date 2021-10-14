@@ -34,7 +34,6 @@ const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
 
     const abstractHandleApprove = () => {
         handleApprove().then((receipt) => {
-            console.log(receipt);
             setNotification({
                 text: approvalMessage,
                 type: "SUCCESS",
