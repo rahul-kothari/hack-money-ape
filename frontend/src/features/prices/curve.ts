@@ -3,9 +3,11 @@ import ICurveFi from '../../artifacts/contracts/yearn/ICurveFi.sol/ICurveFi.json
 import {ICurveFi as ICurveType} from '../../hardhat/typechain/ICurveFi'
 import { getRelativePriceFromCoingecko } from "./coingecko";
 
-const validCurveTokens = ["lusdcrv-f" , "crv3crypto" , "crvtricrypto" , "stecrv" , "alusd3crv-f", "mim-3lp3crv-f"]
+const validCurveTokens = ["lusd3crv-f" , "crv3crypto" , "crvtricrypto" , "stecrv" , "alusd3crv-f", "mim-3lp3crv-f"]
 export type CurveTokenName = (typeof validCurveTokens[number])
-export const isCurveToken = (x: any): x is CurveTokenName => validCurveTokens.includes(x);
+export const isCurveToken = (x: any): x is CurveTokenName => {
+    return validCurveTokens.includes(x);
+}
 
 // TODO this should not be hardcoded and should rather be grabbed from the curve address provider
 // The lusd, alusd and mim pools all have erc20/swap pools built together so the adddress is the same as the token address
@@ -13,7 +15,7 @@ const CURVE_SWAP_ADDRESSES: {[tokenName: string]: string} = {
     "crv3crypto": "0xD51a44d3FaE010294C616388b506AcdA1bfAAE46",
     "crvtricrypto": "0x80466c64868E1ab14a1Ddf27A676C3fcBE638Fe5",
     "stecrv": "0xDC24316b9AE028F1497c275EB9192a3Ea0f67022",
-    "lusdcrv-f": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
+    "lusd3crv-f": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
     "alusd3crv-f": "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c",
     "mim-3lp3crv-f": "0x5a6A4D54456819380173272A5E8E9B9904BdF41B"
 }
@@ -57,7 +59,7 @@ const getBasePrice = async (tokenName: string): Promise<number> => {
             ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
             basePrice = ethPrice;
             break;
-        case "lusdcrv-f": 
+        case "lusd3crv-f": 
             basePrice = 1;
             break;
         case "alusd3crv-f": 
