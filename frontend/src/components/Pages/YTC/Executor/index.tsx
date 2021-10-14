@@ -117,11 +117,11 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         />
                         <DetailItem
                             name="Minimum YT Received:"
-                            value={`${minimumReturn}`}
+                            value={`${shortenNumber(minimumReturn)}`}
                         />
                         <DetailItem
                             name="Estimated Gas Cost:"
-                            value={`${estimatedGas} ETH`}
+                            value={`${shortenNumber(estimatedGas)} ETH`}
                         />
                         <DetailItem
                             name="Estimated APY:"
