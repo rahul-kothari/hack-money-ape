@@ -24,11 +24,12 @@ export interface ApeProps {
     yieldTokenAmount: number;
     userData: YTCInput
     estimatedGas: number;
+    estimatedApy?: number;
 }
 
 export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
-    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData, estimatedGas} = props;
+    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData, estimatedGas, estimatedApy} = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const setSimulationResults = useRecoilState(simulationResultsAtom)[1];
     const elementAddresses = useRecoilValue(elementAddressesAtom);
@@ -124,7 +125,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         />
                         <DetailItem
                             name="Estimated APY:"
-                            value={`%${""}`}
+                            value={`%${estimatedApy}`}
                         />
                     </div>
                 </Flex>
