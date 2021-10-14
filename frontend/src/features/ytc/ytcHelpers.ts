@@ -140,7 +140,11 @@ export const getYTCParameters = async (userData: YTCInput, elementAddresses: Ele
 export const calculateGain = (ytExposure: number, speculatedVariableRate: number, trancheExpiration: number, baseTokensSpent: number, estimatedBaseTokensGas: number): YTCGain => {
     const termRemainingYears = getRemainingTrancheYears(trancheExpiration);
 
-    const netGain = (speculatedVariableRate * termRemainingYears * ytExposure) - baseTokensSpent - estimatedBaseTokensGas;
+    // speculated variable rate is an apy, but we need this as an apr
+    const returnPercentage = (1 + speculatedVariableRate)**termRemainingYears - 1;
+    console.log('return percentage', returnPercentage)
+
+    const netGain = (returnPercentage * ytExposure) - baseTokensSpent - estimatedBaseTokensGas;
     const finalApy = (netGain / baseTokensSpent)*100
 
     return {
