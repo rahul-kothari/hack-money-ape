@@ -9,7 +9,6 @@ import { simulationResultsAtom } from '../../../recoil/simulationResults/atom';
 import { YTCOutput } from "../../../features/ytc/ytcHelpers";
 import { Title } from "../../Title";
 import ResultsTable from "./Table";
-import { shortenNumber } from "../../../utils/shortenNumber";
 
 interface YTCProps {}
 
@@ -39,6 +38,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
             yieldTokenAmount: result.ytExposure,
             userData: result.inputs,
             estimatedGas: result.ethGasFees,
+            estimatedApy: result.gain?.finalApy
         }
     }
 

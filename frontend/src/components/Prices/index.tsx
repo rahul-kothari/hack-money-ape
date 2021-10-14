@@ -1,8 +1,5 @@
-import { Flex } from '@chakra-ui/layout';
 import React, { useContext, useEffect, useState } from 'react'
 import { calcSpotPriceYt } from '../../utils/element/calcSpotPrice';
-import { CoingeckoTokenName, getRelativePriceFromCoingecko, isCoingeckoToken } from '../../features/prices/coingecko';
-import { getPriceOfCurveLP, isCurveToken } from '../../features/prices/curve';
 import { SignerContext } from '../../hardhat/SymfoniContext';
 import { elementAddressesAtom } from '../../recoil/element/atom';
 import {useRecoilValue} from 'recoil';
@@ -70,13 +67,13 @@ export const BaseTokenPriceTag: React.FC<BaseTokenPriceTagProps> = (props) => {
 
     useEffect(() => {
         if(baseTokenName){
-            getTokenPrice(baseTokenName, elementAddresses, signer).then((value) => {
+            getTokenPrice(baseTokenName, signer).then((value) => {
                 setPrice(value);
             }).catch((error) => {
                 console.error(error);
             })
         }
-    }, [baseTokenName])
+    }, [baseTokenName, elementAddresses, signer])
 
 
     return (

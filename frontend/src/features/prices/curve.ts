@@ -1,10 +1,6 @@
-// get the price of curve lp tokens
-
-import { BigNumber } from "@ethersproject/bignumber";
 import { Signer, Contract, utils} from "ethers";
 import ICurveFi from '../../artifacts/contracts/yearn/ICurveFi.sol/ICurveFi.json'
 import {ICurveFi as ICurveType} from '../../hardhat/typechain/ICurveFi'
-import { ElementAddresses } from "../../types/manual/types";
 import { getRelativePriceFromCoingecko } from "./coingecko";
 
 const validCurveTokens = ["lusdcrv-f" , "crv3crypto" , "crvtricrypto" , "stecrv" , "alusd3crv-f", "mim-3lp3crv-f"]
@@ -22,7 +18,7 @@ const CURVE_SWAP_ADDRESSES: {[tokenName: string]: string} = {
     "mim-3lp3crv-f": "0x5a6A4D54456819380173272A5E8E9B9904BdF41B"
 }
 
-export const getPriceOfCurveLP = async (tokenName: string, elementAddreses: ElementAddresses, signer: Signer) => {
+export const getPriceOfCurveLP = async (tokenName: string, signer: Signer) => {
     const swapAddress = CURVE_SWAP_ADDRESSES[tokenName];
 
     if (!swapAddress){
@@ -39,23 +35,26 @@ export const getPriceOfCurveLP = async (tokenName: string, elementAddreses: Elem
 
 const getBasePrice = async (tokenName: string): Promise<number> => {
     let basePrice: number;
+    let ethPrice;
+    let wbtcPrice;
+    let usdtPrice
     switch(tokenName){
         case "crv3crypto": 
-            var ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
-            var wbtcPrice = await getRelativePriceFromCoingecko("wbtc", "usd")
-            var usdtPrice = await getRelativePriceFromCoingecko("usdt", "usd")
+            ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
+            wbtcPrice = await getRelativePriceFromCoingecko("wbtc", "usd")
+            usdtPrice = await getRelativePriceFromCoingecko("usdt", "usd")
             // TODO where is this multiple coming from?
             basePrice = (ethPrice * wbtcPrice * usdtPrice) / (1000000*0.11260245)
             break;
         case "crvtricrypto": 
-            var ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
-            var wbtcPrice = await getRelativePriceFromCoingecko("wbtc", "usd")
-            var usdtPrice = await getRelativePriceFromCoingecko("usdt", "usd")
+            ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
+            wbtcPrice = await getRelativePriceFromCoingecko("wbtc", "usd")
+            usdtPrice = await getRelativePriceFromCoingecko("usdt", "usd")
             // TODO where is this multiple coming from?
             basePrice = (ethPrice * wbtcPrice * usdtPrice)/(1000000*0.11260245)
             break;
         case "stecrv": 
-            var ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
+            ethPrice = await getRelativePriceFromCoingecko("eth", "usd")
             basePrice = ethPrice;
             break;
         case "lusdcrv-f": 

@@ -139,6 +139,7 @@ export const calculateGain = (ytExposure: number, speculatedVariableRate: number
 
     const netGain = (speculatedVariableRate * termRemainingYears * ytExposure) - baseTokensSpent //- gasFee;
     const finalApy = (netGain / baseTokensSpent)*100
+    console.log('finalApy', finalApy)
 
     return {
         netGain,

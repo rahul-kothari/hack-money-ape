@@ -148,13 +148,13 @@ interface FormProps {
 
 const Form: React.FC<FormProps> = (props) => {
 
-    const {tokens, onChange, balance, setBalance, variableApy, setVariableApy} = props;
+    const {tokens, onChange, balance, setBalance, setVariableApy} = props;
 
     const erc20 = useContext(ERC20Context)
     const [currentAddress] = useContext(CurrentAddressContext)
     const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
     const [simulationResults] = useRecoilValue(simulationResultsAtom);
-    const [fixedRate, setFixedRate] = useState<number | undefined>(undefined)
+    // const [fixedRate, setFixedRate] = useState<number | undefined>(undefined)
     const elementAddresses = useRecoilValue(elementAddressesAtom)
     const history = useHistory();
     const query = useQuery();
@@ -235,7 +235,7 @@ const Form: React.FC<FormProps> = (props) => {
                 console.error(error)
             })
         }
-    }, [elementAddresses, tokenAddress, getTokenNameByAddress])
+    }, [elementAddresses, tokenAddress, getTokenNameByAddress, setVariableApy])
     // update fixed apy
     useEffect(() => {
     })

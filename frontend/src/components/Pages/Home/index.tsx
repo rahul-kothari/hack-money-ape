@@ -25,7 +25,7 @@ const Home = (props: Props) => {
     return (
         <>
             <Title
-                title="Welcome To Ape Predicted Yield!"
+                title="Welcome To Ape Predicted Yield"
                 infoLinkText="Learn more about APY"
                 infoLink=""
             />

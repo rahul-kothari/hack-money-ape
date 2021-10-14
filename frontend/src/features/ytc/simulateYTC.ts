@@ -72,6 +72,7 @@ export const simulateYTCForCompoundRange = async (userData: YTCInput, constants:
     return await Promise.all(promises)
 }
 
+//eslint-disable-next-line
 const gasLimitToEthGasFee = async (signer: ethers.Signer, gasAmountEstimate: ethers.BigNumber): Promise<number> => {
     const {maxFeePerGas, maxPriorityFeePerGas} = await signer.getFeeData();
 
