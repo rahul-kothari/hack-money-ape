@@ -26,7 +26,6 @@ export const executeYieldTokenCompounding = async (userData: YTCInput, expectedY
     } catch {
         maximumSlippageTokensAbsolute = ethers.utils.parseUnits((maximumSlippageTokens.toFixed(6)), yieldCalculationParameters.yieldTokenDecimals)
     }
-    console.log(maximumSlippageTokensAbsolute);
 
     // The minimum number of yTokens that should be received
     const minimumYieldAbsolute = expectedYieldTokensAbsolute.sub(maximumSlippageTokensAbsolute);

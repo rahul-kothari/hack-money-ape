@@ -1,5 +1,6 @@
 import { BigNumber, ethers, Signer } from "ethers";
 import _ from "lodash";
+import { GAS_LIMITS } from "../../constants/gasLimits";
 import { ElementAddresses } from "../../types/manual/types";
 import { getTokenPrice } from "../prices";
 import { calculateGain, getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
@@ -15,7 +16,9 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
     const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
 
     // Estimate the required amount of gas, this is likely very imprecise
-    const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
+    // const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
+    // TODO this is using the mean of hardcoded gas estimations
+    const gasAmountEstimate = BigNumber.from(GAS_LIMITS[userData.numberOfCompounds])
 
     const ethGasFees = await gasLimitToEthGasFee(signer, gasAmountEstimate);
 
