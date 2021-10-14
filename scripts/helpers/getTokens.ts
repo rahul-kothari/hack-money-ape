@@ -1,10 +1,10 @@
 import hre, { deployments, ethers } from 'hardhat';
 import ERC20 from '../../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
 import {ERC20 as ERC20Type} from '../../frontend/src/hardhat/typechain/ERC20';
-import { BigNumber } from '@ethersproject/bignumber';
 import { constants as mainnetConstants } from '../mainnet-constants';
 import { constants as goerliConstants} from '../goerli-constants';
 import { tokenHolders } from '../../test/constants/tokenHolders';
+import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts';
 
 if (hre.network.name == "goerli"){
     var constants = goerliConstants;
@@ -13,8 +13,6 @@ if (hre.network.name == "goerli"){
 }
 
 export const getTokens = async (largeHolderAddress: string, tokenName: string, amountNormalized: number) => {
-    const YTCDeployment = await hre.deployments.get('YieldTokenCompounding');
-
     const signer = (await hre.ethers.getSigners())[0];
     // impersonate a large holder of lusdcurve3
     await hre.network.provider.request({
@@ -45,15 +43,15 @@ export const getTokens = async (largeHolderAddress: string, tokenName: string, a
 
     // Create the transfer transaction
     const transaction = await erc20Contract.transfer(signer.address, amountAbsolute);
-    await transaction.wait()
+    return transaction.wait()
 
 }
 
-export const getAllTokens = async () => {
+export const getAllTokens = async (): Promise<(ContractReceipt | undefined)[]> => {
   const promises = tokenHolders.map((entry) => {
     return getTokens(entry.largeHolderAddress, entry.tokenName, entry.amount)
   })
 
-  await Promise.all(promises);
+  return Promise.all(promises);
 }
 
