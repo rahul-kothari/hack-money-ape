@@ -9,6 +9,7 @@ import { simulationResultsAtom } from '../../../recoil/simulationResults/atom';
 import { YTCOutput } from "../../../features/ytc/ytcHelpers";
 import { Title } from "../../Title";
 import ResultsTable from "./Table";
+import { shortenNumber } from "../../../utils/shortenNumber";
 
 interface YTCProps {}
 

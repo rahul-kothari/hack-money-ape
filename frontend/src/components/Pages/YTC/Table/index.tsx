@@ -4,6 +4,8 @@ import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom
 import { Table, Tr, Td, Th, Thead, Text, Flex } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 import Card from '../../../Reusable/Card';
+import { BaseTokenPriceTag } from '../../../Prices';
+import { shortenNumber } from '../../../../utils/shortenNumber';
 
 interface TableProps {
     onSelect: (index: number) => void;
@@ -55,6 +57,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                                     key={result.inputs.numberOfCompounds}
                                     isSelected={index === selected}
                                     onSelect={() => {onSelect(index)}}
+                                    baseTokenName={simulationResults[0].baseTokenName}
                                 />
                     })}
                 </Table>
@@ -64,6 +67,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
 }
 
 interface ResultsTableRowInterface {
+    baseTokenName: string;
     output: YTCOutput;
     onSelect: () => void;
     isSelected: boolean;
@@ -71,7 +75,7 @@ interface ResultsTableRowInterface {
 
 export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
 
-    const {output, onSelect, isSelected} = props;
+    const {output, onSelect, isSelected, baseTokenName} = props;
 
     return (
         <Tr
@@ -86,13 +90,13 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
                 {output.inputs.numberOfCompounds}
             </Td>
             <Td isNumeric>
-                {Math.trunc(output.ytExposure)}
+                {shortenNumber(output.ytExposure)}
             </Td>
             <Td isNumeric>
-                {Math.trunc(output.remainingTokens)}
+                {shortenNumber(output.remainingTokens)}
             </Td>
             <Td isNumeric>
-                {output.gain?.netGain || "100"}
+                {output.gain ? <BaseTokenPriceTag amount={output.gain.netGain} baseTokenName={baseTokenName}/> : "?"}
             </Td>
         </Tr>
     )

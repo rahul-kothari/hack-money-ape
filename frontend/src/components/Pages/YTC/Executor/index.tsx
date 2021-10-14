@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 import { simulationResultsAtom } from "../../../../recoil/simulationResults/atom";
 import { BaseTokenPriceTag, YTPriceTag } from "../../../Prices";
 import Card from "../../../Reusable/Card";
+import { shortenNumber } from "../../../../utils/shortenNumber";
 
 export interface ApeProps {
     baseToken: {
@@ -228,7 +229,7 @@ const TokenResult: React.FC<TokenResultProps> = (props) => {
                     fontSize="lg"
                     justifySelf="center"
                 >
-                    {token.amount}
+                    {shortenNumber(token.amount)}
                 </Flex>
                 <Flex
                     id="base-token-dollar-value"
