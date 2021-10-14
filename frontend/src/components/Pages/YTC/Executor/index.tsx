@@ -12,6 +12,7 @@ import { simulationResultsAtom } from "../../../../recoil/simulationResults/atom
 import { BaseTokenPriceTag, YTPriceTag } from "../../../Prices";
 import Card from "../../../Reusable/Card";
 import { shortenNumber } from "../../../../utils/shortenNumber";
+import { DetailItem } from '../../../Reusable/DetailItem';
 
 export interface ApeProps {
     baseToken: {
@@ -146,19 +147,6 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
     )
 }
 
-interface DetailItemProps {
-    name: string,
-    value: string,
-}
-
-const DetailItem: React.FC<DetailItemProps> = (props) => {
-    const {name, value} = props;
-
-    return <div className="flex flex-row justify-between">
-        <Text>{name}</Text>
-        <Text>{value}</Text>
-    </div>
-}
 
 interface TokenResultProps {
     token: {
