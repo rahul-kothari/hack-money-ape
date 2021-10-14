@@ -1,6 +1,9 @@
 
 export const shortenNumber = (number: number): string => {
     const absoluteNumber = Math.abs(number);
+    if (absoluteNumber === 0){
+        return '0'
+    }
     if (absoluteNumber >= 1000){
         if (absoluteNumber >= 1_000_000){
             if (absoluteNumber >+ 1_000_000_000){
