@@ -42,7 +42,7 @@ const Home = (props: Props) => {
                             rounded="full"
                             onClick={handleConnect}
                             bg={'main.primary'}
-                            color="white"
+                            color="text.secondary"
                             _hover={{
                                 bg: 'main.primary_hover'
                             }}
@@ -55,7 +55,7 @@ const Home = (props: Props) => {
                             rounded="full"
                             onClick={handleStart}
                             bg={'main.primary'}
-                            color="white"
+                            color="text.secondary"
                             _hover={{
                                 bg: 'main.primary_hover'
                             }}

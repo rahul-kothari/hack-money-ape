@@ -17,6 +17,7 @@ import { simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYT
 import { getVariableAPY } from '../../../../features/prices/yearn';
 import { ApproveAndSimulateButton } from "./ApproveAndSimulateButton";
 import { TrancheDetails } from "./Tranche";
+import { TokenIcon } from "../../../Tokens/TokenIcon";
 
 interface CalculateProps {
     tokens: Token[];
@@ -291,6 +292,7 @@ const Form: React.FC<FormProps> = (props) => {
                         rounded="full"
                         variant="filled"
                         bgColor="text.primary"
+                        cursor="pointer"
                         value={formik.values.tokenAddress}
                         onChange={handleTokenChange}
                         shadow="lg"
@@ -305,6 +307,7 @@ const Form: React.FC<FormProps> = (props) => {
                         width="40"
                         name="trancheAddress"
                         rounded="full"
+                        cursor="pointer"
                         variant="filled"
                         bgColor="text.primary"
                         value={formik.values.trancheAddress}
@@ -429,6 +432,9 @@ const Form: React.FC<FormProps> = (props) => {
                     </Text>
                         </InputRightAddon>
                     </InputGroup>
+                    <TokenIcon
+                        tokenName={getTokenNameByAddress(tokenAddress)}
+                    />
                 </Flex>
                 <Flex
                     alignSelf="start"

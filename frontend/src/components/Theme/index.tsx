@@ -16,7 +16,7 @@ export default extendTheme({
     },
     main: {
       primary: "#FFF32C",
-      primary_hover: "#818CF8",
+      primary_hover: "#fff777",
       primary_text: "",
       secondary: "",
       secondary_hover: ""
