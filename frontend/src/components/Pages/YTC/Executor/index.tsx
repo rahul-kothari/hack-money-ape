@@ -1,4 +1,4 @@
-import { Button, Spinner, Flex, Divider } from "@chakra-ui/react";
+import { Button, Spinner, Flex, Divider, FormLabel } from "@chakra-ui/react";
 import { YTCInput } from "../../../../features/ytc/ytcHelpers";
 import { executeYieldTokenCompounding } from "../../../../features/ytc/executeYieldTokenCompounding";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
@@ -92,9 +92,13 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                     <Flex
                         id="outputs"
                         flexDir='column'
+                        alignItems='center'
                         gridGap={1}
                         p={2}
                     >
+                        <FormLabel>
+                            Tokens Received
+                        </FormLabel>
                         <TokenResult
                             tokenType="BaseToken"
                             trancheAddress={userData.trancheAddress}
@@ -118,28 +122,12 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         orientation="horizontal"
                         borderWidth="thin"
                     />
-                    <Flex
-                        id="ape-details" 
-                        flexDir="column"
-                        p={2}
-                    >
-                        <DetailItem
-                            name="Slippage Tolerance:"
-                            value={`%${slippageTolerance}`}
-                        />
-                        <DetailItem
-                            name="Minimum YT Received:"
-                            value={`${shortenNumber(minimumReturn)}`}
-                        />
-                        <DetailItem
-                            name="Estimated Gas Cost:"
-                            value={`${shortenNumber(estimatedGas)} ETH`}
-                        />
-                        <DetailItem
-                            name="Estimated APY:"
-                            value={estimatedApy ? `%${shortenNumber(estimatedApy)}` : "?"}
-                        />
-                    </Flex>
+                <ExecutionDetails 
+                    slippageTolerance={slippageTolerance}
+                    estimatedGas={estimatedGas}
+                    percentageReturn={estimatedApy}
+                    minimumReturn={minimumReturn}
+                />
             </Card>
             <Button
                 id="approve-calculate-button"
@@ -160,3 +148,37 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 }
 
 
+interface ExecutionDetailsProps {
+    slippageTolerance: number,
+    minimumReturn: number,
+    estimatedGas: number,
+    percentageReturn : number | undefined,
+}
+
+const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
+    const {slippageTolerance, minimumReturn, estimatedGas, percentageReturn} = props;
+
+    return <Flex
+        p={2}
+        px={5}
+        flexDir="column"
+        width="full"
+    >
+        <DetailItem
+            name="Slippage Tolerance:"
+            value={`${slippageTolerance}%`}
+        />
+        <DetailItem
+            name="Minimum YT Received:"
+            value={`${shortenNumber(minimumReturn)}`}
+        />
+        <DetailItem
+            name="Estimated Gas Cost:"
+            value={`${shortenNumber(estimatedGas)} ETH`}
+        />
+        <DetailItem
+            name="Percentage Return"
+            value={percentageReturn ? `${shortenNumber(percentageReturn)}%` : "?"}
+        />
+    </Flex>
+}

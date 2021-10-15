@@ -1,4 +1,4 @@
-import { Td, Tr } from "@chakra-ui/react";
+import { Tr, Td } from "@chakra-ui/react";
 import { YTCOutput } from "../../../../features/ytc/ytcHelpers";
 import { shortenNumber } from "../../../../utils/shortenNumber";
 import { BaseTokenPriceTag } from "../../../Prices";
@@ -17,7 +17,7 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
     return (
         <Tr
             onClick={onSelect}
-            bgColor={isSelected ? "indigo.300" : "inherit"}
+            bgColor={isSelected ? "main.primary" : "inherit"}
             cursor="pointer"
             _hover={{
                 bgColor:"indigo.50"

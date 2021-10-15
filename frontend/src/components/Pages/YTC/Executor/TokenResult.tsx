@@ -29,11 +29,10 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
         id="base-token"
         flexDir="row"
         width="full"
-        bgColor="gray.200"
+        bgColor="text.primary"
         rounded="2xl"
         shadow="lg"
         justify="space-between"
-        className="border border-gray-600"
     >
         <Flex
             id="base-token-asset"
