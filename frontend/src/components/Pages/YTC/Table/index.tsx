@@ -54,9 +54,6 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                         <Th isNumeric>
                             Net Gain
                         </Th>
-                        <Th isNumeric>
-                            Term Yield
-                        </Th>
                     </Thead>
                     {simulationResults.map((result: YTCOutput, index) => {
                         return <ResultsTableRow

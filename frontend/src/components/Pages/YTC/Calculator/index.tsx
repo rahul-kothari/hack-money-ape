@@ -279,11 +279,11 @@ const Form: React.FC<FormProps> = (props) => {
                 </FormLabel>
                 <Flex
                     id="selects"
-                    flexDir="row"
+                    flexDir={{base: "column", sm: "row"}}
                     justify="center"
                     alignItems="center"
                     mb={4}
-                    gridGap={6}
+                    gridGap={{base: 2, sm: 6}}
                 >
                     <Select
                         width="40"

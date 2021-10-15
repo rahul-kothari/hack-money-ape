@@ -42,17 +42,7 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
                 }
             >
                 {output.gain ? <BaseTokenPriceTag amount={output.gain.netGain} baseTokenName={baseTokenName}/> : "?"}
-            </Td>
-            <Td isNumeric
-                textColor={
-                    output.gain ?
-                        (output.gain?.netGain >= 0) ? 
-                            "green.600" : 
-                            "red.500" :
-                        "inherit"
-                }
-            >
-                {output.gain ? `%${shortenNumber(output.gain.finalApy)}` : "?"}
+                {output.gain ? ` (%${shortenNumber(output.gain.finalApy)})` : "?"}
             </Td>
         </Tr>
     )
