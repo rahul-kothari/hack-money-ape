@@ -1,5 +1,3 @@
-import Icon, {IconProps} from "@chakra-ui/icon";
-import {QuestionIcon} from "@chakra-ui/icons";
 import { Flex } from "@chakra-ui/layout";
 import { imageLinkMap } from "../../constants/apy-mainnet-constants";
 
@@ -11,7 +9,7 @@ interface TokenIconInterface {
 export const TokenIcon: React.FC<TokenIconInterface> = (props) => {
     const {tokenName} = props;
     if (!tokenName){
-        return <QuestionIcon/>
+        return <></>
     }
 
     const tokenUrl = imageLinkMap[tokenName];

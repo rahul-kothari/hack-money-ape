@@ -13,7 +13,8 @@ const COINGECKO_TOKEN_NAME_TRANSLATION: {[key: string]: string} = {
     "weth": "weth",
     "eth": "ethereum",
     "steth": "lido-staked-ether",
-    "usd": "usd"
+    "usd": "usd",
+    "eur": "eur"
 }
 
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3/simple/price'

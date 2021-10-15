@@ -4,7 +4,7 @@ import { CURVE_SWAP_ADDRESSES } from "../../constants/apy-mainnet-constants";
 import {ICurveFi as ICurveType} from '../../hardhat/typechain/ICurveFi'
 import { getRelativePriceFromCoingecko } from "./coingecko";
 
-const validCurveTokens = ["lusd3crv-f" , "crv3crypto" , "crvtricrypto" , "stecrv" , "alusd3crv-f", "mim-3lp3crv-f"]
+const validCurveTokens = ["lusd3crv-f" , "crv3crypto" , "crvtricrypto" , "stecrv" , "alusd3crv-f", "mim-3lp3crv-f", "eurscrv"]
 export type CurveTokenName = (typeof validCurveTokens[number])
 export const isCurveToken = (x: any): x is CurveTokenName => {
     return validCurveTokens.includes(x);
@@ -57,6 +57,9 @@ const getBasePrice = async (tokenName: string): Promise<number> => {
             break;
         case "mim-3lp3crv-f": 
             basePrice = 1;
+            break;
+        case "eurscrv": 
+            basePrice = (1 / await getRelativePriceFromCoingecko("usdc", "eur"))
             break;
         default:
             throw new Error('Could not find curve token price')

@@ -20,7 +20,7 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
             bgColor={isSelected ? "main.primary" : "inherit"}
             cursor="pointer"
             _hover={{
-                bgColor:"indigo.50"
+                bgColor: isSelected ? "main.primary" : "main.primary_hover"
             }}
         >
             <Td isNumeric>
@@ -42,6 +42,7 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
                 }
             >
                 {output.gain ? <BaseTokenPriceTag amount={output.gain.netGain} baseTokenName={baseTokenName}/> : "?"}
+                <br/>
                 {output.gain ? ` (%${shortenNumber(output.gain.finalApy)})` : "?"}
             </Td>
         </Tr>
