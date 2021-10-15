@@ -315,8 +315,10 @@ const Form: React.FC<FormProps> = (props) => {
             {/* <Text fontSize="large" fontWeight="extrabold">Select Initial Collateral</Text> */}
             <Flex
                 id="amount-card"
+                p={2}
                 flexDir="column"
                 alignItems="end"
+                gridGap={1}
             >
                 <Flex
                     id="amount-header"
@@ -389,24 +391,20 @@ const Form: React.FC<FormProps> = (props) => {
                     />
                 </Flex>
             </Flex>
-        </Card>
-        <Divider
-            borderColor="black"
-            orientation="horizontal"
-        />
-        <Card>
-            {/* <Flex
+            <Divider
+                borderColor="#f4f4f5"
+                orientation="horizontal"
+                borderWidth="thin"
+            />
+            <Flex
                 p={2}
-                my={2}
                 flexDir="column"
-                bgColor="white"
-                rounded="2xl"
-            > */}
+            >
                 { formik.values.trancheAddress && formik.values.tokenAddress && <TrancheDetails
                     trancheAddress={formik.values.trancheAddress}
                     tokenAddress={formik.values.tokenAddress}
                 />} 
-            {/* </Flex> */}
+            </Flex>
         </Card>
         <ApproveAndSimulateButton
             formErrors={formik.errors}

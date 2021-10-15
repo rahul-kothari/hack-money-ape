@@ -60,6 +60,8 @@ export const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
                 handleChangeTrancheRate({
                     fixed: fixedRate
                 })
+            }).catch((error) => {
+                console.error(error);
             })
         }
     }, [handleChangeTrancheRate, signer, trancheAddress, elementAddresses, tokenAddress])

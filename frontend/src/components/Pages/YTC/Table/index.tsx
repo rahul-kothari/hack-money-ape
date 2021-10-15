@@ -37,7 +37,6 @@ const ResultsTable: React.FC<TableProps> = (props) => {
             py={5}
         >
             <Card>
-                <Text fontSize="large" fontWeight="extrabold">Select Number of Compounds</Text>
                 <Table
                     ref={tableRef}
                     variant="simple"

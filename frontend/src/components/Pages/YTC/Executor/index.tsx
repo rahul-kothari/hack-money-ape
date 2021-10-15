@@ -1,4 +1,4 @@
-import { Button, Text, Spinner, Flex } from "@chakra-ui/react";
+import { Button, Text, Spinner, Flex, Divider } from "@chakra-ui/react";
 import { YTCInput } from "../../../../features/ytc/ytcHelpers";
 import { executeYieldTokenCompounding } from "../../../../features/ytc/executeYieldTokenCompounding";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
@@ -84,16 +84,16 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
             gridGap={3}
         >
             <Card>
-                <Text fontSize="large" fontWeight="extrabold">Output</Text>
-                <Flex
+                {/* <Flex
                     flexDir='column'
                     gridGap={3}
                     py={2}
-                >
+                > */}
                     <Flex
                         id="outputs"
                         flexDir='column'
                         gridGap={1}
+                        p={2}
                     >
                         <TokenResult
                             tokenType="BaseToken"
@@ -113,7 +113,16 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                             baseTokenName={baseToken.name}
                         />
                     </Flex>
-                    <div id="ape-details" className="">
+                    <Divider
+                        borderColor="#f4f4f5"
+                        orientation="horizontal"
+                        borderWidth="thin"
+                    />
+                    <Flex
+                        id="ape-details" 
+                        flexDir="column"
+                        p={2}
+                    >
                         <DetailItem
                             name="Slippage Tolerance:"
                             value={`%${slippageTolerance}`}
@@ -130,8 +139,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                             name="Estimated APY:"
                             value={estimatedApy ? `%${shortenNumber(estimatedApy)}` : "?"}
                         />
-                    </div>
-                </Flex>
+                    </Flex>
             </Card>
             <Button
                 id="approve-calculate-button"
