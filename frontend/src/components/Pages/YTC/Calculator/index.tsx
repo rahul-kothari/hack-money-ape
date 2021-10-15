@@ -19,6 +19,7 @@ import { getVariableAPY } from '../../../../features/prices/yearn';
 import { TrancheRatesInterface, trancheSelector } from "../../../../recoil/trancheRates/atom";
 import { shortenNumber } from "../../../../utils/shortenNumber";
 import { DetailItem } from "../../../Reusable/DetailItem";
+import { getFixedRate } from "../../../../features/element/fixedRate";
 
 interface CalculateProps {
     tokens: Token[];
@@ -492,6 +493,7 @@ const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
     const {trancheAddress, tokenAddress} = props;
 
     const elementAddresses = useRecoilValue(elementAddressesAtom);
+    const [signer] = useContext(SignerContext);
     const [trancheRate, setTrancheRates] = useRecoilState(trancheSelector(trancheAddress));
 
     // let trancheExpiration: number | undefined = undefined;
@@ -521,10 +523,17 @@ const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
 
     // TODO get fixed apy
     useEffect(() => {
-        handleChangeTrancheRate({
-            fixed: 0
-        })
-    }, [handleChangeTrancheRate])
+        // get baseTokenName
+        const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
+
+        if (baseTokenName && signer){
+            getFixedRate(baseTokenName, trancheAddress, elementAddresses, signer).then((fixedRate) => {
+                handleChangeTrancheRate({
+                    fixed: fixedRate
+                })
+            })
+        }
+    }, [handleChangeTrancheRate, signer, trancheAddress, elementAddressesAtom])
 
     useEffect(() => {
         const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
@@ -554,11 +563,11 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
     return <>
         <DetailItem
             name= "Fixed Rate:"
-            value={`%${shortenNumber(fixed * 100)}`}
+            value={`${shortenNumber(fixed * 100)}%`}
         />
         <DetailItem
             name= "Variable Rate:"
-            value={`%${shortenNumber(variable * 100)}`}
+            value={`${shortenNumber(variable * 100)}%`}
         />
         <DetailItem
             name= "Days Remaining:"

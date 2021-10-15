@@ -36,6 +36,10 @@ export interface ReservesResult {
    * decimals of tokens in same order as tokens
    */
   decimals: number[];
+  /**
+   * Total supply of pool liquidity shares
+   */
+  totalSupply: BigNumber;
 }
 /**
  * Returns the reserves for a given pool.
@@ -57,8 +61,11 @@ export async function getReserves(
 
   const poolContract = new Contract(poolAddress, poolAbi, signerOrProvider) as BasePoolType;
 
+  const totalSupply = await poolContract.totalSupply();
+
   const poolId = await poolContract.getPoolId();
   const poolTokens = await balancerVault.getPoolTokens(poolId);
+  
   const decimals: number[] = [];
   await Promise.all(
     poolTokens.tokens.map(async (token) => {
@@ -72,6 +79,7 @@ export async function getReserves(
 
   return {
     tokens: poolTokens.tokens,
+    totalSupply,
     balances: poolTokens.balances,
     decimals: decimals,
   };
