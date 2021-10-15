@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
-import { Table, Th, Thead, Text, Flex } from '@chakra-ui/react';
+import { Table, Th, Thead, Flex } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 import Card from '../../../Reusable/Card';
 import { ResultsTableRow } from './ResultsTableRow';
