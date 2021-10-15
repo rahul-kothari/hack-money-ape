@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react'
 import { Button, ButtonProps, Spinner } from '@chakra-ui/react'
 import { checkApproval, sendApproval } from './approvalAPI';
-import { ProviderContext, ERC20Context, CurrentAddressContext, YieldTokenCompoundingContext } from '../../hardhat/SymfoniContext';
+import { ProviderContext, ERC20Context, CurrentAddressContext, YieldTokenCompoundingContext, SymfoniContext } from '../../hardhat/SymfoniContext';
 import { BigNumber, ContractReceipt, providers } from 'ethers';
 import { notificationAtom } from '../../recoil/notifications/atom';
 import { useRecoilState } from 'recoil';
@@ -22,6 +22,8 @@ type AbstractApprovalProps = {
 
 const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
     const {approveText, approvalMessage, children, handleCheckApproval, handleApprove, provider, isLoading, isApproved, setIsLoading, ...rest} = props;
+
+    const {init} = useContext(SymfoniContext);
 
 
     useEffect(() => {
@@ -53,7 +55,7 @@ const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
     if (!provider){
         return <Button
             {...rest}
-            disabled
+            onClick={() => init()}
         >
             CONNECT YOUR WALLET
         </Button>

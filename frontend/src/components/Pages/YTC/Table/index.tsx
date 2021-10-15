@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
-import { Table, Tr, Td, Th, Thead, Text, Flex } from '@chakra-ui/react';
+import { Table, Th, Thead, Text, Flex } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 import Card from '../../../Reusable/Card';
-import { BaseTokenPriceTag } from '../../../Prices';
-import { shortenNumber } from '../../../../utils/shortenNumber';
+import { ResultsTableRow } from './ResultsTableRow';
 
 interface TableProps {
     onSelect: (index: number | undefined) => void;
@@ -75,59 +74,5 @@ const ResultsTable: React.FC<TableProps> = (props) => {
     )
 }
 
-interface ResultsTableRowInterface {
-    baseTokenName: string;
-    output: YTCOutput;
-    onSelect: () => void;
-    isSelected: boolean;
-}
-
-export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
-
-    const {output, onSelect, isSelected, baseTokenName} = props;
-
-    return (
-        <Tr
-            onClick={onSelect}
-            bgColor={isSelected ? "indigo.300" : "inherit"}
-            cursor="pointer"
-            _hover={{
-                bgColor:"indigo.50"
-            }}
-        >
-            <Td isNumeric>
-                {output.inputs.numberOfCompounds}
-            </Td>
-            <Td isNumeric>
-                {shortenNumber(output.ytExposure)}
-            </Td>
-            <Td isNumeric>
-                {shortenNumber(output.baseTokensSpent)}
-            </Td>
-            <Td isNumeric
-                textColor={
-                    output.gain ?
-                        (output.gain?.netGain >= 0) ? 
-                            "green.600" : 
-                            "red.500" :
-                        "inherit"
-                }
-            >
-                {output.gain ? <BaseTokenPriceTag amount={output.gain.netGain} baseTokenName={baseTokenName}/> : "?"}
-            </Td>
-            <Td isNumeric
-                textColor={
-                    output.gain ?
-                        (output.gain?.netGain >= 0) ? 
-                            "green.600" : 
-                            "red.500" :
-                        "inherit"
-                }
-            >
-                {output.gain ? `%${shortenNumber(output.gain.finalApy)}` : "?"}
-            </Td>
-        </Tr>
-    )
-}
 
 export default ResultsTable

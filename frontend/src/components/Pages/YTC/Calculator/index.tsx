@@ -1,14 +1,13 @@
-import { Box, Button, ButtonProps, Divider, Flex, Select, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Select, Text } from "@chakra-ui/react";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { BalancerApproval, ERC20Approval } from '../../../../features/approval/Approval';
-import { getTokenNameByAddress, YTCInput } from "../../../../features/ytc/ytcHelpers";
-import { getActiveTranches, getBalance, getRemainingTrancheYears, getTrancheByAddress } from "../../../../features/element";
+import { YTCInput } from "../../../../features/ytc/ytcHelpers";
+import { getActiveTranches, getBalance } from "../../../../features/element";
 import { CurrentAddressContext, ERC20Context, SignerContext, YieldTokenCompoundingContext } from "../../../../hardhat/SymfoniContext";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
-import { isSimulatedSelector, isSimulatingAtom, simulationResultsAtom } from "../../../../recoil/simulationResults/atom";
+import { isSimulatingAtom, simulationResultsAtom } from "../../../../recoil/simulationResults/atom";
 import { Token, Tranche } from "../../../../types/manual/types";
 import * as Yup from 'yup';
 import { notificationAtom } from "../../../../recoil/notifications/atom";
@@ -16,10 +15,8 @@ import { BaseTokenPriceTag } from "../../../Prices";
 import Card from "../../../Reusable/Card";
 import { simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYTC";
 import { getVariableAPY } from '../../../../features/prices/yearn';
-import { TrancheRatesInterface, trancheSelector } from "../../../../recoil/trancheRates/atom";
-import { shortenNumber } from "../../../../utils/shortenNumber";
-import { DetailItem } from "../../../Reusable/DetailItem";
-import { getFixedRate } from "../../../../features/element/fixedRate";
+import { ApproveAndSimulateButton } from "./ApproveAndSimulateButton";
+import { TrancheDetails } from "./Tranche";
 
 interface CalculateProps {
     tokens: Token[];
@@ -315,7 +312,7 @@ const Form: React.FC<FormProps> = (props) => {
             </Select>
         </Flex>
         <Card>
-            <Text fontSize="large" fontWeight="extrabold">Select Initial Collateral</Text>
+            {/* <Text fontSize="large" fontWeight="extrabold">Select Initial Collateral</Text> */}
             <Flex
                 id="amount-card"
                 flexDir="column"
@@ -392,15 +389,24 @@ const Form: React.FC<FormProps> = (props) => {
                     />
                 </Flex>
             </Flex>
-            <Flex
-                p={4}
+        </Card>
+        <Divider
+            borderColor="black"
+            orientation="horizontal"
+        />
+        <Card>
+            {/* <Flex
+                p={2}
+                my={2}
                 flexDir="column"
-            >
+                bgColor="white"
+                rounded="2xl"
+            > */}
                 { formik.values.trancheAddress && formik.values.tokenAddress && <TrancheDetails
                     trancheAddress={formik.values.trancheAddress}
                     tokenAddress={formik.values.tokenAddress}
                 />} 
-            </Flex>
+            {/* </Flex> */}
         </Card>
         <ApproveAndSimulateButton
             formErrors={formik.errors}
@@ -418,160 +424,4 @@ const Form: React.FC<FormProps> = (props) => {
             }}
         />
     </form>
-}
-
-interface ApproveAndSimulateButtonProps {
-    tokenAddress: string | undefined;
-    tokenName: string | undefined;
-    trancheAddress: string | undefined;
-    formErrors: {[fieldName: string]: string | undefined}
-}
-
-
-const ApproveAndSimulateButton: React.FC<ApproveAndSimulateButtonProps & ButtonProps> = (props) => {
-    const ytc = useContext(YieldTokenCompoundingContext);
-
-    const { tokenAddress, tokenName, trancheAddress, formErrors, ...rest} = props;
-
-    return <BalancerApproval
-        trancheAddress={trancheAddress}
-        {...rest}
-    >
-        <ERC20Approval
-            tokenAddress={tokenAddress}
-            tokenName={tokenName}
-            approvalAddress={ytc.instance?.address}
-            {...rest}
-        >
-            <SimulateButton 
-                formErrors={formErrors}
-                {...rest}
-            />
-        </ERC20Approval>
-    </BalancerApproval>
-}
-
-interface SimulateButtonProps {
-    formErrors: {[fieldName: string]: string | undefined}
-}
-
-const SimulateButton: React.FC<SimulateButtonProps & ButtonProps> = (props) => {
-    const isSimulating = useRecoilValue(isSimulatingAtom)
-
-    const isSimulated = useRecoilValue(isSimulatedSelector)
-
-    const { formErrors, ...rest} = props;
-
-    const areNoErrors =  Object.values(formErrors).every((error) => {
-            return !error
-        })
-
-    return <Button
-        id="approve-calculate-button"
-        type="submit"
-        {...rest}
-        disabled={!areNoErrors}
-    >
-        {
-            isSimulating ? 
-                <Spinner/> : 
-                isSimulated ? 
-                    "RE-SIMULATE" :
-                    "SIMULATE"
-            
-        }
-    </Button>
-}
-
-interface TrancheDetailsProps {
-    trancheAddress: string,
-    tokenAddress: string,
-}
-
-// Fixed rate, and variable rate
-const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
-    const {trancheAddress, tokenAddress} = props;
-
-    const elementAddresses = useRecoilValue(elementAddressesAtom);
-    const [signer] = useContext(SignerContext);
-    const [trancheRate, setTrancheRates] = useRecoilState(trancheSelector(trancheAddress));
-
-    // let trancheExpiration: number | undefined = undefined;
-
-    const handleChangeTrancheRate = useCallback((rateChange: Partial<TrancheRatesInterface>) => {
-        setTrancheRates((currentValue) => {
-            return {
-                ...currentValue,
-                ...rateChange,
-            }
-        })
-    }, [setTrancheRates, trancheAddress])
-
-    useEffect(() => {
-        // get baseTokenName
-        const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
-
-        // get variable rate
-        if (baseTokenName){
-            getVariableAPY(baseTokenName, elementAddresses).then((apy) => {
-                handleChangeTrancheRate({
-                    variable: apy
-                })
-            })
-        }
-    }, [handleChangeTrancheRate, elementAddresses, getTokenNameByAddress, tokenAddress])
-
-    // TODO get fixed apy
-    useEffect(() => {
-        // get baseTokenName
-        const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
-
-        if (baseTokenName && signer){
-            getFixedRate(baseTokenName, trancheAddress, elementAddresses, signer).then((fixedRate) => {
-                handleChangeTrancheRate({
-                    fixed: fixedRate
-                })
-            })
-        }
-    }, [handleChangeTrancheRate, signer, trancheAddress, elementAddressesAtom])
-
-    useEffect(() => {
-        const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
-        if (baseTokenName){
-            const trancheDict: {[key: string]: Tranche[]} = elementAddresses.tranches;
-            const tranches: Tranche[] = trancheDict[baseTokenName];
-            const tranche: Tranche | undefined = getTrancheByAddress(trancheAddress, tranches);
-            if (tranche){
-                handleChangeTrancheRate({
-                    daysRemaining: getRemainingTrancheYears(tranche.expiration) * 365
-                })
-            }
-        }
-
-    }, [handleChangeTrancheRate, elementAddresses, getRemainingTrancheYears])
-
-    return <TrancheDisplay
-        {...trancheRate}
-    />
-
-}
-
-const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
-
-    const {variable, fixed, daysRemaining} = props;
-
-    return <>
-        <DetailItem
-            name= "Fixed Rate:"
-            value={`${shortenNumber(fixed * 100)}%`}
-        />
-        <DetailItem
-            name= "Variable Rate:"
-            value={`${shortenNumber(variable * 100)}%`}
-        />
-        <DetailItem
-            name= "Days Remaining:"
-            value={`${shortenNumber(daysRemaining)}`}
-        />
-    </>
 }

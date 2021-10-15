@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { calcSpotPriceYt } from '../../utils/element/calcSpotPrice';
 import { SignerContext } from '../../hardhat/SymfoniContext';
 import { elementAddressesAtom } from '../../recoil/element/atom';
 import {useRecoilValue} from 'recoil';
