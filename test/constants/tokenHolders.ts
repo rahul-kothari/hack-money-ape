@@ -48,5 +48,10 @@ export const tokenHolders: {amount: number, tokenName: string, largeHolderAddres
         tokenName: "mim-3lp3crv-f",
         largeHolderAddress: "0x5d5d08393e5bc93078f83a6a0b9077b474b9bad4",
         amount: 200_000
+    },
+    {
+        tokenName: "eurscrv",
+        largeHolderAddress: "0xaffe4271096c9ecbbde1bb309c60136506989acb",
+        amount: 300_000
     }
 ]
