@@ -9,6 +9,8 @@ import { simulationResultsAtom } from '../../../recoil/simulationResults/atom';
 import { YTCOutput } from "../../../features/ytc/ytcHelpers";
 import { Title } from "../../Title";
 import ResultsTable from "./Table";
+import Icon from "@chakra-ui/icon";
+import { Flex } from "@chakra-ui/layout";
 
 interface YTCProps {}
 
@@ -53,9 +55,11 @@ export const YTC: React.FC<YTCProps> = (props) => {
         />
         {
             (simulationResults.length > 0) && <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
-                </svg>
+                <Flex width="full">
+                    <Icon stroke="text.primary" viewBox="0 0 24 24" h={7} w={10} mx="auto">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+                    </Icon>
+                </Flex>
 
                 <ResultsTable
                     selected={resultIndex}
@@ -63,9 +67,11 @@ export const YTC: React.FC<YTCProps> = (props) => {
                 />
                 {
                     (resultIndex !== undefined ) && <>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
-                        </svg>
+                        <Flex width="full">
+                            <Icon stroke="text.primary" viewBox="0 0 24 24" h={7} w={10} mx="auto">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+                            </Icon>
+                        </Flex>
                         <Ape
                         {
                             ...(processSimulationResult(

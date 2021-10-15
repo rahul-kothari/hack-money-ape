@@ -14,22 +14,18 @@ export default extendTheme({
         800: "#3730A3",
         900: "#312E81"
     },
-    complementaryTeal: {
-      300: "#a863f1",
+    main: {
+      primary: "#FFF32C",
+      primary_hover: "#818CF8",
+      primary_text: "",
+      secondary: "",
+      secondary_hover: ""
     },
-    complementaryPurple: {
-      300: "#63f1ef"
+    text: {
+      primary: "#EDE9E3",
+      secondary: "#2D3748"
     },
-    background: {
-      100: "#63ADF1",
-      200: "#cccccc"
-    },
-    palette1: {
-      100: "#ADD7F6",
-      200: "#87BFFF",
-      300: "#3F8EFC",
-      400: "#2667FF",
-      500: "#3B28CC"
-    }
+    background: "#0c216e",
+    card: "#CDC6C3"
   },
 })

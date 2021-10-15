@@ -41,10 +41,10 @@ const Home = (props: Props) => {
                         <Button
                             rounded="full"
                             onClick={handleConnect}
-                            bg={'indigo.500'}
+                            bg={'main.primary'}
                             color="white"
                             _hover={{
-                                bg: 'indigo.300'
+                                bg: 'main.primary_hover'
                             }}
                             width="full"
                         >
@@ -54,10 +54,10 @@ const Home = (props: Props) => {
                         <Button
                             rounded="full"
                             onClick={handleStart}
-                            bg={'indigo.500'}
+                            bg={'main.primary'}
                             color="white"
                             _hover={{
-                                bg: 'indigo.300'
+                                bg: 'main.primary_hover'
                             }}
                             width="full"
                         >

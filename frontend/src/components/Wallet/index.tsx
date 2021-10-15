@@ -54,6 +54,7 @@ export const Wallet = (props: Props) => {
                     >
                         <Text
                             pr={2}
+                            color="text.primary"
                         >
                             {chainName}
                         </Text>
@@ -62,11 +63,11 @@ export const Wallet = (props: Props) => {
                         onClick={handleDisconnect}
                         fontSize={'sm'}
                         fontWeight={600}
-                        color={'white'}
-                        bg={'indigo.500'}
+                        color="text.secondary"
+                        bg={'card'}
                         href={'#'}
                         _hover={{
-                            bg: 'indigo.400',
+                            bg: 'text.primary',
                         }}>
                             {shortenAddress(currentAddress)}
                     </Button> 
@@ -76,13 +77,13 @@ export const Wallet = (props: Props) => {
                     display={{  md: 'inline-flex' }}
                     fontSize={'sm'}
                     fontWeight={600}
-                    color={'white'}
-                    bg={'indigo.300'}
+                    color="text.secondary"
+                    bg='main.primary'
                     href={'#'}
                     _hover={{
-                        bg: 'indigo.200',
+                        bg: 'main.primary_hover',
                     }}>
-                        Connect Wallet
+                        CONNECT WALLET
                 </Button>
             }
         </div>

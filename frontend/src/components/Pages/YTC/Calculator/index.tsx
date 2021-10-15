@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Select, Text } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Text } from "@chakra-ui/react";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -268,66 +268,105 @@ const Form: React.FC<FormProps> = (props) => {
     }
 
     return <form onSubmit={formik.handleSubmit} onChange={handleChange}>
-        <Flex
-            id="selects"
-            flexDir="row"
-            justify="center"
-            alignItems="center"
-            mb={4}
-            gridGap={6}
-        >
-            <Select
-                width="40"
-                name="tokenAddress"
-                rounded="full"
-                variant="filled"
-                bgColor="indigo.100"
-                value={formik.values.tokenAddress}
-                onChange={handleTokenChange}
-                shadow="lg"
-            >
-                {tokens.map((token) => {
-                    return <option value={token.address} key={token.address}>
-                        {token.name.toUpperCase()}
-                    </option>
-                })}
-            </Select>
-            <Select
-                width="40"
-                name="trancheAddress"
-                rounded="full"
-                variant="filled"
-                bgColor="indigo.100"
-                value={formik.values.trancheAddress}
-                onChange={formik.handleChange}
-                shadow="lg"
-            >
-                {
-                    tranches && tranches.map((tranche: Tranche) => {
-                        return <option value={tranche.address} key={tranche.address}>
-                            {(new Date(tranche.expiration * 1000)).toLocaleDateString()}
-                        </option>
-                    })
-                }
-            </Select>
-        </Flex>
         <Card>
+            <Flex
+                id="tranche-select"
+                flexDir="column"
+                alignItems="center"
+            >
+                <FormLabel>
+                    Tranche
+                </FormLabel>
+                <Flex
+                    id="selects"
+                    flexDir="row"
+                    justify="center"
+                    alignItems="center"
+                    mb={4}
+                    gridGap={6}
+                >
+                    <Select
+                        width="40"
+                        name="tokenAddress"
+                        rounded="full"
+                        variant="filled"
+                        bgColor="text.primary"
+                        value={formik.values.tokenAddress}
+                        onChange={handleTokenChange}
+                        shadow="lg"
+                    >
+                        {tokens.map((token) => {
+                            return <option value={token.address} key={token.address}>
+                                {token.name.toUpperCase()}
+                            </option>
+                        })}
+                    </Select>
+                    <Select
+                        width="40"
+                        name="trancheAddress"
+                        rounded="full"
+                        variant="filled"
+                        bgColor="text.primary"
+                        value={formik.values.trancheAddress}
+                        onChange={formik.handleChange}
+                        shadow="lg"
+                    >
+                        {
+                            tranches && tranches.map((tranche: Tranche) => {
+                                return <option value={tranche.address} key={tranche.address}>
+                                    {(new Date(tranche.expiration * 1000)).toLocaleDateString()}
+                                </option>
+                            })
+                        }
+                    </Select>
+                </Flex>
+                <Divider
+                    borderColor="background.100"
+                    orientation="horizontal"
+                    borderWidth="thin"
+                />
+                <Flex
+                    p={2}
+                    px={5}
+                    flexDir="column"
+                    width="full"
+                >
+                    { formik.values.trancheAddress && formik.values.tokenAddress && <TrancheDetails
+                        trancheAddress={formik.values.trancheAddress}
+                        tokenAddress={formik.values.tokenAddress}
+                    />} 
+                </Flex>
+            </Flex>
+        </Card>
+        <Card mt={5}>
             {/* <Text fontSize="large" fontWeight="extrabold">Select Initial Collateral</Text> */}
             <Flex
                 id="amount-card"
                 p={2}
                 flexDir="column"
-                alignItems="end"
+                alignItems="center"
                 gridGap={1}
             >
+                <FormLabel
+                    flexDir="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                        Amount
+                </FormLabel>
                 <Flex
                     id="amount-header"
                     flexDir="row"
                     gridGap={2}
+                    justify="space-between"
                     alignItems="center"
                     fontSize="sm"
+                    width="full"
                 >
-
+                    <Flex
+                        alignItems="center"
+                        gridGap={1}
+                    >
                         <Button
                             id="max"
                             onClick={handleMax}
@@ -350,11 +389,13 @@ const Form: React.FC<FormProps> = (props) => {
                         >
                             Balance: {balance}                        
                         </Box>
+                    </Flex>
                 </Flex>
                 <Flex
                     id="amount-row"
                     flexDir="row"
                     justifyContent="end"
+                    width="full"
                     rounded="xl"
                     gridGap={2}
                     p={1}
@@ -362,26 +403,36 @@ const Form: React.FC<FormProps> = (props) => {
                         shadow: "inner"
                     }}
                 >
-                    <input
-                        type="number"
-                        name="amount"
-                        onBlur={formik.handleBlur}
-                        value={formik.values.amount}
-                        placeholder={"0.0"}
-                        onChange={formik.handleChange}
-                        id="amount-input"
-                        className={`text-2xl text-right flex-grow bg-indigo-100 min-w-0 ${formik.errors.amount && "text-red-300"}`}/>
-                    <Text
-                        id="amount-token-label"
-                        fontSize="2xl"
-                        whiteSpace="nowrap"
-                        color="gray.500"
+                    <InputGroup
+                        bgColor="text.primary"
+                        rounded="2xl"
                     >
+                        <Input
+                            type="number"
+                            name="amount"
+                            onBlur={formik.handleBlur}
+                            value={formik.values.amount}
+                            // variant="filled"
+                            placeholder={"0.0"}
+                            onChange={formik.handleChange}
+                            id="amount-input"/>
+                        <InputRightAddon
+                            bgColor="text.primary"
+                        >
+                            <Text
+                                id="amount-token-label"
+                                fontSize="2xl"
+                                whiteSpace="nowrap"
+                                color="gray.500"
+                            >
                         {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
                     </Text>
+                        </InputRightAddon>
+                    </InputGroup>
                 </Flex>
                 <Flex
-                    alignSelf="end"
+                    alignSelf="start"
+                    px={2}
                     fontSize="sm"
                     textColor="gray.500"
                 >
@@ -391,20 +442,6 @@ const Form: React.FC<FormProps> = (props) => {
                     />
                 </Flex>
             </Flex>
-            <Divider
-                borderColor="background.100"
-                orientation="horizontal"
-                borderWidth="thin"
-            />
-            <Flex
-                p={2}
-                flexDir="column"
-            >
-                { formik.values.trancheAddress && formik.values.tokenAddress && <TrancheDetails
-                    trancheAddress={formik.values.trancheAddress}
-                    tokenAddress={formik.values.tokenAddress}
-                />} 
-            </Flex>
         </Card>
         <ApproveAndSimulateButton
             formErrors={formik.errors}
@@ -412,13 +449,13 @@ const Form: React.FC<FormProps> = (props) => {
             tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
             trancheAddress={formik.values.trancheAddress}
             rounded="full"
-            bgColor="indigo.500"
+            bgColor="main.primary"
+            color="text.secondary"
             mt="4"
             p="2"
-            textColor="gray.50"
             width="full"
             _hover={{
-                bgColor:"indigo.400"
+                bgColor:"main.primary_hover"
             }}
         />
     </form>

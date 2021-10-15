@@ -143,12 +143,14 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
             </Card>
             <Button
                 id="approve-calculate-button"
-                className="rounded-full w-full bg-indigo-500 mt-4 p-2 text-gray-50 hover:bg-indigo-400"
                 rounded="full"
-                bgColor="#6366F1"
+                bgColor="main.primary"
+                _hover={{
+                    bgColor:"main.primary_hover"
+                }}
                 mt="4"
                 p="2"
-                textColor="gray.50"
+                textColor="text.secondary"
                 onClick={handleExecuteTransaction}
             >
                 {isLoading ? <Spinner/> : "APE"}

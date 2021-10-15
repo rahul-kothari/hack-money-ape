@@ -19,6 +19,7 @@ export const Title: React.FC<TitleProps> = (props) => {
         <Text
             fontSize="2xl"
             fontWeight="bold"
+            color="text.primary"
         >
             {title}
         </Text>
@@ -26,7 +27,7 @@ export const Title: React.FC<TitleProps> = (props) => {
             href={infoLink}
             isExternal
             fontSize="sm"
-            textColor="indigo.400"
+            textColor="main.primary"
         >
             {infoLinkText}
         </Link>
