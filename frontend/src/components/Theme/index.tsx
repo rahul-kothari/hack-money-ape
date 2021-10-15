@@ -19,6 +19,17 @@ export default extendTheme({
     },
     complementaryPurple: {
       300: "#63f1ef"
+    },
+    background: {
+      100: "#63ADF1",
+      200: "#cccccc"
+    },
+    palette1: {
+      100: "#ADD7F6",
+      200: "#87BFFF",
+      300: "#3F8EFC",
+      400: "#2667FF",
+      500: "#3B28CC"
     }
   },
 })

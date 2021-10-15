@@ -63,10 +63,10 @@ export const Wallet = (props: Props) => {
                         fontSize={'sm'}
                         fontWeight={600}
                         color={'white'}
-                        bg={'teal.400'}
+                        bg={'indigo.500'}
                         href={'#'}
                         _hover={{
-                            bg: 'teal.300',
+                            bg: 'indigo.400',
                         }}>
                             {shortenAddress(currentAddress)}
                     </Button> 
@@ -77,10 +77,10 @@ export const Wallet = (props: Props) => {
                     fontSize={'sm'}
                     fontWeight={600}
                     color={'white'}
-                    bg={'pink.400'}
+                    bg={'indigo.300'}
                     href={'#'}
                     _hover={{
-                        bg: 'pink.300',
+                        bg: 'indigo.200',
                     }}>
                         Connect Wallet
                 </Button>

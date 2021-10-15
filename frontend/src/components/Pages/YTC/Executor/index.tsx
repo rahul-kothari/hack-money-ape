@@ -114,7 +114,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         />
                     </Flex>
                     <Divider
-                        borderColor="#f4f4f5"
+                        borderColor="background.100"
                         orientation="horizontal"
                         borderWidth="thin"
                     />

@@ -392,7 +392,7 @@ const Form: React.FC<FormProps> = (props) => {
                 </Flex>
             </Flex>
             <Divider
-                borderColor="#f4f4f5"
+                borderColor="background.100"
                 orientation="horizontal"
                 borderWidth="thin"
             />
@@ -412,13 +412,13 @@ const Form: React.FC<FormProps> = (props) => {
             tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
             trancheAddress={formik.values.trancheAddress}
             rounded="full"
-            bgColor="#6366F1"
+            bgColor="indigo.500"
             mt="4"
             p="2"
             textColor="gray.50"
             width="full"
             _hover={{
-                bgColor:"#indigo.400"
+                bgColor:"indigo.400"
             }}
         />
     </form>
