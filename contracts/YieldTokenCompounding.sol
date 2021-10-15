@@ -133,4 +133,11 @@ contract YieldTokenCompounding {
         ITranche tranche = ITranche(_trancheAddress);
         tranche.approve(address(balVault), _MAX_VALUE);
     }
+
+    /// @dev Check allowance of balancer vault for spending this contract's tranche tokens (PTs aka fixed yield tokens)
+    /// @param _trancheAddress The tranche address
+    function checkTranchePTAllowanceOnBalancer(address _trancheAddress) public view returns (uint256) {
+        ITranche tranche = ITranche(_trancheAddress);
+        return tranche.allowance(address(this), address(balVault));
+    }
 }
