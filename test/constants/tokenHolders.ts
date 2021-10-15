@@ -25,13 +25,8 @@ export const tokenHolders: {amount: number, tokenName: string, largeHolderAddres
         amount: 10
     },
     {
-        tokenName: 'crvtricrypto',
-        largeHolderAddress: "0x0aabf5633a90816390d64767f3a8da776dd6097d",
-        amount: 10
-    },
-    {
         tokenName: 'crv3crypto',
-        largeHolderAddress: "0x4f96f50edb37a19216d87693e5db241e31bd3735",
+        largeHolderAddress: "0x73cae59e9d6e73b43ad32de120b456783f72b7aa",
         amount: 100
     },
     {
@@ -41,12 +36,12 @@ export const tokenHolders: {amount: number, tokenName: string, largeHolderAddres
     },
     {
         tokenName: "alusd3crv-f",
-        largeHolderAddress: "0xd1b12b00b88915cb68a7faad1b2142814ff8564b",
+        largeHolderAddress: "0xd44a4999df99fb92db7cdfe7dea352a28bcedb63",
         amount: 100_000
     },
     {
         tokenName: "mim-3lp3crv-f",
-        largeHolderAddress: "0x5d5d08393e5bc93078f83a6a0b9077b474b9bad4",
+        largeHolderAddress: "0x9888e846bcb0a14e0fcb2f66368a69d1d04bd5f0",
         amount: 200_000
     },
     {
