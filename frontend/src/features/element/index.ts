@@ -4,8 +4,7 @@ import { ElementAddresses, Token, Tranche } from "../../types/manual/types";
 import { ERC20 } from '../../hardhat/typechain/ERC20';
 import { isTrancheActive } from '../ytc/ytcHelpers';
 import { ethers } from 'ethers';
-const MILLISECONDS_PER_DAY = 1000*60*60*24;
-const MILLISECONDS_PER_YEAR = MILLISECONDS_PER_DAY*365;
+import { ONE_YEAR_IN_MILLISECONDS } from '../../constants/time';
 
 export const getTranches = async (tokenAddress: string, elementState: ElementAddresses): Promise<Tranche[]> => {
     // get the name of the token
@@ -92,7 +91,7 @@ export const getTrancheByAddress = (address: string, tranches: Tranche[]): Tranc
 export const getRemainingTrancheYears = (trancheExpiration: number): number => {
     const ms = getRemainingTrancheTimeMs(trancheExpiration);
 
-    return ms/MILLISECONDS_PER_YEAR;
+    return ms/ONE_YEAR_IN_MILLISECONDS;
 }
 
 export const getRemainingTrancheTimeMs = (trancheExpiration: number): number => {
