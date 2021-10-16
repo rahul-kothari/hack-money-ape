@@ -170,7 +170,7 @@ const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
         />
         <DetailItem
             name="Minimum YT Received:"
-            value={`${shortenNumber(minimumReturn)}`}
+            value={shortenNumber(minimumReturn)}
         />
         <DetailItem
             name="Estimated Gas Cost:"
