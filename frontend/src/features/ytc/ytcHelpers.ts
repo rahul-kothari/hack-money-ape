@@ -120,10 +120,11 @@ export const getYTCParameters = async (userData: YTCInput, elementAddresses: Ele
 
 
 
-// // Calculates the expected gains from a set of yield token compound simulation, at a specific average variable rate
-// // param speculatedVariableRate, the estimated average yield of the underlying vault over the course of the term
-// // param ytcOutputs, a set of yield token compounding simulation results to have gains calculated upon
-// // Returns YTCOutput[], an aray of yield token compounding results augmented with gain information
+// This function is not currently used, but could still be valuable if the ux flow is changed slightly
+// Calculates the expected gains from a set of yield token compound simulation, at a specific average variable rate
+// param speculatedVariableRate, the estimated average yield of the underlying vault over the course of the term
+// param ytcOutputs, a set of yield token compounding simulation results to have gains calculated upon
+// Returns YTCOutput[], an aray of yield token compounding results augmented with gain information
 // export const calculateGainsFromSpeculatedRate = (speculatedVariableRate: number, ytcOutputs: YTCOutput[]): YTCOutput[] => {
 //     const rates = ytcOutputs.map((ytcOutput) => {
 //         return {
