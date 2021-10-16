@@ -21,7 +21,6 @@ export const Template: React.FC<Props> = (props: Props) => {
             minH="100vh"
         >
             <Header/>
-            {/* <div id="body" className="p-5 mx-auto max-w-lg w-full flex-1"> */}
             <Box
                 p={5}
                 mx="auto"
@@ -44,7 +43,6 @@ export const Template: React.FC<Props> = (props: Props) => {
                     </Route>
                 </Switch>
             </Box>
-            {/* </div> */}
             <Footer/>
             <Notifications/>
         </Flex>

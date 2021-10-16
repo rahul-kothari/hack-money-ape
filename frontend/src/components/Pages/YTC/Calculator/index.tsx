@@ -156,7 +156,6 @@ const Form: React.FC<FormProps> = (props) => {
     const [currentAddress] = useContext(CurrentAddressContext)
     const [tranches, setTranches] = useState<Tranche[] | undefined>(undefined);
     const [simulationResults] = useRecoilValue(simulationResultsAtom);
-    // const [fixedRate, setFixedRate] = useState<number | undefined>(undefined)
     const elementAddresses = useRecoilValue(elementAddressesAtom)
     const history = useHistory();
     const query = useQuery();

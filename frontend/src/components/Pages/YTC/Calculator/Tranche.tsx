@@ -17,15 +17,13 @@ interface TrancheDetailsProps {
     tokenAddress: string,
 }
 
-// Fixed rate, and variable rate
+// Fixed rate, variable rate, and number of days remaining, should be displayed
 export const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
     const {trancheAddress, tokenAddress} = props;
 
     const elementAddresses = useRecoilValue(elementAddressesAtom);
     const [signer] = useContext(SignerContext);
     const [trancheRate, setTrancheRates] = useRecoilState(trancheSelector(trancheAddress));
-
-    // let trancheExpiration: number | undefined = undefined;
 
     const handleChangeTrancheRate = useCallback((rateChange: Partial<TrancheRatesInterface>) => {
         setTrancheRates((currentValue) => {
@@ -50,7 +48,6 @@ export const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
         }
     }, [handleChangeTrancheRate, elementAddresses, tokenAddress])
 
-    // TODO get fixed apy
     useEffect(() => {
         // get baseTokenName
         const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
