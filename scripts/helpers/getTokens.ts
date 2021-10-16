@@ -4,7 +4,7 @@ import {ERC20 as ERC20Type} from '../../frontend/src/hardhat/typechain/ERC20';
 import { constants as mainnetConstants } from '../mainnet-constants';
 import { constants as goerliConstants} from '../goerli-constants';
 import { tokenHolders } from '../../test/constants/tokenHolders';
-import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts';
+import { ContractReceipt } from '@ethersproject/contracts';
 
 if (hre.network.name == "goerli"){
     var constants = goerliConstants;
