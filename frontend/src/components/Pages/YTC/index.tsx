@@ -27,7 +27,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
         })
     }, [elementAddresses])
 
-    // TODO this is a stopgap
+    // This is a shim to change the output type from as simulation into the input type for execution
     const processSimulationResult = (result: YTCOutput): ApeProps => {
         return {
             baseToken: {

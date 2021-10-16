@@ -20,6 +20,9 @@ type AbstractApprovalProps = {
     handleApprove: () => Promise<ContractReceipt>
 } & ButtonProps;
 
+// An approval button that checks whether or not a wallet is connected, then checks whether a specific token has been approved
+// If the token has not been approved, the button will trigger an approval transaction
+// At the moment it is hardcoded for maxint approval
 const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
     const {approveText, approvalMessage, children, handleCheckApproval, handleApprove, provider, isLoading, isApproved, setIsLoading, ...rest} = props;
 
@@ -79,7 +82,6 @@ const AbstractApproval: React.FC<AbstractApprovalProps> = (props) => {
     </Button>
 }
 
-// This is a button that is used to approve a specific token for use by a 
 type ERC20ApprovalProps = {
     amount?: number | string,
     approvalAddress?: string,
@@ -89,6 +91,7 @@ type ERC20ApprovalProps = {
 } & ButtonProps;
 
 
+// An implementation of the approval button specifically for erc20 tokens
 export const ERC20Approval: React.FC<ERC20ApprovalProps> = (props) => {
     const [provider] = useContext(ProviderContext);
     const erc20 = useContext(ERC20Context);
@@ -160,6 +163,7 @@ interface BalancerApprovalProps {
     children: ReactElement;
 }
 
+// An implementation of the approval button specifically for approving a balancer pool to use funds from the YTC contract
 export const BalancerApproval: React.FC<BalancerApprovalProps> = (props) => {
     const [provider] = useContext(ProviderContext);
     const ytc = useContext(YieldTokenCompoundingContext);
