@@ -9,7 +9,8 @@
     "frontend": "cd frontend && npm run start",
     "frontend:debug": "cd frontend && npm run start -- --inspect",
     "deploy:hardhat": "npx hardhat compile && npx hardhat typechain && npx hardhat deploy && npx hardhat react",
-    "deploy:goerli": "npx hardhat compile --network goerli && npx hardhat deploy --network goerli && npx hardhat typechain --network goerli && npx hardhat react --network goerli"
+    "deploy:goerli": "npx hardhat compile --network goerli && npx hardhat deploy --network goerli && npx hardhat typechain --network goerli && npx hardhat react --network goerli",
+    "start": "npm run deploy:hardhat && hh node"
   },
   "browserslist": {
     "production": [
