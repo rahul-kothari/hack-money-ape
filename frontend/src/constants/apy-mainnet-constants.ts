@@ -22,3 +22,19 @@ export const CURVE_SWAP_ADDRESSES: {[tokenName: string]: string} = {
     "mim-3lp3crv-f": "0x5a6A4D54456819380173272A5E8E9B9904BdF41B",
     "eurscrv": "0x0Ce6a5fF5217e38315f87032CF90686C96627CAA",
 }
+
+export const COINGECKO_TOKEN_NAME_TRANSLATION: {[key: string]: string} = {
+    "usdt": "tether",
+    "alusd": "alchemix-usd",
+    "usdc": "usd-coin",
+    "dai": "dai",
+    "wbtc": "wrapped-bitcoin",
+    "weth": "weth",
+    "eth": "ethereum",
+    "steth": "lido-staked-ether",
+    "usd": "usd",
+    "eur": "eur"
+}
+
+export const validCurveTokens = Object.keys(CURVE_SWAP_ADDRESSES);
+export const validCoingeckoTokens = Object.keys(COINGECKO_TOKEN_NAME_TRANSLATION);

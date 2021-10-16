@@ -1,12 +1,11 @@
 import { Signer, Contract, utils, ethers } from "ethers";
 import ICurveFi from '../../artifacts/contracts/yearn/ICurveFi.sol/ICurveFi.json';
-import { CURVE_SWAP_ADDRESSES } from "../../constants/apy-mainnet-constants";
+import { CURVE_SWAP_ADDRESSES, validCurveTokens } from "../../constants/apy-mainnet-constants";
 import { ERC20 as ERC20Type } from "../../hardhat/typechain/ERC20";
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
 import {ICurveFi as ICurveType} from '../../hardhat/typechain/ICurveFi';
 import { getRelativePriceFromCoingecko } from "./coingecko";
 
-const validCurveTokens = ["lusd3crv-f" , "crv3crypto" , "crvtricrypto" , "stecrv" , "alusd3crv-f", "mim-3lp3crv-f", "eurscrv"]
 export type CurveTokenName = (typeof validCurveTokens[number])
 export const isCurveToken = (x: any): x is CurveTokenName => {
     return validCurveTokens.includes(x);
