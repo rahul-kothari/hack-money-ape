@@ -1,4 +1,3 @@
-// This is for element api calls to get information on tokens, tranches, pools, etc..
 import _ from 'lodash';
 import { ElementAddresses, Token, Tranche } from "../../types/manual/types";
 import { ERC20 } from '../../hardhat/typechain/ERC20';
@@ -6,6 +5,7 @@ import { isTrancheActive } from '../ytc/ytcHelpers';
 import { ethers } from 'ethers';
 import { ONE_YEAR_IN_MILLISECONDS } from '../../constants/time';
 
+// This is for element api calls to get information on tokens, tranches, pools, etc..
 export const getTranches = async (tokenAddress: string, elementState: ElementAddresses): Promise<Tranche[]> => {
     // get the name of the token
     const tokenName = _.findKey(elementState.tokens, (value) => value === tokenAddress)
