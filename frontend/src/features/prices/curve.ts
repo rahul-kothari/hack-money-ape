@@ -75,35 +75,28 @@ const getCurveVirtualPrice = async (tokenAddress: string, signer: Signer): Promi
 }
 
 const getTriCryptoPrice = async (tokenAddress: string, signer: Signer): Promise<number> => {
-    console.log(tokenAddress)
     const curveAbi = ICurveFi.abi;
 
     const curveContract = new Contract(tokenAddress, curveAbi, signer) as ICurveType;
 
     const lpTokenAddress = await curveContract.token();
-    console.log("lpTokenAddress", lpTokenAddress);
 
     const usdtBalanceAbsolute = await curveContract.balances(0);
-    console.log("usdtBalanceAbsolute", usdtBalanceAbsolute);
 
     const erc20Abi = ERC20.abi;
 
     const erc20Contract = new Contract(lpTokenAddress, erc20Abi, signer) as ERC20Type;
 
     const totalSupplyAbsolute = await erc20Contract.totalSupply();
-    console.log("totalSupplyAbsolute", totalSupplyAbsolute);
 
     // USDT makes up a third of the pool thus we can multiply the number of tokens by 3
     // USDT decimals is 6
     const approximateTotalValue = parseFloat(ethers.utils.formatUnits(usdtBalanceAbsolute, 6)) * 3;
-    console.log("approximateTotalValue", approximateTotalValue)
 
     // Total supply decimals is 18
     const totalSupplyNormalized = parseFloat(ethers.utils.formatUnits(totalSupplyAbsolute, 18));
-    console.log("totalSupplyNormalized", totalSupplyNormalized);
 
     const price = approximateTotalValue/totalSupplyNormalized;
-    console.log("price", price);
 
     return price;
 }
