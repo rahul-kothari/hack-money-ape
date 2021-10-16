@@ -15,16 +15,6 @@ interface TokenResultProps {
 export const TokenResult: React.FC<TokenResultProps> = (props) => {
     const { token, tokenType } = props;
 
-    let tokenNameElement;
-    const tokenName = token.name.split('-')
-
-    if (tokenName.length > 1){
-        tokenNameElement = <> {tokenName[0]} <br></br> {tokenName[1]} </>
-    } else {
-        tokenNameElement = tokenName[0]
-    }
-
-
     return <Flex
         id="base-token"
         flexDir="row"
@@ -51,7 +41,10 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
                 <Flex
                     id="base-token-asset-name"
                 >
-                    {tokenNameElement}
+                    <TokenNameElement
+                        isYToken={tokenType === "YToken"}
+                        tokenName={token.name}
+                    />
                 </Flex>
             </Flex>
         </Flex>
@@ -97,4 +90,37 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
             </Flex>
         </Flex>
     </Flex>
+}
+
+interface TokenNameElementProps {
+    isYToken: boolean;
+    tokenName: string;
+}
+
+const TokenNameElement: React.FC<TokenNameElementProps> = (props) => {
+    const {isYToken, tokenName} = props;
+
+    if (!isYToken){
+        // if the token is not a ytoken, the name needs no modification
+        return <> 
+            { tokenName }
+        </>
+    } else {
+        // split the name at the dashes
+        const splitName = tokenName.split('-');
+
+        // if the last part of the name is a date of format DDMMMYY then split it off
+        // otherwise just return the name by itself
+        const lastComponent = splitName[splitName.length - 1];
+        const regexp: RegExp = /\d{2}[a-zA-z]{3}\d{2}/;
+        const matches = lastComponent.match(regexp);
+
+        if (matches){
+            return <> { splitName.slice(0, -1).join("-") }  <br/> {lastComponent} </>
+        } else {
+            return <>
+                { tokenName } 
+            </> 
+        }
+    }
 }
