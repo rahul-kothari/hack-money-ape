@@ -1,8 +1,12 @@
+pragma solidity ^0.7.3;
 // Solidity Interface
+// To get the price of curve tokens this contract interface is used to access the following functions
+// get_virtual price, token address, and the balance of underlying tokens
 
 interface ICurveFi {
-
   function get_virtual_price() external view returns (uint256);
+  function token() external view returns (address);
+  function balances(uint256 arg0) external view returns (uint256);
   function get_dy(
     int128 i,
     int128 j,
@@ -15,7 +19,6 @@ interface ICurveFi {
   ) external view returns (uint256);
   function coins(int128 arg0) external view returns (address);
   function underlying_coins(int128 arg0) external view returns (address);
-  function balances(int128 arg0) external view returns (uint256);
 
   function add_liquidity(
     uint256[2] calldata amounts,
