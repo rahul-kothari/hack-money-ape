@@ -57,19 +57,25 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
         >
             <Flex
                 flexDir="column"
-                justify="end"
+                // justify="end"
                 align="end"
             >
                 <Flex
                     id="base-token-amount-text"
                     fontSize="lg"
-                    justifySelf="center"
+                    // justifySelf="center"
+                    flexDir="column"
+                    justify="end"
+                    height="66%"
                 >
                     {shortenNumber(token.amount)}
                 </Flex>
                 <Flex
                     id="base-token-dollar-value"
                     textColor="gray.500"
+                    flexDir="column"
+                    justify="end"
+                    height="33%"
                 >
                     {
                         tokenType === "BaseToken"
@@ -79,12 +85,12 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
                             />
                     }
                     {
-                        tokenType === "YToken"
-                            && <YTPriceTag
-                                amount={token.amount}
-                                baseTokenName={props.baseTokenName}
-                                trancheAddress={props.trancheAddress}
-                            />
+                        tokenType === "YToken" && <></>
+                            // && <YTPriceTag
+                            //     amount={token.amount}
+                            //     baseTokenName={props.baseTokenName}
+                            //     trancheAddress={props.trancheAddress}
+                            // />
                     }
                 </Flex>
             </Flex>
