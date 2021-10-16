@@ -1,748 +1,160 @@
 {
-  "tokens": {
-    "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    "dai": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-    "lusd3crv-f": "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
-    "crvtricrypto": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
-    "stecrv": "0x06325440D014e39736583c165C2963BA99fAf14E",
-    "crv3crypto": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
-    "wbtc": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
-  },
-  "wrappedPositions": {
-    "yearn": {
-      "lusd3crv-f": "0x53b1aEAa018da00b4F458Cc13d40eB3e8d1B85d6",
-      "crvtricrypto": "0x97278Ce17D4860f8f49afC6E4c1C5AcBf2584cE5",
-      "stecrv": "0xB3295e739380BD68de96802F7c4Dba4e54477206",
-      "dai": "0x21BbC083362022aB8D7e42C18c47D484cc95C193",
-      "usdc": "0xdEa04Ffc66ECD7bf35782C70255852B34102C3b0",
-      "crv3crypto": "0x4F424B26c7c659F198797Bd87282BF602F543521",
-      "wbtc": "0x8D9487b81e0fEdcd2D8Cab91885756742375CDC5"
-    }
-  },
-  "vaults": {
-    "yearn": {
-      "lusd3crv-f": "0x5fA5B62c8AF877CB37031e0a3B2f34A78e3C56A6",
-      "crvtricrypto": "0x3D980E50508CFd41a13837A60149927a11c03731",
-      "stecrv": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325",
-      "dai": "0xdA816459F1AB5631232FE5e97a05BBBb94970c95",
-      "usdc": "0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9",
-      "crv3crypto": "0xE537B5cc158EB71037D4125BDD7538421981E6AA",
-      "wbtc": "0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E"
-    }
-  },
-  "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-  "userProxy": "0xEe4e158c03A10CBc8242350d74510779A364581C",
-  "balancerVault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
-  "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-  "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD",
-  "tranches": {
-    "stecrv": [
-      {
-        "expiration": 1634325622,
-        "address": "0x26941C63F4587796aBE199348ecd3d7C44F9aE0C",
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0xce16E7ed7654a3453E8FaF748f2c82E57069278f",
-          "poolId": "0xce16e7ed7654a3453e8faf748f2c82e57069278f00020000000000000000006d",
-          "fee": "0.1",
-          "timeStretch": 26.1
-        },
-        "ytPool": {
-          "address": "0xD5D7bc115B32ad1449C6D0083E43C87be95F2809",
-          "poolId": "0xd5d7bc115b32ad1449c6d0083e43c87be95f280900020000000000000000006c",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      }
-    ],
-    "lusd3crv-f": [
-      {
-        "address": "0x9b44Ed798a10Df31dee52C5256Dcb4754BCf097E",
-        "expiration": 1632834462,
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0xA8D4433BAdAa1A35506804B43657B0694deA928d",
-          "poolId": "0xa8d4433badaa1a35506804b43657b0694dea928d00020000000000000000005e",
-          "fee": "0.1",
-          "timeStretch": 16
-        },
-        "ytPool": {
-          "address": "0xDe620bb8BE43ee54d7aa73f8E99A7409Fe511084",
-          "poolId": "0xde620bb8be43ee54d7aa73f8e99a7409fe51108400020000000000000000005d",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      },
-      {
-        "expiration": 1640620258,
-        "address": "0xa2b3d083AA1eaa8453BfB477f062A208Ed85cBBF",
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0x893B30574BF183d69413717f30b17062eC9DFD8b",
-          "poolId": "0x893b30574bf183d69413717f30b17062ec9dfd8b000200000000000000000061",
-          "fee": "0.1",
-          "timeStretch": 24
-        },
-        "ytPool": {
-          "address": "0x67F8FCb9D3c463da05DE1392EfDbB2A87F8599Ea",
-          "poolId": "0x67f8fcb9d3c463da05de1392efdbb2a87f8599ea000200000000000000000060",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      }
-    ],
-    "crvtricrypto": [
-      {
-        "expiration": 1628997564,
-        "address": "0x237535Da7e2f0aBa1b68262ABCf7C4e60B42600C",
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0x3A693EB97b500008d4Bb6258906f7Bbca1D09Cc5",
-          "poolId": "0x3a693eb97b500008d4bb6258906f7bbca1d09cc5000200000000000000000065",
-          "fee": "0.1",
-          "timeStretch": 6.16
-        },
-        "ytPool": {
-          "address": "0xF94A7Df264A2ec8bCEef2cFE54d7cA3f6C6DFC7a",
-          "poolId": "0xf94a7df264a2ec8bceef2cfe54d7ca3f6c6dfc7a000200000000000000000064",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      }
-    ],
-    "dai": [
-      {
-        "expiration": 1634346845,
-        "address": "0xb1cc77e701de60FE246607565CF7eDC9D9b6b963",
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0x71628c66C502F988Fbb9e17081F2bD14e361FAF4",
-          "poolId": "0x71628c66c502f988fbb9e17081f2bd14e361faf4000200000000000000000078",
-          "fee": "0.1",
-          "timeStretch": 22.19
-        },
-        "ytPool": {
-          "address": "0xE54B3F5c444a801e61BECDCa93e74CdC1C4C1F90",
-          "poolId": "0xe54b3f5c444a801e61becdca93e74cdc1c4c1f90000200000000000000000077",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      }
-    ],
-    "usdc": [
-      {
-        "expiration": 1635528110,
-        "address": "0xf38c3E836Be9cD35072055Ff6a9Ba570e0B70797",
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0x787546Bf2c05e3e19e2b6BDE57A203da7f682efF",
-          "poolId": "0x787546bf2c05e3e19e2b6bde57a203da7f682eff00020000000000000000007c",
-          "fee": "0.1",
-          "timeStretch": 18.5
-        },
-        "ytPool": {
-          "address": "0x2D6e3515C8b47192Ca3913770fa741d3C4Dac354",
-          "poolId": "0x2d6e3515c8b47192ca3913770fa741d3c4dac35400020000000000000000007b",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      }
-    ],
-    "crv3crypto": [
-      {
-        "expiration": 1636746083,
-        "address": "0x9CF2AB51aC93711Ec2fa32Ec861349568A16c729",
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0xF6dc4640D2783654BeF88E0dF3fb0F051f0DfC1A",
-          "poolId": "0xf6dc4640d2783654bef88e0df3fb0f051f0dfc1a00020000000000000000007e",
-          "fee": "0.1",
-          "timeStretch": 4.44
-        },
-        "ytPool": {
-          "address": "0xd16847480D6bc218048CD31Ad98b63CC34e5c2bF",
-          "poolId": "0xd16847480d6bc218048cd31ad98b63cc34e5c2bf00020000000000000000007d",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      }
-    ],
-    "wbtc": [
-      {
-        "expiration": 1637941844,
-        "address": "0x6BF924137E769C0A5c443dcE6eC885552d31D579",
-        "trancheFactory": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
-        "ptPool": {
-          "address": "0x4Db9024fc9F477134e00Da0DA3c77DE98d9836aC",
-          "poolId": "0x4db9024fc9f477134e00da0da3c77de98d9836ac000200000000000000000086",
-          "fee": "0.1",
-          "timeStretch": 31.7
-        },
-        "ytPool": {
-          "address": "0x7320d680Ca9BCE8048a286f00A79A2c9f8DCD7b3",
-          "poolId": "0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3000200000000000000000085",
-          "fee": "0.003"
-        },
-        "weightedPoolFactory": "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9",
-        "convergentCurvePoolFactory": "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
-      }
-    ]
-  },
-  "yieldTokenCompoundingAddress": {
-    "interface": {
-      "fragments": [
-        {
-          "name": null,
-          "type": "constructor",
-          "inputs": [
-            {
-              "name": "_balVault",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "gas": null,
-          "_isFragment": true
-        },
-        {
-          "type": "function",
-          "name": "approveTranchePTOnBalancer",
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_trancheAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            }
-          ],
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        },
-        {
-          "type": "function",
-          "name": "balVault",
-          "constant": true,
-          "inputs": [],
-          "outputs": [
-            {
-              "name": null,
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        },
-        {
-          "type": "function",
-          "name": "compound",
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_n",
-              "type": "uint8",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint8",
-              "_isParamType": true
-            },
-            {
-              "name": "_trancheAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_balancerPoolId",
-              "type": "bytes32",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "bytes32",
-              "_isParamType": true
-            },
-            {
-              "name": "_amount",
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            },
-            {
-              "name": "_expectedYtOutput",
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "outputs": [
-            {
-              "name": null,
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            },
-            {
-              "name": null,
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        },
-        {
-          "type": "function",
-          "name": "swapPTsForBaseTokenOnBalancer",
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_trancheAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_poolId",
-              "type": "bytes32",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "bytes32",
-              "_isParamType": true
-            },
-            {
-              "name": "_baseTokenAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_fromAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_receiverAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_amount",
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "outputs": [
-            {
-              "name": null,
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        }
-      ],
-      "_abiCoder": {
-        "coerceFunc": null
-      },
-      "functions": {
-        "approveTranchePTOnBalancer(address)": {
-          "type": "function",
-          "name": "approveTranchePTOnBalancer",
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_trancheAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            }
-          ],
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        },
-        "balVault()": {
-          "type": "function",
-          "name": "balVault",
-          "constant": true,
-          "inputs": [],
-          "outputs": [
-            {
-              "name": null,
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        },
-        "compound(uint8,address,bytes32,uint256,uint256)": {
-          "type": "function",
-          "name": "compound",
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_n",
-              "type": "uint8",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint8",
-              "_isParamType": true
-            },
-            {
-              "name": "_trancheAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_balancerPoolId",
-              "type": "bytes32",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "bytes32",
-              "_isParamType": true
-            },
-            {
-              "name": "_amount",
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            },
-            {
-              "name": "_expectedYtOutput",
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "outputs": [
-            {
-              "name": null,
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            },
-            {
-              "name": null,
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        },
-        "swapPTsForBaseTokenOnBalancer(address,bytes32,address,address,address,uint256)": {
-          "type": "function",
-          "name": "swapPTsForBaseTokenOnBalancer",
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_trancheAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_poolId",
-              "type": "bytes32",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "bytes32",
-              "_isParamType": true
-            },
-            {
-              "name": "_baseTokenAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_fromAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_receiverAddress",
-              "type": "address",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "address",
-              "_isParamType": true
-            },
-            {
-              "name": "_amount",
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "outputs": [
-            {
-              "name": null,
-              "type": "uint256",
-              "indexed": null,
-              "components": null,
-              "arrayLength": null,
-              "arrayChildren": null,
-              "baseType": "uint256",
-              "_isParamType": true
-            }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "gas": {
-            "type": "BigNumber",
-            "hex": "0x01ba8140"
-          },
-          "_isFragment": true
-        }
-      },
-      "errors": {},
-      "events": {},
-      "structs": {},
-      "deploy": {
-        "name": null,
-        "type": "constructor",
-        "inputs": [
-          {
-            "name": "_balVault",
-            "type": "address",
-            "indexed": null,
-            "components": null,
-            "arrayLength": null,
-            "arrayChildren": null,
-            "baseType": "address",
-            "_isParamType": true
-          }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "gas": null,
-        "_isFragment": true
-      },
-      "_isInterface": true
-    },
-    "provider": "<WrappedHardhatProvider>",
-    "signer": "<SignerWithAddress 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266>",
-    "callStatic": {},
-    "estimateGas": {},
-    "functions": {},
-    "populateTransaction": {},
-    "filters": {},
-    "_runningEvents": {},
-    "_wrappedEmits": {},
-    "address": "0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650",
-    "resolvedAddress": {},
-    "deployTransaction": {
-      "hash": "0x50581273d58e8786e945118e63c8a8e7d9de4aaddd36ee5b54af8c928ec7b9dd",
-      "type": 2,
-      "accessList": [],
-      "blockHash": "0x1e4f89b49057efad4c09d8d8cbc6d8f7fc698088cb500c16ffcffe855e7e4371",
-      "blockNumber": 13180351,
-      "transactionIndex": 0,
-      "confirmations": 1,
-      "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      "gasPrice": {
-        "type": "BigNumber",
-        "hex": "0x2256626875"
-      },
-      "maxPriorityFeePerGas": {
-        "type": "BigNumber",
-        "hex": "0x3b9aca00"
-      },
-      "maxFeePerGas": {
-        "type": "BigNumber",
-        "hex": "0x44712a06ea"
-      },
-      "gasLimit": {
-        "type": "BigNumber",
-        "hex": "0x0b4956"
-      },
-      "to": null,
-      "value": {
-        "type": "BigNumber",
-        "hex": "0x00"
-      },
-      "nonce": 57,
-      "data": "0x60c060405260001960a05234801561001657600080fd5b50604051610d14380380610d148339810160408190526100359161004a565b60601b6001600160601b031916608052610078565b60006020828403121561005b578081fd5b81516001600160a01b0381168114610071578182fd5b9392505050565b60805160601c60a051610c676100ad600039806101755280610687525080610199528061023d52806106655250610c676000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c806376f3bc071461005157806377aba2131461007a578063bdc387b81461008f578063bfe75b86146100b0575b600080fd5b61006461005f3660046108f8565b6100c5565b6040516100719190610c02565b60405180910390f35b61008261023b565b6040516100719190610ab3565b6100a261009d3660046109de565b61025f565b604051610071929190610c0b565b6100c36100be3660046108d5565b61063f565b005b60008087866100d2610865565b6040518060c001604052808b81526020018560018111156100ef57fe5b8152602001846001600160a01b03168152602001836001600160a01b031681526020018781526020016040518060200160405280600081525081525090506101356108ae565b50604080516080810182526001600160a01b03808b1682526000602083018190528a8216838501526060830181905292516352bbbe2960e01b81529192917f00000000000000000000000000000000000000000000000000000000000000009183917f0000000000000000000000000000000000000000000000000000000000000000909116906352bbbe29906101d6908890889086908890600401610b76565b602060405180830381600087803b1580156101f057600080fd5b505af1158015610204573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061022891906109a3565b9f9e505050505050505050505050505050565b7f000000000000000000000000000000000000000000000000000000000000000081565b60008060008760ff161180156102785750601f8760ff16105b61029d5760405162461bcd60e51b815260040161029490610b04565b60405180910390fd5b60008690506000816001600160a01b0316636f307dc36040518163ffffffff1660e01b815260040160206040518083038186803b1580156102dd57600080fd5b505afa1580156102f1573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103159190610987565b90506000816001600160a01b03166370a08231336040518263ffffffff1660e01b81526004016103459190610ab3565b60206040518083038186803b15801561035d57600080fd5b505afa158015610371573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061039591906109a3565b90506000836001600160a01b03166309218e916040518163ffffffff1660e01b815260040160206040518083038186803b1580156103d257600080fd5b505afa1580156103e6573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061040a9190610987565b9050836001600160a01b0316636f307dc36040518163ffffffff1660e01b815260040160206040518083038186803b15801561044557600080fd5b505afa158015610459573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061047d9190610987565b6001600160a01b03166323b872dd33838b6040518463ffffffff1660e01b81526004016104ac93929190610ac7565b602060405180830381600087803b1580156104c657600080fd5b505af11580156104da573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104fe9190610967565b50600061050e8c868c8786610706565b9050878110156105305760405162461bcd60e51b815260040161029490610b4b565b846001600160a01b031663764b666c6040518163ffffffff1660e01b815260040160206040518083038186803b15801561056957600080fd5b505afa15801561057d573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906105a19190610987565b6001600160a01b031663a9059cbb33836040518363ffffffff1660e01b81526004016105ce929190610aeb565b602060405180830381600087803b1580156105e857600080fd5b505af11580156105fc573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106209190610967565b508061062c85856107dd565b9650965050505050509550959350505050565b60405163095ea7b360e01b815281906001600160a01b0382169063095ea7b3906106af907f0000000000000000000000000000000000000000000000000000000000000000907f000000000000000000000000000000000000000000000000000000000000000090600401610aeb565b602060405180830381600087803b1580156106c957600080fd5b505af11580156106dd573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107019190610967565b505050565b600080805b8760ff168160ff1610156107d257600080886001600160a01b03166385f45c88306040518263ffffffff1660e01b81526004016107489190610ab3565b6040805180830381600087803b15801561076157600080fd5b505af1158015610775573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061079991906109bb565b9150915080840193506107c78989893060018f0360ff168860ff16146107bf578a6107c1565b335b876100c5565b50505060010161070b565b509695505050505050565b6040516370a0823160e01b81526000906001600160a01b038416906370a082319061080c903390600401610ab3565b60206040518083038186803b15801561082457600080fd5b505afa158015610838573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061085c91906109a3565b90910392915050565b6040805160c0810190915260008082526020820190815260200160006001600160a01b0316815260200160006001600160a01b0316815260200160008152602001606081525090565b60408051608081018252600080825260208201819052918101829052606081019190915290565b6000602082840312156108e6578081fd5b81356108f181610c19565b9392505050565b60008060008060008060c08789031215610910578182fd5b863561091b81610c19565b955060208701359450604087013561093281610c19565b9350606087013561094281610c19565b9250608087013561095281610c19565b8092505060a087013590509295509295509295565b600060208284031215610978578081fd5b815180151581146108f1578182fd5b600060208284031215610998578081fd5b81516108f181610c19565b6000602082840312156109b4578081fd5b5051919050565b600080604083850312156109cd578182fd5b505080516020909101519092909150565b600080600080600060a086880312156109f5578081fd5b853560ff81168114610a05578182fd5b94506020860135610a1581610c19565b94979496505050506040830135926060810135926080909101359150565b60008151808452815b81811015610a5857602081850181015186830182015201610a3c565b81811115610a695782602083870101525b50601f01601f19169290920160200192915050565b80516001600160a01b039081168352602080830151151590840152604080830151909116908301526060908101511515910152565b6001600160a01b0391909116815260200190565b6001600160a01b039384168152919092166020820152604081019190915260600190565b6001600160a01b03929092168252602082015260400190565b60208082526027908201527f6e2068617320746f206265206265747765656e203120746f2032353520696e63604082015266363ab9b4bb329760c91b606082015260800190565b602080825260119082015270546f6f206d75636820736c69707061676560781b604082015260600190565b600060e08252855160e0830152602086015160028110610b9257fe5b61010083015260408601516001600160a01b03908116610120840152606087015116610140830152608086015161016083015260a086015160c0610180840152610be06101a0840182610a33565b915050610bf06020830186610a7e565b60a082019390935260c0015292915050565b90815260200190565b918252602082015260400190565b6001600160a01b0381168114610c2e57600080fd5b5056fea26469706673582212206a547311b726ac272b3bc41fd4e5afef4339b1fd88717cc2d629ba6f6c9c487f64736f6c63430007030033000000000000000000000000ba12222222228d8ba445958a75a0704d566bf2c8",
-      "r": "0xdbcfb705c503e763bac02d3c6109edd4ebe13b8087c61ea446b2d0b088f5bd7a",
-      "s": "0x20462877e226d0c87c7b805b461574b1069a67e6f11b3497c99022993cab6ff6",
-      "v": 1,
-      "creates": "0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650",
-      "chainId": 31337
-    },
-    "_deployedPromise": {}
-  }
+	"tokens": {
+		"usdc": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+		"weth": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+		"dai": "0x5bD768CCE8C529CDF23B136bB486a81f64985B92"
+	},
+	"wrappedPositions": {
+		"yearn": {
+			"usdc": "0x814C447a9F58A2b823504Fe2775bA48c843925B6",
+			"weth": "0x6F643Ba6894D8C50c476A3539e1D1690B2194018",
+			"dai": "0x8dc82c95B8901Db35390Aa4096B643d7724F278D"
+		}
+	},
+	"vaults": {
+		"yearn": {
+			"usdc": "0x23c3C6C06d7684207fB09076914A15B16aba02c5",
+			"weth": "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1",
+			"dai": "0x851A97B6520c582dAB33F722Bd9C5939Ea349546"
+		}
+	},
+	"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+	"userProxy": "0xB8d8DD04385De3cbc84132F31dD84d5DaF0675fD",
+	"balancerVault": "0x65748E8287Ce4B9E6D83EE853431958851550311",
+	"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+	"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7",
+	"tranches": {
+		"usdc": [
+			{
+				"expiration": 1628211057,
+				"address": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
+				"ptPool": {
+					"address": "0x40bf8A2eCB62c6B880302b55a5552A4e315b5827",
+					"poolId": "0x40bf8a2ecb62c6b880302b55a5552a4e315b5827000200000000000000000062",
+					"fee": "0.1",
+					"timeStretch": 9
+				},
+				"ytPool": {
+					"address": "0x252797e51F51631b6956545C45F9d3F9fFCb0940",
+					"poolId": "0x252797e51f51631b6956545c45f9d3f9ffcb0940000200000000000000000063",
+					"fee": "0.1"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1622661612,
+				"address": "0x7D64aD2b83a62C0d02514a43E5B4582C671E5F72",
+				"ptPool": {
+					"address": "0x5e5D0F28D52eBC7dfe101542e3BfD32f09065F15",
+					"poolId": "0x5e5d0f28d52ebc7dfe101542e3bfd32f09065f15000200000000000000000072",
+					"fee": "0.1",
+					"timeStretch": 11
+				},
+				"ytPool": {
+					"address": "0x7dfD3ec2Dd0020b7F85E0555b6D499156420D796",
+					"poolId": "0x7dfd3ec2dd0020b7f85e0555b6d499156420d796000200000000000000000070",
+					"fee": "0.003"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1623266597,
+				"address": "0x8Bd721BB84a30c0078aF4a5a732c7169C5BE6eDB",
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"ptPool": {
+					"address": "0x680C7914E2CAE78A2ac94DABf6277692EF652353",
+					"poolId": "0x680c7914e2cae78a2ac94dabf6277692ef652353000200000000000000000074",
+					"fee": "0.1",
+					"timeStretch": 11
+				},
+				"ytPool": {
+					"address": "0xcdEe31456e502EF883316d4F6A3CF12027554afE",
+					"poolId": "0xcdee31456e502ef883316d4f6a3cf12027554afe000200000000000000000073",
+					"fee": "0.003"
+				},
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1660165080,
+				"address": "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"ptPool": {
+					"address": "0x4294005520c453EB8Fa66F53042cfC79707855c4",
+					"poolId": "0x4294005520c453eb8fa66f53042cfc79707855c400020000000000000000009a",
+					"fee": "0.1",
+					"timeStretch": 9
+				},
+				"ytPool": {
+					"address": "0xCE3dE100bA6B1fd0d078a938F2d698Ed08a6a54D",
+					"poolId": "0xce3de100ba6b1fd0d078a938f2d698ed08a6a54d000200000000000000000099",
+					"fee": "0.003"
+				},
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			}
+		],
+		"weth": [
+			{
+				"expiration": 1628210937,
+				"address": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
+				"ptPool": {
+					"address": "0x9eB7F54C0eCc4d0D2dfF28a1276e36d598F2B0D1",
+					"poolId": "0x9eb7f54c0ecc4d0d2dff28a1276e36d598f2b0d1000200000000000000000066",
+					"fee": "0.1",
+					"timeStretch": 8
+				},
+				"ytPool": {
+					"address": "0xD75bfF2444FF738d443066ff4688691e6852b217",
+					"poolId": "0xd75bff2444ff738d443066ff4688691e6852b217000200000000000000000067",
+					"fee": "0.1"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1621010937,
+				"address": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
+				"ptPool": {
+					"address": "0x5941DB4d6C500C4FFa57c359eE0C55c6b41D0b61",
+					"poolId": "0x5941db4d6c500c4ffa57c359ee0c55c6b41d0b61000200000000000000000064",
+					"fee": "0.1",
+					"timeStretch": 8
+				},
+				"ytPool": {
+					"address": "0xcF6894C48c2AF3ddD433CC1EDfEfC74e654cC9B4",
+					"poolId": "0xcf6894c48c2af3ddd433cc1edfefc74e654cc9b4000200000000000000000065",
+					"fee": "0.1"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			}
+		],
+		"dai": [
+			{
+				"expiration": 1624901889,
+				"address": "0x6866dFc9A60e9dba922668b9b27931DCaCDF645A",
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7",
+				"ptPool": {
+					"address": "0x00655F8F287848f35538648A012e2cbd13016138",
+					"poolId": "0x00655f8f287848f35538648a012e2cbd13016138000200000000000000000079",
+					"fee": "0.1",
+					"timeStretch": 26
+				},
+				"ytPool": {
+					"address": "0x4c3f56cC1ad2BC61293739C7f0550575c9DAf313",
+					"poolId": "0x4c3f56cc1ad2bc61293739c7f0550575c9daf313000200000000000000000078",
+					"fee": "0.003"
+				}
+			}
+		]
+	}
 }

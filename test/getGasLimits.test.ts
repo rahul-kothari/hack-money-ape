@@ -1,7 +1,7 @@
 // This is to get the amount of gas used to perform ytc with a variety of tokens and number of compounds
 import hre, { deployments } from 'hardhat';
-import { constants as mainnetConstants } from './mainnet-constants';
-import { constants as goerliConstants} from './goerli-constants';
+import mainnetConstants from '../constants/mainnet-constants.json';
+import goerliConstants from '../constants/goerli-constants.json';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { Deployment } from 'hardhat-deploy/dist/types';
 import { getAllTokens } from '../scripts/helpers/getTokens';
@@ -12,12 +12,16 @@ import { getActiveTranches } from '../frontend/src/features/element';
 import {sendApproval} from '../frontend/src/features/approval/approvalAPI';
 import { ethers } from 'ethers';
 import _ from 'lodash';
+import { ElementAddresses } from '../frontend/src/types/manual/types';
+
 const MAX_UINT_HEX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
+let constants: ElementAddresses;
+
 if (hre.network.name == "goerli"){
-    var constants = goerliConstants;
+    constants = goerliConstants;
 } else {
-    var constants = mainnetConstants;
+    constants = mainnetConstants;
 }
 
 let deployment: Deployment;

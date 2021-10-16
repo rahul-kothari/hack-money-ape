@@ -1,24 +1,27 @@
 // Calculator is used to estimate the YTC output from the ytc contract
-import { calculateYieldExposures, YTCInput } from '../frontend/src/features/ytc/ytcHelpers';
+import { YTCInput } from '../frontend/src/features/ytc/ytcHelpers';
+import { simulateYTCForCompoundRange } from '../frontend/src/features/ytc/simulateYTC';
+import mainnetConstants from '../constants/mainnet-constants.json';
+import goerliConstants from '../constants/goerli-constants.json';
 import hre, { deployments, ethers } from 'hardhat';
 import ERC20 from '../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
-import YieldTokenCompounding from '../frontend/src/artifacts/contracts/YieldTokenCompounding.sol/YieldTokenCompounding.json'
 import {ERC20 as ERC20Type} from '../frontend/src/hardhat/typechain/ERC20';
 import {YieldTokenCompounding as YieldTokenCompoundingType} from '../frontend/src/hardhat/typechain/YieldTokenCompounding'
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { constants as mainnetConstants } from './mainnet-constants';
-import { constants as goerliConstants} from './goerli-constants';
+import { BigNumber } from '@ethersproject/bignumber';
 import { getAllTokens } from '../scripts/helpers/getTokens';
 import { Deployment } from 'hardhat-deploy/dist/types';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { expect } from 'chai';
+import { ElementAddresses } from '../frontend/src/types/manual/types';
 
 const MAX_UINT_HEX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
+let constants: ElementAddresses;
+
 if (hre.network.name == "goerli"){
-    var constants = goerliConstants;
+    constants = goerliConstants;
 } else {
-    var constants = mainnetConstants;
+    constants = mainnetConstants;
 }
 
 let deployment: Deployment;
@@ -84,7 +87,7 @@ describe('calculate yield exposure test', () => {
 
         console.log(userData);
 
-        const results = await calculateYieldExposures(userData, constants, [1,4], signer);
+        const results = await simulateYTCForCompoundRange(userData, constants, [1,4], signer);
         console.log(results);
     })
 

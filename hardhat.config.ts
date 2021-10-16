@@ -17,6 +17,37 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
   }
 });
 
+task("compile", "Compiles the entire project, building all artifacts", async (args, hre, runSuper) => {
+  await runSuper(args);
+
+  const fs = require('fs');
+
+  // File destination.txt will be created or overwritten by default.
+  await new Promise<void>((resolve, reject) => {
+    fs.copyFile('./constants/mainnet-constants.json', './frontend/src/hardhat/mainnet-constants.json', (err: Error) => {
+      if (err) reject(err);
+      console.log('mainnet-constants.json was copied to the frontend');
+      resolve()
+    });
+  })
+
+  await new Promise<void>((resolve, reject) => {
+    fs.copyFile('./constants/goerli-constants.json', './frontend/src/hardhat/goerli-constants.json', (err: Error) => {
+      if (err) reject(err);
+      console.log('goerli-constants.json was copied to the frontend');
+      resolve()
+    });
+  })
+})
+
+task("clean", "Clears the cache and deletes all artifacts",  async (args, hre, runSuper) => {
+  await runSuper(args);
+
+  const fs = require('fs');
+
+  fs.rmdirSync('./frontend/src/hardhat', { recursive: true });
+})
+
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 

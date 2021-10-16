@@ -31,8 +31,6 @@ export interface ElementAddresses {
 	balancerVault: string;
 	weightedPoolFactory: string;
 	convergentCurvePoolFactory: string;
-	yieldTokenCompoundingAddress?: string;
-	yieldTokenCompoundingPTAddress?: string;
 	tranches: {[tokenName: string]: Tranche[]}
 }
 

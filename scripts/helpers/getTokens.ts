@@ -1,15 +1,17 @@
 import hre, { deployments, ethers } from 'hardhat';
 import ERC20 from '../../frontend/src/artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
 import {ERC20 as ERC20Type} from '../../frontend/src/hardhat/typechain/ERC20';
-import { constants as mainnetConstants } from '../mainnet-constants';
-import { constants as goerliConstants} from '../goerli-constants';
+import mainnetConstants from '../../constants/mainnet-constants.json';
+import goerliConstants from '../../constants/goerli-constants.json';
 import { tokenHolders } from '../../test/constants/tokenHolders';
 import { ContractReceipt } from '@ethersproject/contracts';
+import { ElementAddresses } from '../../frontend/src/types/manual/types';
 
+let constants: ElementAddresses;
 if (hre.network.name == "goerli"){
-    var constants = goerliConstants;
+    constants = goerliConstants;
 } else {
-    var constants = mainnetConstants;
+    constants = mainnetConstants;
 }
 
 export const getTokens = async (largeHolderAddress: string, tokenName: string, amountNormalized: number) => {
