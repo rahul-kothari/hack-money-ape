@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
-import { Table, Th, Thead, Flex } from '@chakra-ui/react';
+import { Table, Th, Thead, Flex, Tr } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 import Card from '../../../Reusable/Card';
 import { ResultsTableRow } from './ResultsTableRow';
@@ -43,17 +43,19 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                     size="sm"
                 >
                     <Thead>
-                        <Th isNumeric>
-                        </Th>
-                        <Th isNumeric>
-                            Yield Tokens
-                        </Th>
-                        <Th isNumeric>
-                            Tokens Spent
-                        </Th>
-                        <Th isNumeric>
-                            Net Gain
-                        </Th>
+                        <Tr>
+                            <Th isNumeric>
+                            </Th>
+                            <Th isNumeric>
+                                Yield Tokens
+                            </Th>
+                            <Th isNumeric>
+                                Tokens Spent
+                            </Th>
+                            <Th isNumeric>
+                                Net Gain
+                            </Th>
+                        </Tr>
                     </Thead>
                     {simulationResults.map((result: YTCOutput, index) => {
                         return <ResultsTableRow
