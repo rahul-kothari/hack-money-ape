@@ -1,4 +1,4 @@
-import { Signer, Contract, utils, ethers, BigNumber} from "ethers";
+import { Signer, Contract, utils, ethers } from "ethers";
 import ICurveFi from '../../artifacts/contracts/yearn/ICurveFi.sol/ICurveFi.json';
 import { CURVE_SWAP_ADDRESSES } from "../../constants/apy-mainnet-constants";
 import { ERC20 as ERC20Type } from "../../hardhat/typechain/ERC20";
