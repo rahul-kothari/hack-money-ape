@@ -91,15 +91,15 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
     return <>
         <DetailItem
             name= "Fixed Rate:"
-            value={`${shortenNumber(fixed * 100)}%`}
+            value={`${fixed ? shortenNumber(fixed * 100) : "?"}%`}
         />
         <DetailItem
             name= "Variable Rate:"
-            value={`${shortenNumber(variable * 100)}%`}
+            value={`${variable ? shortenNumber(variable * 100) : "?"}%`}
         />
         <DetailItem
             name= "Days Remaining:"
-            value={`${shortenNumber(daysRemaining)}`}
+            value={daysRemaining ? shortenNumber(daysRemaining) : "?"}
         />
     </>
 }

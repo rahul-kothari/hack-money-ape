@@ -7,9 +7,9 @@ import { atomFamily, selectorFamily, atom} from 'recoil';
 // The key for this family is the tranche address
 
 export interface TrancheRatesInterface {
-    variable: number,
-    fixed: number,
-    daysRemaining: number,
+    variable: number | undefined,
+    fixed: number | undefined,
+    daysRemaining: number | undefined,
 }
 
 // This is an atom family, it functions as a key value pair of atoms allowing for the generation of new atoms if an existing one is not found
@@ -17,9 +17,9 @@ export interface TrancheRatesInterface {
 const trancheRatesAtoms = atomFamily<TrancheRatesInterface, string>({
     key: "trancheRates",
     default: {
-        variable: 0,
-        fixed: 0,
-        daysRemaining: 0,
+        variable: undefined,
+        fixed: undefined,
+        daysRemaining: undefined,
     },
   });
   
