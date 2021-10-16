@@ -93,7 +93,7 @@ contract YieldTokenCompounding {
         address _fromAddress,
         address payable _receiverAddress,
         uint256 _amount
-    ) public returns (uint256) {
+    ) internal returns (uint256) {
         // Swap PTs (tranche contract token) for base tokens
         IVault.SwapKind kind = IVault.SwapKind.GIVEN_IN;
         IAsset assetIn = IAsset(_trancheAddress);
