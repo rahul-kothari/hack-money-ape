@@ -56,6 +56,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
         {
             (simulationResults.length > 0) && <>
                 <Flex width="full">
+                    {/** Arrow Icon */}
                     <Icon stroke="text.primary" viewBox="0 0 24 24" h={7} w={10} mx="auto">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
                     </Icon>
@@ -68,6 +69,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
                 {
                     (resultIndex !== undefined ) && <>
                         <Flex width="full">
+                            {/** Arrow Icon */}
                             <Icon stroke="text.primary" viewBox="0 0 24 24" h={7} w={10} mx="auto">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
                             </Icon>
