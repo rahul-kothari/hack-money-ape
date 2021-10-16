@@ -6,10 +6,9 @@ import { getReserves } from "../../utils/element/getReserves";
 import { calcSpotPricePt } from "../../utils/element/calcSpotPrice";
 import { calcFixedAPR } from "../../utils/element/calcFixedAPR";
 import _ from 'lodash';
+import { ONE_YEAR_IN_SECONDS } from "../../constants/time";
 
 // calculate the fixed rate of the pTokens for a tranche
-
-const SECONDS_PER_YEAR = 3.154 * 10 ** 7;
 
 export const getFixedRate = async (tokenName: string, trancheAddress: string, elementAddresses: ElementAddresses, signer: Signer): Promise<number> => {
     const tranche = _.find(elementAddresses.tranches[tokenName], (tranche: Tranche) => (tranche.address === trancheAddress));
@@ -23,7 +22,7 @@ export const getFixedRate = async (tokenName: string, trancheAddress: string, el
 
     const reserves = await getReserves(ptPool.address, balancerAddress, signer);
 
-    const tParamSeconds = ptPool.timeStretch * SECONDS_PER_YEAR;
+    const tParamSeconds = ptPool.timeStretch * ONE_YEAR_IN_SECONDS;
 
     const timeRemainingSeconds = tranche.expiration - (new Date()).getTime()/1000;
 
