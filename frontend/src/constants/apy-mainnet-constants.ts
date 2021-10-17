@@ -36,5 +36,14 @@ export const COINGECKO_TOKEN_NAME_TRANSLATION: {[key: string]: string} = {
     "eur": "eur"
 }
 
-export const validCurveTokens = Object.keys(CURVE_SWAP_ADDRESSES);
+
+export const validCurveTokens = [
+    "crv3crypto",
+    "crvtricrypto",
+    "stecrv",
+    "lusd3crv-f",
+    "alusd3crv-f",
+    "mim-3lp3crv-f",
+    "eurscrv",
+]
 export const validCoingeckoTokens = Object.keys(COINGECKO_TOKEN_NAME_TRANSLATION);
