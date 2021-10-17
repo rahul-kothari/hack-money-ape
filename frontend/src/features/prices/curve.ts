@@ -15,7 +15,6 @@ export const isCurveToken = (x: any): x is CurveTokenName => {
 }
 
 export const getPriceOfCurveLP = async (tokenName: string, elementAddresses: ElementAddresses ,signer: Signer) => {
-    // const swapAddress = CURVE_SWAP_ADDRESSES[tokenName];
     const tokenAddress = elementAddresses.tokens[tokenName];
 
     if (!tokenAddress){

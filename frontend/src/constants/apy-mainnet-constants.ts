@@ -36,7 +36,8 @@ export const COINGECKO_TOKEN_NAME_TRANSLATION: {[key: string]: string} = {
     "eur": "eur"
 }
 
-
+// TODO this list needs to be updated every time that element deploys a new curve token
+// This could potentially be resolved by using the element finance tokenlist
 export const validCurveTokens = [
     "crv3crypto",
     "crvtricrypto",
