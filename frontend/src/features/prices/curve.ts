@@ -1,21 +1,31 @@
 import { Signer, Contract, utils, ethers } from "ethers";
-import ICurveFi from '../../artifacts/contracts/yearn/ICurveFi.sol/ICurveFi.json';
-import { CURVE_SWAP_ADDRESSES, validCurveTokens } from "../../constants/apy-mainnet-constants";
-import { ERC20 as ERC20Type } from "../../hardhat/typechain/ERC20";
-import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
+import ICurveFi from '../../artifacts/contracts/curve/ICurveFi.sol/ICurveFi.json';
 import {ICurveFi as ICurveType} from '../../hardhat/typechain/ICurveFi';
+import { validCurveTokens } from "../../constants/apy-mainnet-constants";
+import { ERC20 as ERC20Type } from "../../hardhat/typechain/ERC20";
+import { IERC20Minter as IERC20MinterType } from "../../hardhat/typechain/IERC20Minter";
+import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
+import IERC20Minter from '../../artifacts/contracts/curve/IERC20Minter.sol/IERC20Minter.json';
 import { getRelativePriceFromCoingecko } from "./coingecko";
+import { ElementAddresses } from "../../types/manual/types";
 
 export type CurveTokenName = (typeof validCurveTokens[number])
 export const isCurveToken = (x: any): x is CurveTokenName => {
     return validCurveTokens.includes(x);
 }
 
-export const getPriceOfCurveLP = async (tokenName: string, signer: Signer) => {
-    const swapAddress = CURVE_SWAP_ADDRESSES[tokenName];
+export const getPriceOfCurveLP = async (tokenName: string, elementAddresses: ElementAddresses ,signer: Signer) => {
+    // const swapAddress = CURVE_SWAP_ADDRESSES[tokenName];
+    const tokenAddress = elementAddresses.tokens[tokenName];
+
+    if (!tokenAddress){
+        throw new Error('Could not find token address of ' + tokenName)
+    }
+
+    const swapAddress = await getCurveSwapAddress(tokenAddress, signer);
 
     if (!swapAddress){
-        throw new Error('Could not find swap address for curve token')
+        throw new Error('Could not find swap address for curve token ' + tokenName)
     }
 
     const virtualPrice: number = await getCurveVirtualPrice(swapAddress, signer);
@@ -98,4 +108,22 @@ const getTriCryptoPrice = async (tokenAddress: string, signer: Signer): Promise<
     const price = approximateTotalValue/totalSupplyNormalized;
 
     return price;
+}
+
+// Some curve lp contracts are both the erc20 and the swap pool contract, some have this functionality separated
+// When there are two contracts the ERC20 token will have a minter variable that contains the address of the swap contract
+const getCurveSwapAddress = async (tokenAddress: string, signer: Signer): Promise<string> => {
+    const erc20MinterAbi = IERC20Minter.abi;
+
+    const erc20Contract = new Contract(tokenAddress, erc20MinterAbi, signer) as IERC20MinterType;
+
+    try {
+        const minter = await erc20Contract.minter()
+        // if the minter function call is successful return the associated swap address
+        return minter;
+    } catch (error) {
+        // otherwise the token and swap addresses are the same, thus the token address is returned
+        return tokenAddress;
+    }
+
 }

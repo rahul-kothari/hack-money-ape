@@ -74,7 +74,7 @@ export const BaseTokenPriceTag: React.FC<BaseTokenPriceTagProps> = (props) => {
 
     useEffect(() => {
         if(baseTokenName){
-            getTokenPrice(baseTokenName, signer).then((value) => {
+            getTokenPrice(baseTokenName, elementAddresses, signer).then((value) => {
                 setPrice(value);
             }).catch((error) => {
                 console.error(error);

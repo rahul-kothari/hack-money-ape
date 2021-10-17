@@ -101,7 +101,7 @@ export const getYTCParameters = async (userData: YTCInput, elementAddresses: Ele
         amount = baseTokenBalance;
     }
 
-    const ethToBaseToken = await ethToBaseTokenRate(baseTokenName, signer);
+    const ethToBaseToken = await ethToBaseTokenRate(baseTokenName, elementAddresses, signer);
 
     return {
         ytc,
@@ -169,9 +169,9 @@ export const getTokenNameByAddress = (address: string, tokens: {[name: string]: 
     return result && result[0]
 }
 
-const ethToBaseTokenRate = async (baseTokenName: string, signer: Signer) => {
-    const baseTokenPrice = await getTokenPrice(baseTokenName, signer);
-    const ethPrice =  await getTokenPrice("eth", signer);
+const ethToBaseTokenRate = async (baseTokenName: string, elementAddresses: ElementAddresses, signer: Signer) => {
+    const baseTokenPrice = await getTokenPrice(baseTokenName, elementAddresses, signer);
+    const ethPrice =  await getTokenPrice("eth", elementAddresses, signer);
 
     return (ethPrice/baseTokenPrice);
 
