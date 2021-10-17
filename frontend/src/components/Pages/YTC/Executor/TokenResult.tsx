@@ -86,6 +86,7 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
                     }
                     {
                         tokenType === "YToken" && <></>
+                            // This is commented out due to a bug in yt price calculation
                             // && <YTPriceTag
                             //     amount={token.amount}
                             //     baseTokenName={props.baseTokenName}
