@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
-import { Table, Th, Thead, Flex, Tr, Tbody } from '@chakra-ui/react';
+import { Table, Th, Thead, Flex, Tr, Tbody, FormLabel, Tooltip } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 import Card from '../../../Reusable/Card';
 import { ResultsTableRow } from './ResultsTableRow';
+import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 interface TableProps {
     onSelect: (index: number | undefined) => void;
@@ -37,6 +38,23 @@ const ResultsTable: React.FC<TableProps> = (props) => {
             py={5}
         >
             <Card>
+                <FormLabel
+                    flexDir="row"
+                    justify="center"
+                    alignItems="center"
+                    alignSelf="center"
+                >
+                    <Flex
+                        flexDir="row"
+                        alignItems="center"
+                        gridGap={2}
+                    >
+                        Number of Compounds
+                        <Tooltip label="Select the number of iterations you would like to execute. The more compounds the larger the yield token position.">
+                            <InfoOutlineIcon/>
+                        </Tooltip>
+                    </Flex>
+                </FormLabel>
                 <Table
                     ref={tableRef}
                     variant="simple"
