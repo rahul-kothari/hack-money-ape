@@ -354,7 +354,7 @@ const Form: React.FC<FormProps> = (props) => {
                     justify="center"
                     alignItems="center"
                 >
-                        Amount
+                    Amount
                 </FormLabel>
                 <Flex
                     id="amount-header"

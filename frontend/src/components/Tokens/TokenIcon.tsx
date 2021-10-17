@@ -43,7 +43,7 @@ export const TokenIcon: React.FC<TokenIconInterface> = (props) => {
                 }
             }
         }
-    }, [tokenName])
+    }, [tokenName, elementAddresses.tokens])
 
     if (tokenUrl){
         return <Flex
