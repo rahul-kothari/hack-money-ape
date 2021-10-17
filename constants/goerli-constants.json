@@ -1,0 +1,160 @@
+{
+	"tokens": {
+		"usdc": "0x78dEca24CBa286C0f8d56370f5406B48cFCE2f86",
+		"weth": "0x9A1000D492d40bfccbc03f413A48F5B6516Ec0Fd",
+		"dai": "0x5bD768CCE8C529CDF23B136bB486a81f64985B92"
+	},
+	"wrappedPositions": {
+		"yearn": {
+			"usdc": "0x814C447a9F58A2b823504Fe2775bA48c843925B6",
+			"weth": "0x6F643Ba6894D8C50c476A3539e1D1690B2194018",
+			"dai": "0x8dc82c95B8901Db35390Aa4096B643d7724F278D"
+		}
+	},
+	"vaults": {
+		"yearn": {
+			"usdc": "0x23c3C6C06d7684207fB09076914A15B16aba02c5",
+			"weth": "0xdD82595F5eB0e7477D7432B24E44be7c0252bbf1",
+			"dai": "0x851A97B6520c582dAB33F722Bd9C5939Ea349546"
+		}
+	},
+	"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+	"userProxy": "0xB8d8DD04385De3cbc84132F31dD84d5DaF0675fD",
+	"balancerVault": "0x65748E8287Ce4B9E6D83EE853431958851550311",
+	"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+	"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7",
+	"tranches": {
+		"usdc": [
+			{
+				"expiration": 1628211057,
+				"address": "0x80272c960b862B4d6542CDB7338Ad1f727E0D18d",
+				"ptPool": {
+					"address": "0x40bf8A2eCB62c6B880302b55a5552A4e315b5827",
+					"poolId": "0x40bf8a2ecb62c6b880302b55a5552a4e315b5827000200000000000000000062",
+					"fee": "0.1",
+					"timeStretch": 9
+				},
+				"ytPool": {
+					"address": "0x252797e51F51631b6956545C45F9d3F9fFCb0940",
+					"poolId": "0x252797e51f51631b6956545c45f9d3f9ffcb0940000200000000000000000063",
+					"fee": "0.1"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1622661612,
+				"address": "0x7D64aD2b83a62C0d02514a43E5B4582C671E5F72",
+				"ptPool": {
+					"address": "0x5e5D0F28D52eBC7dfe101542e3BfD32f09065F15",
+					"poolId": "0x5e5d0f28d52ebc7dfe101542e3bfd32f09065f15000200000000000000000072",
+					"fee": "0.1",
+					"timeStretch": 11
+				},
+				"ytPool": {
+					"address": "0x7dfD3ec2Dd0020b7F85E0555b6D499156420D796",
+					"poolId": "0x7dfd3ec2dd0020b7f85e0555b6d499156420d796000200000000000000000070",
+					"fee": "0.003"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1623266597,
+				"address": "0x8Bd721BB84a30c0078aF4a5a732c7169C5BE6eDB",
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"ptPool": {
+					"address": "0x680C7914E2CAE78A2ac94DABf6277692EF652353",
+					"poolId": "0x680c7914e2cae78a2ac94dabf6277692ef652353000200000000000000000074",
+					"fee": "0.1",
+					"timeStretch": 11
+				},
+				"ytPool": {
+					"address": "0xcdEe31456e502EF883316d4F6A3CF12027554afE",
+					"poolId": "0xcdee31456e502ef883316d4f6a3cf12027554afe000200000000000000000073",
+					"fee": "0.003"
+				},
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1660165080,
+				"address": "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"ptPool": {
+					"address": "0x4294005520c453EB8Fa66F53042cfC79707855c4",
+					"poolId": "0x4294005520c453eb8fa66f53042cfc79707855c400020000000000000000009a",
+					"fee": "0.1",
+					"timeStretch": 9
+				},
+				"ytPool": {
+					"address": "0xCE3dE100bA6B1fd0d078a938F2d698Ed08a6a54D",
+					"poolId": "0xce3de100ba6b1fd0d078a938f2d698ed08a6a54d000200000000000000000099",
+					"fee": "0.003"
+				},
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			}
+		],
+		"weth": [
+			{
+				"expiration": 1628210937,
+				"address": "0x89d66Ad25F3A723D606B78170366d8da9870A879",
+				"ptPool": {
+					"address": "0x9eB7F54C0eCc4d0D2dfF28a1276e36d598F2B0D1",
+					"poolId": "0x9eb7f54c0ecc4d0d2dff28a1276e36d598f2b0d1000200000000000000000066",
+					"fee": "0.1",
+					"timeStretch": 8
+				},
+				"ytPool": {
+					"address": "0xD75bfF2444FF738d443066ff4688691e6852b217",
+					"poolId": "0xd75bff2444ff738d443066ff4688691e6852b217000200000000000000000067",
+					"fee": "0.1"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			},
+			{
+				"expiration": 1621010937,
+				"address": "0x44eecA004b2612d131EDA7dA2b9d986E7fED562e",
+				"ptPool": {
+					"address": "0x5941DB4d6C500C4FFa57c359eE0C55c6b41D0b61",
+					"poolId": "0x5941db4d6c500c4ffa57c359ee0c55c6b41d0b61000200000000000000000064",
+					"fee": "0.1",
+					"timeStretch": 8
+				},
+				"ytPool": {
+					"address": "0xcF6894C48c2AF3ddD433CC1EDfEfC74e654cC9B4",
+					"poolId": "0xcf6894c48c2af3ddd433cc1edfefc74e654cc9b4000200000000000000000065",
+					"fee": "0.1"
+				},
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7"
+			}
+		],
+		"dai": [
+			{
+				"expiration": 1624901889,
+				"address": "0x6866dFc9A60e9dba922668b9b27931DCaCDF645A",
+				"trancheFactory": "0x5690332C2f0c12F00c147cE350d95B19a0C24f14",
+				"weightedPoolFactory": "0x7576dB443020ec4F46526c317262347Acdf1B99d",
+				"convergentCurvePoolFactory": "0x0766B218517d9dC198155f0dC3485270cF788aF7",
+				"ptPool": {
+					"address": "0x00655F8F287848f35538648A012e2cbd13016138",
+					"poolId": "0x00655f8f287848f35538648a012e2cbd13016138000200000000000000000079",
+					"fee": "0.1",
+					"timeStretch": 26
+				},
+				"ytPool": {
+					"address": "0x4c3f56cC1ad2BC61293739C7f0550575c9DAf313",
+					"poolId": "0x4c3f56cc1ad2bc61293739c7f0550575c9daf313000200000000000000000078",
+					"fee": "0.003"
+				}
+			}
+		]
+	}
+}
