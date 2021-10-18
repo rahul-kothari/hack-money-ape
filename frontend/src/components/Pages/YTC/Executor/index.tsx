@@ -13,6 +13,7 @@ import Card from "../../../Reusable/Card";
 import { shortenNumber } from "../../../../utils/shortenNumber";
 import { DetailItem } from '../../../Reusable/DetailItem';
 import { TokenResult } from "./TokenResult";
+import { DetailPane } from "../../../Reusable/DetailPane";
 
 export interface ApeProps {
     baseToken: {
@@ -84,50 +85,40 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
             gridGap={3}
         >
             <Card>
-                {/* <Flex
+                <Flex
+                    id="outputs"
                     flexDir='column'
-                    gridGap={3}
-                    py={2}
-                > */}
-                    <Flex
-                        id="outputs"
-                        flexDir='column'
-                        alignItems='center'
-                        gridGap={1}
-                        p={2}
-                    >
-                        <FormLabel>
-                            Tokens Received
-                        </FormLabel>
-                        <TokenResult
-                            tokenType="BaseToken"
-                            trancheAddress={userData.trancheAddress}
-                            token={{
-                                name: baseToken.name,
-                                amount: baseTokenAmount
-                            }}
-                        />
-                        <TokenResult
-                            tokenType="YToken"
-                            trancheAddress={userData.trancheAddress}
-                            token={{
-                                name: yieldToken.name,
-                                amount: yieldTokenAmount
-                            }}
-                            baseTokenName={baseToken.name}
-                        />
-                    </Flex>
-                    <Divider
-                        borderColor="background.100"
-                        orientation="horizontal"
-                        borderWidth="thin"
+                    alignItems='center'
+                    gridGap={1}
+                    p={2}
+                >
+                    <FormLabel>
+                        Review Your Transaction
+                    </FormLabel>
+                    <TokenResult
+                        tokenType="BaseToken"
+                        trancheAddress={userData.trancheAddress}
+                        token={{
+                            name: baseToken.name,
+                            amount: baseTokenAmount
+                        }}
                     />
-                <ExecutionDetails 
-                    slippageTolerance={slippageTolerance}
-                    estimatedGas={estimatedGas}
-                    percentageReturn={estimatedApy}
-                    minimumReturn={minimumReturn}
-                />
+                    <TokenResult
+                        tokenType="YToken"
+                        trancheAddress={userData.trancheAddress}
+                        token={{
+                            name: yieldToken.name,
+                            amount: yieldTokenAmount
+                        }}
+                        baseTokenName={baseToken.name}
+                    />
+                    <ExecutionDetails 
+                        slippageTolerance={slippageTolerance}
+                        estimatedGas={estimatedGas}
+                        percentageReturn={estimatedApy}
+                        minimumReturn={minimumReturn}
+                    />
+                </Flex>
             </Card>
             <Button
                 id="approve-calculate-button"
@@ -141,7 +132,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 textColor="text.secondary"
                 onClick={handleExecuteTransaction}
             >
-                {isLoading ? <Spinner/> : "APE"}
+                {isLoading ? <Spinner/> : "CONFIRM TRANSACTION"}
             </Button>
         </Flex>
     )
@@ -158,12 +149,7 @@ interface ExecutionDetailsProps {
 const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
     const {slippageTolerance, minimumReturn, estimatedGas, percentageReturn} = props;
 
-    return <Flex
-        p={2}
-        px={5}
-        flexDir="column"
-        width="full"
-    >
+    return <DetailPane>
         <DetailItem
             name="Slippage Tolerance:"
             value={`${slippageTolerance}%`}
@@ -180,5 +166,5 @@ const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
             name="Percentage Return"
             value={percentageReturn ? `${shortenNumber(percentageReturn)}%` : "?"}
         />
-    </Flex>
+    </DetailPane>
 }

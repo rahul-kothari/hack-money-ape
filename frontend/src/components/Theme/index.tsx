@@ -26,6 +26,8 @@ export default extendTheme({
       secondary: "#2D3748"
     },
     background: "#0c216e",
-    card: "#CDC6C3"
+    card: "#CDC6C3",
+    dark_card: "#8f8a88",
+    light_card: "#dfdad8"
   },
 })

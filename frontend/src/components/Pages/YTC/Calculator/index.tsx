@@ -332,22 +332,10 @@ const Form: React.FC<FormProps> = (props) => {
                         }
                     </Select>
                 </Flex>
-                <Divider
-                    borderColor="background.100"
-                    orientation="horizontal"
-                    borderWidth="thin"
-                />
-                <Flex
-                    p={2}
-                    px={5}
-                    flexDir="column"
-                    width="full"
-                >
-                    { formik.values.trancheAddress && formik.values.tokenAddress && <TrancheDetails
-                        trancheAddress={formik.values.trancheAddress}
-                        tokenAddress={formik.values.tokenAddress}
-                    />} 
-                </Flex>
+                { formik.values.trancheAddress && formik.values.tokenAddress && <TrancheDetails
+                    trancheAddress={formik.values.trancheAddress}
+                    tokenAddress={formik.values.tokenAddress}
+                />} 
             </Flex>
         </Card>
         <Card mt={5}>

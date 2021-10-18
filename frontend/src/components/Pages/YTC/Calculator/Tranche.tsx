@@ -10,6 +10,8 @@ import { DetailItem } from "../../../Reusable/DetailItem";
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { getVariableAPY } from '../../../../features/prices/yearn';
+import { Flex } from "@chakra-ui/react";
+import { DetailPane } from "../../../Reusable/DetailPane";
 
 
 interface TrancheDetailsProps {
@@ -88,7 +90,7 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
 
     const {variable, fixed, daysRemaining} = props;
 
-    return <>
+    return <DetailPane>
         <DetailItem
             name= "Fixed Rate:"
             value={`${fixed ? shortenNumber(fixed * 100) : "?"}%`}
@@ -101,5 +103,5 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
             name= "Days Remaining:"
             value={daysRemaining ? shortenNumber(daysRemaining) : "?"}
         />
-    </>
+    </DetailPane>
 }
