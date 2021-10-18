@@ -8,7 +8,7 @@ interface DetailItemProps {
 export const DetailItem: React.FC<DetailItemProps> = (props) => {
     const {name, value} = props;
 
-    return <div className="flex flex-row justify-between">
+    return <div className="flex flex-row justify-between gap-4">
         <Text>{name}</Text>
         <Text>{value}</Text>
     </div>
