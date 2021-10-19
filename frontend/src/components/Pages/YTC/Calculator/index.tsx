@@ -1,4 +1,5 @@
 import { Box, Button, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Text, Tooltip } from "@chakra-ui/react";
+import { Spinner } from "../../../Reusable/Spinner";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -397,7 +398,7 @@ const Form: React.FC<FormProps> = (props) => {
                         <Box
                             id="balance"
                         >
-                            Balance: {balance ? balance : "?"}
+                            Balance: {balance ? balance : <Spinner/>}
                         </Box>
                     </Flex>
                 </Flex>

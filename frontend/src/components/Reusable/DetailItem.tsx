@@ -2,7 +2,7 @@ import { Text } from '@chakra-ui/layout';
 
 interface DetailItemProps {
     name: string,
-    value: string,
+    value: string | React.ReactElement,
 }
 
 export const DetailItem: React.FC<DetailItemProps> = (props) => {
