@@ -77,6 +77,36 @@ export const simulateYTCForCompoundRange = async (userData: YTCInput, constants:
     return await Promise.all(promises)
 }
 
+// Takes the current discount price of a pt and the desired percentage exposure to Y tokens
+// This returns the number of compounds required to get that exposure
+// If the number of compounds is between 0-2, it will return 2, and if it is larger than 29 it will return 29
+// This is because the simulator can only support simulations between 1-30, and the simulator will execute additional ytcs for the nearest whole numbers
+// Ex. if the compounds returned is 5, the 4,5 and 6 compounds will be simulated
+export const getCompoundsFromTargetExposure = (fixedRate: number, targetExposure: number, daysRemaining: number): number => {
+
+    console.log({
+        fixedRate,
+        targetExposure,
+        daysRemaining
+    })
+
+    const yearsRemaining = daysRemaining/365;
+    const spotPrice = 1 - (fixedRate * yearsRemaining);
+
+    const bottomLog = Math.log(spotPrice);
+    const topLog = Math.log(1-(targetExposure/100))
+    const estimatedCompounds = Math.floor(topLog/bottomLog);
+
+
+    if (estimatedCompounds <= 29 && estimatedCompounds >= 2){
+        return estimatedCompounds;
+    } else if (estimatedCompounds < 2) {
+        return 2;
+    } else {
+        return 29;
+    }
+}
+
 //eslint-disable-next-line
 const gasLimitToEthGasFee = async (signer: ethers.Signer, gasAmountEstimate: ethers.BigNumber): Promise<number> => {
     const {maxFeePerGas, maxPriorityFeePerGas} = await signer.getFeeData();
