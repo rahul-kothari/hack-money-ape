@@ -10,7 +10,8 @@ import { DetailItem } from "../../../Reusable/DetailItem";
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { getVariableAPY } from '../../../../features/prices/yearn';
-import { Flex } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
+import { Spinner } from "../../../Reusable/Spinner";
 import { DetailPane } from "../../../Reusable/DetailPane";
 
 
@@ -93,15 +94,33 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
     return <DetailPane>
         <DetailItem
             name= "Fixed Rate:"
-            value={`${fixed ? shortenNumber(fixed * 100) : "?"}%`}
+            value={ 
+                fixed ? 
+                    `${shortenNumber(fixed * 100)}%`: 
+                    <>
+                        <Spinner/>%
+                    </>
+            }
         />
         <DetailItem
             name= "Variable Rate:"
-            value={`${variable ? shortenNumber(variable * 100) : "?"}%`}
+            value={
+                variable ? 
+                    `${shortenNumber(variable * 100)}%`: 
+                    <>
+                        <Spinner/>%
+                    </>
+            }
         />
         <DetailItem
             name= "Days Remaining:"
-            value={daysRemaining ? shortenNumber(daysRemaining) : "?"}
+            value={
+                daysRemaining ? 
+                    shortenNumber(daysRemaining) : 
+                    <>
+                        <Spinner/>
+                    </>
+            }
         />
     </DetailPane>
 }
