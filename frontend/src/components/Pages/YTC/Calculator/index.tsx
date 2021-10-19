@@ -191,6 +191,7 @@ const Form: React.FC<FormProps> = (props) => {
         () => {
             if (tokenAddress){
                 const tokenContract = erc20.factory?.attach(tokenAddress);
+                setBalance(undefined);
                 getBalance(currentAddress, tokenContract).then((res) => {
                     setBalance(res);
                 })
@@ -396,7 +397,7 @@ const Form: React.FC<FormProps> = (props) => {
                         <Box
                             id="balance"
                         >
-                            Balance: {balance}                        
+                            Balance: {balance ? balance : "?"}
                         </Box>
                     </Flex>
                 </Flex>
