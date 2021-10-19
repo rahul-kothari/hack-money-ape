@@ -1,5 +1,5 @@
-import { Box, Button, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Text } from "@chakra-ui/react";
 import { Spinner } from "../../../Reusable/Spinner";
+import { Box, Button, ButtonGroup, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -14,12 +14,13 @@ import * as Yup from 'yup';
 import { notificationAtom } from "../../../../recoil/notifications/atom";
 import { BaseTokenPriceTag } from "../../../Prices";
 import Card from "../../../Reusable/Card";
-import { simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYTC";
+import { getCompoundsFromTargetExposure, simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYTC";
 import { getVariableAPY } from '../../../../features/prices/yearn';
 import { ApproveAndSimulateButton } from "./ApproveAndSimulateButton";
 import { TrancheDetails } from "./Tranche";
 import { TokenIcon } from "../../../Tokens/TokenIcon";
 import { InfoTooltip } from "../../../Reusable/Tooltip";
+import { trancheSelector } from "../../../../recoil/trancheRates/atom";
 
 interface CalculateProps {
     tokens: Token[];
@@ -29,7 +30,8 @@ export interface FormFields {
     tokenAddress: string | undefined,
     trancheAddress: string | undefined,
     amount: number | undefined,
-    compounds: number | undefined
+    compounds: number,
+    percentExposure: number,
 }
 
 export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
@@ -64,7 +66,16 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
             }
 
             setIsSimulating(true);
-            simulateYTCForCompoundRange(userData, elementAddresses, [1, 8], signer).then(
+
+            let compoundRange: [number, number] = [1, 8];
+            if (values.compounds > 0){
+                compoundRange = [values.compounds-1, values.compounds+1];
+            }
+            if (values.compounds === 1){
+                compoundRange = [1, 3];
+            }
+            
+            simulateYTCForCompoundRange(userData, elementAddresses, compoundRange, signer).then(
                 (results) => {
                     setSimulationResults(() => {
                         return results;
@@ -91,7 +102,8 @@ export const Calculator: React.FC<CalculateProps> = (props: CalculateProps) => {
         tokenAddress: undefined,
         trancheAddress: undefined,
         amount: 0,
-        compounds: 1
+        compounds: 0,
+        percentExposure: 0,
     }
 
     return (
@@ -452,6 +464,7 @@ const Form: React.FC<FormProps> = (props) => {
                     />
                 </Flex>
             </Flex>
+            <AdvancedForm/>
         </Card>
         <ApproveAndSimulateButton
             formErrors={formik.errors}
@@ -469,4 +482,95 @@ const Form: React.FC<FormProps> = (props) => {
             }}
         />
     </form>
+}
+
+
+const AdvancedForm = () => {
+    return <Flex flexDir="column" alignItems="center">
+        <Tabs>
+            <TabList>
+                <Tab>Number of Compounds</Tab>
+                <Tab>Percentage Exposure</Tab>
+            </TabList>
+
+            <TabPanels>
+                <TabPanel>
+                    <NumberCompoundsField/>
+                </TabPanel>
+                <TabPanel>
+                    <PercentageExposureField/>
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
+    </Flex>
+}
+
+const PercentageExposureField = () => {
+    const formik = useFormikContext<FormFields>();
+
+    const trancheRate = useRecoilValue(trancheSelector(formik.values.trancheAddress || "null"));
+    const fixedRate: number | undefined = trancheRate.fixed;
+    const daysRemaining: number | undefined = trancheRate.daysRemaining;
+
+    // Set the number of compounds based on the desired target exposure
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        formik.handleChange(e);
+        console.log(fixedRate);
+        if (fixedRate && daysRemaining){
+            const estimatedCompounds = getCompoundsFromTargetExposure(fixedRate, parseFloat(e.target.value), daysRemaining);
+            console.log(estimatedCompounds);
+            formik.setFieldValue("compounds", estimatedCompounds)
+        }
+    }
+
+    return <InputGroup
+        bgColor="text.primary"
+        rounded="2xl"
+    >
+        <Input
+            type="number"
+            name="percentExposure"
+            onBlur={formik.handleBlur}
+            value={formik.values.percentExposure}
+            // variant="filled"
+            placeholder={"0"}
+            onChange={handleChange}
+            id="amount-input"/>
+        <InputRightAddon
+            bgColor="text.primary"
+        >
+            <Text
+                id="amount-token-label"
+                fontSize="2xl"
+                whiteSpace="nowrap"
+                color="gray.500"
+            >
+                %
+            </Text>
+        </InputRightAddon>
+    </InputGroup>
+}
+
+const NumberCompoundsField = () => {
+    const formik = useFormikContext<FormFields>();
+
+    return <InputGroup
+            bgColor="text.primary"
+            rounded="2xl"
+        >
+            <Input
+                type="number"
+                name="compounds"
+                onBlur={formik.handleBlur}
+                value={formik.values.compounds}
+                // variant="filled"
+                placeholder={"0"}
+                onChange={formik.handleChange}
+                id="amount-input"/>
+                <InputRightAddon
+                    bgColor="text.primary"
+                >
+                    Compounds
+                </InputRightAddon>
+        </InputGroup>
 }
