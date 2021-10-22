@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { trancheSelector } from "../../../../../recoil/trancheRates/atom";
 import { getCompoundsFromTargetExposure } from "../../../../../features/ytc/simulateYTC";
 import { FormFields } from "..";
+import { InfoTooltip } from "../../../../Reusable/Tooltip";
 
 export const AdvancedCollapsable: React.FC = () => {
     const [show, setShow] = useState<boolean>(false);
@@ -12,8 +13,9 @@ export const AdvancedCollapsable: React.FC = () => {
     const handleToggle = () => setShow(!show);
 
     return <Flex flexDir="column" alignItems="center">
-        <Button variant="link" onClick={handleToggle}>
+        <Button variant="link" onClick={handleToggle} gridGap={2}>
             Advanced Options
+            <InfoTooltip label="The simulator will by default run with 1-8 compounds. Advanced options allow you to change this by selecting either the number of compounds you want to simulate, or the percentage of your collateral you want to spend."/>
         </Button>
         <Collapse in={show}>
             <AdvancedForm/>
