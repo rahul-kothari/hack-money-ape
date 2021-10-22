@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import { useRecoilValue } from 'recoil';
 import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
-import { Table, Th, Thead, Flex, Tr, Tbody, FormLabel, Tooltip } from '@chakra-ui/react';
+import { Table, Th, Thead, Flex, Tr, Tbody, FormLabel, Text } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 import Card from '../../../Reusable/Card';
 import { ResultsTableRow } from './ResultsTableRow';
-import { InfoOutlineIcon } from '@chakra-ui/icons';
+import { InfoTooltip } from '../../../Reusable/Tooltip';
 
 interface TableProps {
     onSelect: (index: number | undefined) => void;
@@ -50,9 +50,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                         gridGap={2}
                     >
                         Number of Compounds
-                        <Tooltip label="Select the number of iterations you would like to execute. The more compounds the larger the yield token position.">
-                            <InfoOutlineIcon/>
-                        </Tooltip>
+                        <InfoTooltip label="Select the number of iterations you would like to execute. The more compounds the larger the yield token position."/>
                     </Flex>
                 </FormLabel>
                 <Table
@@ -65,13 +63,28 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                             <Th isNumeric>
                             </Th>
                             <Th isNumeric>
-                                Yield Tokens
+                                <Flex alignItems="center" gridGap={1}>
+                                    <Text>
+                                        Yield Tokens
+                                    </Text>
+                                    <InfoTooltip label="The number of yTokens that you would receive"/>
+                                </Flex>
                             </Th>
                             <Th isNumeric>
-                                Tokens Spent
+                                <Flex alignItems="center" gridGap={1}>
+                                    <Text>
+                                        Tokens Spent
+                                    </Text>
+                                    <InfoTooltip label="The number of base tokens that you would get back"/>
+                                </Flex>
                             </Th>
                             <Th isNumeric>
-                                Net Gain
+                                <Flex alignItems="center" gridGap={1}>
+                                    <Text>
+                                        Expected Gain
+                                    </Text>
+                                    <InfoTooltip label="This is the expected return by the end of the tranche term including gas costs.  This assumes that the current variable yield is the average variable yield over the course of the terms."/>
+                                </Flex>
                             </Th>
                         </Tr>
                     </Thead>
