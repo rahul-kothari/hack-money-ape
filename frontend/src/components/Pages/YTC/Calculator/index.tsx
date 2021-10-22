@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Text } from "@chakra-ui/react";
 import { Spinner } from "../../../Reusable/Spinner";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -19,7 +19,7 @@ import { getVariableAPY } from '../../../../features/prices/yearn';
 import { ApproveAndSimulateButton } from "./ApproveAndSimulateButton";
 import { TrancheDetails } from "./Tranche";
 import { TokenIcon } from "../../../Tokens/TokenIcon";
-import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { InfoTooltip } from "../../../Reusable/Tooltip";
 
 interface CalculateProps {
     tokens: Token[];
@@ -284,9 +284,7 @@ const Form: React.FC<FormProps> = (props) => {
                         gridGap={2}
                     >
                         Tranche
-                        <Tooltip label="Select an active Element Finance Tranche">
-                            <InfoOutlineIcon/>
-                        </Tooltip>
+                        <InfoTooltip label="Select an active Element Finance Tranche"/>
                     </Flex>
                 </FormLabel>
                 <Flex
@@ -360,9 +358,7 @@ const Form: React.FC<FormProps> = (props) => {
                         gridGap={2}
                     >
                         Collateral Amount
-                        <Tooltip label="Yield Token Compounding requires collateral of the base token during the ytc transaction. Only a portion of these tokens will be spent, and the rest will be returned to you when the transaction is complete.">
-                            <InfoOutlineIcon/>
-                        </Tooltip>
+                        <InfoTooltip label="Yield Token Compounding requires collateral of the base token during the ytc transaction. Only a portion of these tokens will be spent, and the rest will be returned to you when the transaction is complete."/>
                     </Flex>
                 </FormLabel>
                 <Flex
