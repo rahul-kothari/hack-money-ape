@@ -1,5 +1,5 @@
 import { Spinner } from "../../../Reusable/Spinner";
-import { Box, Button, ButtonGroup, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Collapse, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -464,7 +464,7 @@ const Form: React.FC<FormProps> = (props) => {
                     />
                 </Flex>
             </Flex>
-            <AdvancedForm/>
+            <AdvancedCollapsable/>
         </Card>
         <ApproveAndSimulateButton
             formErrors={formik.errors}
@@ -482,6 +482,22 @@ const Form: React.FC<FormProps> = (props) => {
             }}
         />
     </form>
+}
+
+const AdvancedCollapsable: React.FC = () => {
+    const [show, setShow] = useState<boolean>(false);
+
+    const handleToggle = () => setShow(!show);
+
+    return <Flex flexDir="column" alignItems="center">
+        <Button variant="link" onClick={handleToggle}>
+            Advanced Options
+        </Button>
+        <Collapse in={show}>
+            <AdvancedForm/>
+        </Collapse>
+    </Flex>
+
 }
 
 
