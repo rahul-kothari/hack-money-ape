@@ -1,5 +1,5 @@
 import { Spinner } from "../../../Reusable/Spinner";
-import { Box, Button, ButtonGroup, Collapse, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, FormLabel, Input, InputGroup, InputRightAddon, Select, Text} from "@chakra-ui/react";
 import { Formik, FormikHelpers, useFormikContext } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -14,13 +14,13 @@ import * as Yup from 'yup';
 import { notificationAtom } from "../../../../recoil/notifications/atom";
 import { BaseTokenPriceTag } from "../../../Prices";
 import Card from "../../../Reusable/Card";
-import { getCompoundsFromTargetExposure, simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYTC";
+import { simulateYTCForCompoundRange } from "../../../../features/ytc/simulateYTC";
 import { getVariableAPY } from '../../../../features/prices/yearn';
 import { ApproveAndSimulateButton } from "./ApproveAndSimulateButton";
 import { TrancheDetails } from "./Tranche";
 import { TokenIcon } from "../../../Tokens/TokenIcon";
 import { InfoTooltip } from "../../../Reusable/Tooltip";
-import { trancheSelector } from "../../../../recoil/trancheRates/atom";
+import { AdvancedCollapsable } from "./Advanced";
 
 interface CalculateProps {
     tokens: Token[];
@@ -482,111 +482,4 @@ const Form: React.FC<FormProps> = (props) => {
             }}
         />
     </form>
-}
-
-const AdvancedCollapsable: React.FC = () => {
-    const [show, setShow] = useState<boolean>(false);
-
-    const handleToggle = () => setShow(!show);
-
-    return <Flex flexDir="column" alignItems="center">
-        <Button variant="link" onClick={handleToggle}>
-            Advanced Options
-        </Button>
-        <Collapse in={show}>
-            <AdvancedForm/>
-        </Collapse>
-    </Flex>
-
-}
-
-
-const AdvancedForm = () => {
-    return <Flex flexDir="column" alignItems="center">
-        <Tabs>
-            <TabList>
-                <Tab>Number of Compounds</Tab>
-                <Tab>Percentage Exposure</Tab>
-            </TabList>
-
-            <TabPanels>
-                <TabPanel>
-                    <NumberCompoundsField/>
-                </TabPanel>
-                <TabPanel>
-                    <PercentageExposureField/>
-                </TabPanel>
-            </TabPanels>
-        </Tabs>
-    </Flex>
-}
-
-const PercentageExposureField = () => {
-    const formik = useFormikContext<FormFields>();
-
-    const trancheRate = useRecoilValue(trancheSelector(formik.values.trancheAddress || "null"));
-    const fixedRate: number | undefined = trancheRate.fixed;
-    const daysRemaining: number | undefined = trancheRate.daysRemaining;
-
-    // Set the number of compounds based on the desired target exposure
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        formik.handleChange(e);
-        console.log(fixedRate);
-        if (fixedRate && daysRemaining){
-            const estimatedCompounds = getCompoundsFromTargetExposure(fixedRate, parseFloat(e.target.value), daysRemaining);
-            console.log(estimatedCompounds);
-            formik.setFieldValue("compounds", estimatedCompounds)
-        }
-    }
-
-    return <InputGroup
-        bgColor="text.primary"
-        rounded="2xl"
-    >
-        <Input
-            type="number"
-            name="percentExposure"
-            onBlur={formik.handleBlur}
-            value={formik.values.percentExposure}
-            // variant="filled"
-            placeholder={"0"}
-            onChange={handleChange}
-            id="amount-input"/>
-        <InputRightAddon
-            bgColor="text.primary"
-        >
-            <Text
-                id="amount-token-label"
-                fontSize="2xl"
-                whiteSpace="nowrap"
-                color="gray.500"
-            >
-                %
-            </Text>
-        </InputRightAddon>
-    </InputGroup>
-}
-
-const NumberCompoundsField = () => {
-    const formik = useFormikContext<FormFields>();
-
-    return <InputGroup
-            bgColor="text.primary"
-            rounded="2xl"
-        >
-            <Input
-                type="number"
-                name="compounds"
-                onBlur={formik.handleBlur}
-                value={formik.values.compounds}
-                // variant="filled"
-                placeholder={"0"}
-                onChange={formik.handleChange}
-                id="amount-input"/>
-                <InputRightAddon
-                    bgColor="text.primary"
-                >
-                    Compounds
-                </InputRightAddon>
-        </InputGroup>
 }
