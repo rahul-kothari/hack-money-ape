@@ -1,4 +1,4 @@
-import { Button, Spinner, Flex, Divider, FormLabel } from "@chakra-ui/react";
+import { Button, Spinner, Flex, FormLabel } from "@chakra-ui/react";
 import { YTCInput } from "../../../../features/ytc/ytcHelpers";
 import { executeYieldTokenCompounding } from "../../../../features/ytc/executeYieldTokenCompounding";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
