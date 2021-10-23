@@ -55,10 +55,8 @@ const PercentageExposureField = () => {
     // Set the number of compounds based on the desired target exposure
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         formik.handleChange(e);
-        console.log(fixedRate);
         if (fixedRate && daysRemaining){
             const estimatedCompounds = getCompoundsFromTargetExposure(fixedRate, parseFloat(e.target.value), daysRemaining);
-            console.log(estimatedCompounds);
             formik.setFieldValue("compounds", estimatedCompounds)
         }
     }
@@ -103,7 +101,6 @@ const NumberCompoundsField = () => {
                 name="compounds"
                 onBlur={formik.handleBlur}
                 value={formik.values.compounds}
-                // variant="filled"
                 placeholder={"0"}
                 onChange={formik.handleChange}
                 id="amount-input"/>

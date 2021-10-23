@@ -84,19 +84,12 @@ export const simulateYTCForCompoundRange = async (userData: YTCInput, constants:
 // Ex. if the compounds returned is 5, the 4,5 and 6 compounds will be simulated
 export const getCompoundsFromTargetExposure = (fixedRate: number, targetExposure: number, daysRemaining: number): number => {
 
-    console.log({
-        fixedRate,
-        targetExposure,
-        daysRemaining
-    })
-
     const yearsRemaining = daysRemaining/365;
     const spotPrice = 1 - (fixedRate * yearsRemaining);
 
     const bottomLog = Math.log(spotPrice);
     const topLog = Math.log(1-(targetExposure/100))
     const estimatedCompounds = Math.floor(topLog/bottomLog);
-
 
     if (estimatedCompounds <= 29 && estimatedCompounds >= 2){
         return estimatedCompounds;
