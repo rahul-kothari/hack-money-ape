@@ -9,14 +9,15 @@ interface ApproveAndSimulateButtonProps {
     tokenAddress: string | undefined;
     tokenName: string | undefined;
     trancheAddress: string | undefined;
-    formErrors: {[fieldName: string]: string | undefined}
+    formErrors: {[fieldName: string]: string | undefined};
+    amount: number | undefined;
 }
 
 
 export const ApproveAndSimulateButton: React.FC<ApproveAndSimulateButtonProps & ButtonProps> = (props) => {
     const ytc = useContext(YieldTokenCompoundingContext);
 
-    const { tokenAddress, tokenName, trancheAddress, formErrors, ...rest} = props;
+    const { tokenAddress, tokenName, trancheAddress, formErrors, amount, ...rest} = props;
 
     return <BalancerApproval
         trancheAddress={trancheAddress}
@@ -26,6 +27,7 @@ export const ApproveAndSimulateButton: React.FC<ApproveAndSimulateButtonProps & 
             tokenAddress={tokenAddress}
             tokenName={tokenName}
             approvalAddress={ytc.instance?.address}
+            amount={amount}
             {...rest}
         >
             <SimulateButton 

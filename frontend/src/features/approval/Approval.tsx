@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useContext, useEffect, useState } fro
 import { Button, ButtonProps, Spinner } from '@chakra-ui/react'
 import { checkApproval, sendApproval } from './approvalAPI';
 import { ProviderContext, ERC20Context, CurrentAddressContext, YieldTokenCompoundingContext, SymfoniContext } from '../../hardhat/SymfoniContext';
-import { BigNumber, ContractReceipt, providers } from 'ethers';
+import { BigNumber, ContractReceipt, utils, providers } from 'ethers';
 import { notificationAtom } from '../../recoil/notifications/atom';
 import { useRecoilState } from 'recoil';
 
@@ -106,8 +106,10 @@ export const ERC20Approval: React.FC<ERC20ApprovalProps> = (props) => {
         async () => {
             if (tokenAddress && approvalAddress && provider){
                 const tokenContract = erc20.factory?.attach(tokenAddress);
-                if (tokenContract){
-                    checkApproval(amount, approvalAddress, currentAddress, tokenContract).then((result) => {
+                if (tokenContract && amount){
+                    const decimals = await tokenContract.decimals();
+                    const absoluteAmount = utils.parseUnits(amount.toString(), decimals)
+                    checkApproval(absoluteAmount.toString(), approvalAddress, currentAddress, tokenContract).then((result) => {
                         if (result) {
                             setIsApproved(true)
                          } else {
@@ -129,8 +131,10 @@ export const ERC20Approval: React.FC<ERC20ApprovalProps> = (props) => {
 
                 // send the approval request
                 const tokenContract = erc20.factory?.attach(tokenAddress);
-                if (tokenContract){
-                    const receipt = await sendApproval(amount, approvalAddress, tokenContract)
+                if (tokenContract && amount){
+                    const decimals = await tokenContract.decimals();
+                    const absoluteAmount = utils.parseUnits(amount.toString(), decimals)
+                    const receipt = await sendApproval(absoluteAmount.toString(), approvalAddress, tokenContract)
                     handleCheckApproval();
                     return receipt;
                 } 
@@ -147,7 +151,7 @@ export const ERC20Approval: React.FC<ERC20ApprovalProps> = (props) => {
         setIsLoading={setIsLoading}
         handleApprove={handleApprove}
         handleCheckApproval={handleCheckApproval}
-        approveText={`Approve ${tokenName?.toUpperCase()}`}
+        approveText={`Approve ${amount} ${tokenName?.toUpperCase()}`}
         provider = {provider}
         {...rest}
     >
