@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react'
-import { useRecoilValue } from 'recoil';
-import { simulationResultsAtom } from '../../../../recoil/simulationResults/atom'
-import { Table, Th, Thead, Flex, Tr, Tbody, FormLabel, Text } from '@chakra-ui/react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { calculatorGainSelector } from '../../../../recoil/simulationResults/atom'
+import { Table, Th, Thead, Flex, Tr, Tbody, FormLabel, Text, Input, InputGroup, InputRightAddon } from '@chakra-ui/react';
 import { YTCOutput } from '../../../../features/ytc/ytcHelpers';
 import Card from '../../../Reusable/Card';
 import { ResultsTableRow } from './ResultsTableRow';
 import { InfoTooltip } from '../../../Reusable/Tooltip';
+import { predictedRateAtom } from '../../../../recoil/predictedRate/atom';
+import { trancheSelector } from '../../../../recoil/trancheRates/atom';
 
 interface TableProps {
     onSelect: (index: number | undefined) => void;
@@ -16,9 +18,27 @@ const ResultsTable: React.FC<TableProps> = (props) => {
 
     const {onSelect, selected} = props;
 
-    const simulationResults = useRecoilValue(simulationResultsAtom);
+    const [predictedRate, setPredictedRate] = useRecoilState(predictedRateAtom);
+    const simulationResults = useRecoilValue(calculatorGainSelector);
+
+    // Multiply by 100 to display as percent rather than a decimal
+    const predictedRatePercentage = predictedRate*100;
+
+    const trancheAddress = simulationResults[0]?.inputs.trancheAddress;
+    const trancheRate = useRecoilValue(trancheSelector(trancheAddress));
 
     const tableRef = useRef<HTMLTableElement>(null);
+
+    const handlePredictedRateChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setPredictedRate(parseFloat(e.target.value)/100 || 0);
+    }
+
+    // Set the predicted rate to equal the tranche variable rate on load
+    useEffect(() => {
+        if (trancheRate.variable){
+            setPredictedRate(trancheRate.variable)
+        }
+    }, [setPredictedRate, trancheRate.variable])
 
     useEffect(() => {
         if (tableRef.current){
@@ -36,7 +56,48 @@ const ResultsTable: React.FC<TableProps> = (props) => {
         <Flex
             id="results-table"
             py={5}
+            flexDir="column"
+            gridGap={5}
         >
+            <Card>
+                    <FormLabel
+                        flexDir="row"
+                        justify="center"
+                        alignItems="center"
+                        alignSelf="center"
+                    >
+                        <Flex
+                            flexDir="row"
+                            alignItems="center"
+                            gridGap={2}
+                        >
+                            Estimated Variable Rate
+                            <InfoTooltip label="This has no effect on your transaction. Input the average APY that you expect from the vault over the course of the term. This ius used to estimate the expected gain for your position."/>
+                        </Flex>
+                    </FormLabel>
+                    <InputGroup
+                        bgColor="text.primary"
+                        rounded="2xl"
+                    >
+                        <Input
+                            type="number"
+                            value={predictedRatePercentage}
+                            onChange={handlePredictedRateChange}
+                        />
+                        <InputRightAddon
+                            bgColor="text.primary"
+                        >
+                            <Text
+                                id="amount-token-label"
+                                fontSize="2xl"
+                                whiteSpace="nowrap"
+                                color="gray.500"
+                            >
+                                %
+                            </Text>
+                        </InputRightAddon>
+                    </InputGroup>
+            </Card>
             <Card>
                 <FormLabel
                     flexDir="row"
@@ -95,7 +156,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                                         key={result.inputs.numberOfCompounds}
                                         isSelected={index === selected}
                                         onSelect={() => {onSelect(index)}}
-                                        baseTokenName={simulationResults[0].baseTokenName}
+                                        baseTokenName={simulationResults[0].receivedTokens.baseTokens.name}
                                     />
                         })}
                     </Tbody>

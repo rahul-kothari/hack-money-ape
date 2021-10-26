@@ -10,7 +10,6 @@ import { DetailItem } from "../../../Reusable/DetailItem";
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { getVariableAPY } from '../../../../features/prices/yearn';
-import { Text } from "@chakra-ui/react";
 import { Spinner } from "../../../Reusable/Spinner";
 import { DetailPane } from "../../../Reusable/DetailPane";
 

@@ -24,14 +24,18 @@ export interface ApeProps {
     };
     baseTokenAmount: number;
     yieldTokenAmount: number;
-    userData: YTCInput
-    estimatedGas: number;
+    userData: YTCInput;
+    inputAmount: number;
+    gas: {
+        eth: number,
+        baseToken: number,
+    };
     estimatedApy?: number;
 }
 
 export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
-    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData, estimatedGas, estimatedApy} = props;
+    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData, gas, estimatedApy, inputAmount} = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const setSimulationResults = useRecoilState(simulationResultsAtom)[1];
     const elementAddresses = useRecoilValue(elementAddressesAtom);
@@ -40,7 +44,6 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
     const setNotification = useRecoilState(notificationAtom)[1];
 
     const minimumReturn = yieldTokenAmount * (1-(slippageTolerance/100))
-
 
     const executorRef = useRef<HTMLDivElement>(null);
 
@@ -89,32 +92,73 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                     id="outputs"
                     flexDir='column'
                     alignItems='center'
-                    gridGap={1}
+                    gridGap={3}
                     p={2}
                 >
-                    <FormLabel>
-                        Review Your Transaction
+                    <FormLabel
+                        flexDir="row"
+                        justify="center"
+                        alignItems="center"
+                        alignSelf="center"
+                    >
+                        <Flex
+                            flexDir="row"
+                            alignItems="center"
+                            gridGap={2}
+                        >
+                            Review Your Transaction
+                            {/* <InfoTooltip label="This has no effect on your transaction. Input the average APY that you expect from the vault over the course of the term. This ius used to estimate the expected gain for your position."/> */}
+                        </Flex>
                     </FormLabel>
-                    <TokenResult
-                        tokenType="BaseToken"
-                        trancheAddress={userData.trancheAddress}
-                        token={{
-                            name: baseToken.name,
-                            amount: baseTokenAmount
-                        }}
-                    />
-                    <TokenResult
-                        tokenType="YToken"
-                        trancheAddress={userData.trancheAddress}
-                        token={{
-                            name: yieldToken.name,
-                            amount: yieldTokenAmount
-                        }}
-                        baseTokenName={baseToken.name}
-                    />
+                    <Flex
+                        flexDir="column"
+                        w="full"
+                    >
+                        <FormLabel>
+                            Input
+                        </FormLabel>
+                        <TokenResult
+                            tokenType="BaseToken"
+                            trancheAddress={userData.trancheAddress}
+                            token={{
+                                name: baseToken.name,
+                                amount: inputAmount
+                            }}
+                        />
+                    </Flex>
+                    <Flex
+                        flexDir="column"
+                        w="full"
+                    >
+                        <FormLabel>
+                            Output
+                        </FormLabel>
+                        <Flex
+                            flexDir="column"
+                            gridGap={1}
+                        >
+                            <TokenResult
+                                tokenType="BaseToken"
+                                trancheAddress={userData.trancheAddress}
+                                token={{
+                                    name: baseToken.name,
+                                    amount: baseTokenAmount
+                                }}
+                            />
+                            <TokenResult
+                                tokenType="YToken"
+                                trancheAddress={userData.trancheAddress}
+                                token={{
+                                    name: yieldToken.name,
+                                    amount: yieldTokenAmount
+                                }}
+                                baseTokenName={baseToken.name}
+                            />
+                        </Flex>
+                    </Flex>
                     <ExecutionDetails 
                         slippageTolerance={slippageTolerance}
-                        estimatedGas={estimatedGas}
+                        estimatedGas={gas.eth}
                         percentageReturn={estimatedApy}
                         minimumReturn={minimumReturn}
                     />

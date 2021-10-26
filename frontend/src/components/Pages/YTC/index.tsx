@@ -31,16 +31,16 @@ export const YTC: React.FC<YTCProps> = (props) => {
     const processSimulationResult = (result: YTCOutput): ApeProps => {
         return {
             baseToken: {
-                name: result.baseTokenName,
+                name: result.receivedTokens.baseTokens.name,
             },
             yieldToken: {
-                name: result.ytName,
+                name: result.receivedTokens.yt.name,
             },
-            baseTokenAmount: result.remainingTokens,
-            yieldTokenAmount: result.ytExposure,
+            inputAmount: parseFloat(result.inputs.amountCollateralDeposited.toString()),
+            baseTokenAmount: result.receivedTokens.baseTokens.amount,
+            yieldTokenAmount: result.receivedTokens.yt.amount,
             userData: result.inputs,
-            estimatedGas: result.ethGasFees,
-            estimatedApy: result.gain?.finalApy
+            gas: result.gas,
         }
     }
 

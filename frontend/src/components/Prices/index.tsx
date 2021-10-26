@@ -15,9 +15,17 @@ const PriceTag: React.FC<PriceFeedProps> = (props) => {
 
     const { price, amount } = props;
 
+    let absValue: number;
     let value: string;
+
     if (price && amount){
-        value = shortenNumber(price * amount);
+        absValue = price * amount;
+        if (absValue >= 0){
+            value = `$${shortenNumber(price * amount)}`;
+        } else {
+            value = `-$${shortenNumber(Math.abs(price * amount))}`;
+        }
+
     } else {
         value = "0"
     }
@@ -25,7 +33,7 @@ const PriceTag: React.FC<PriceFeedProps> = (props) => {
 
     return (
         <>
-            {(parseFloat(value) >= 0) ? `$${value}` : `-$${Math.abs(parseFloat(value))}`}
+            {value}
         </>
     )
 }

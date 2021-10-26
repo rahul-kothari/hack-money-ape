@@ -24,15 +24,34 @@ export interface YTCGain {
 }
 
 export interface YTCOutput {
-    ytExposure: number,
-    remainingTokens: number,
-    ethGasFees: number,
-    baseTokensSpent: number,
-    trancheExpiration: number,
-    baseTokenName: string,
-    ytName: string,
+    receivedTokens: {
+        yt: {
+            name: string,
+            amount: number,
+        }
+        baseTokens: {
+            name: string,
+            amount: number,
+        }
+    },
+    spentTokens: {
+        baseTokens: {
+            name: string,
+            amount: number
+        }
+    },
+    gas: {
+        eth: number,
+        baseToken: number,
+    },
+    tranche: {
+        expiration: number,
+    },
     inputs: YTCInput,
-    gain?: YTCGain,
+    gain?: {
+        finalApy: number,
+        netGain: number
+    }
 }
 
 export interface YTCParameters {
@@ -143,6 +162,9 @@ export const calculateGain = (ytExposure: number, speculatedVariableRate: number
 
     // speculated variable rate is an apy, but we need this as an apr
     const returnPercentage = (1 + speculatedVariableRate)**termRemainingYears - 1;
+
+    console.log({returnPercentage});
+    console.log({estimatedBaseTokensGas})
 
     const netGain = (returnPercentage * ytExposure) - baseTokensSpent - estimatedBaseTokensGas;
     const finalApy = (netGain / baseTokensSpent)*100

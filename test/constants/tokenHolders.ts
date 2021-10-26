@@ -1,6 +1,6 @@
 export const tokenHolders: {amount: number, tokenName: string, largeHolderAddress: string}[] = [
     {
-        amount: 1000,
+        amount: 100000,
         tokenName: 'lusd3crv-f',
         largeHolderAddress: "0x959fdba32f2a3aa6099e5ff9290977d89c20270f",
     },

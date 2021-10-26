@@ -14,6 +14,8 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
 
     const {output, onSelect, isSelected, baseTokenName} = props;
 
+    console.log(output)
+
     return (
         <Tr
             onClick={onSelect}
@@ -27,10 +29,12 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
                 {output.inputs.numberOfCompounds}
             </Td>
             <Td isNumeric>
-                {shortenNumber(output.ytExposure)}
+                {shortenNumber(output.receivedTokens.yt.amount)}
             </Td>
             <Td isNumeric>
-                {shortenNumber(output.baseTokensSpent)}
+                {shortenNumber(output.spentTokens.baseTokens.amount)}
+                <br/>
+                (<BaseTokenPriceTag amount={output.spentTokens.baseTokens.amount} baseTokenName={baseTokenName}/>)
             </Td>
             <Td isNumeric
                 textColor={
