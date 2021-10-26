@@ -469,6 +469,7 @@ const Form: React.FC<FormProps> = (props) => {
             tokenAddress={formik.values.tokenAddress}
             tokenName={getTokenNameByAddress(formik.values.tokenAddress)}
             trancheAddress={formik.values.trancheAddress}
+            amount={formik.values.amount}
             rounded="full"
             bgColor="main.primary"
             color="text.secondary"
