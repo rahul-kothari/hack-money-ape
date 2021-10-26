@@ -2,7 +2,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import _ from "lodash";
 import { GAS_LIMITS } from "../../constants/gasLimits";
 import { ElementAddresses } from "../../types/manual/types";
-import { calculateGain, getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
+import { getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
 
 // Simulates a single yield token compounding execution to determine what the output would be
 // No actual transaction is executed
@@ -26,27 +26,37 @@ export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balan
     // Convert the result to a number
     const [ytExposureAbsolute, baseTokensSpentAbsolute]: BigNumber[] = returnedVals.map((val: any) => ethers.BigNumber.from(val));
 
+
     const remainingTokensAbsolute = BigNumber.from(baseTokenAmountAbsolute).sub(BigNumber.from(baseTokensSpentAbsolute));
 
     const ytExposureNormalized = parseFloat(ethers.utils.formatUnits(ytExposureAbsolute, yieldTokenDecimals))
     const remainingTokensNormalized = parseFloat(ethers.utils.formatUnits(remainingTokensAbsolute, baseTokenDecimals))
     const baseTokensSpentNormalized = parseFloat(ethers.utils.formatUnits(baseTokensSpentAbsolute, baseTokenDecimals))
 
-    let gain = undefined;
-    if (userData.variableApy){
-        gain = calculateGain(ytExposureNormalized, userData.variableApy, trancheExpiration, baseTokensSpentNormalized, gasFeesInBaseToken);
-    }
-
-
     return {
-        ytExposure: ytExposureNormalized,
-        remainingTokens: remainingTokensNormalized,
-        ethGasFees: ethGasFees,
-        baseTokensSpent: baseTokensSpentNormalized,
-        trancheExpiration,
-        baseTokenName,
-        gain,
-        ytName,
+        receivedTokens: {
+            yt: {
+                name: ytName,
+                amount: ytExposureNormalized,
+            },
+            baseTokens: {
+                name: baseTokenName,
+                amount: remainingTokensNormalized
+            }
+        },
+        spentTokens: {
+            baseTokens: {
+                name: baseTokenName,
+                amount: baseTokensSpentNormalized
+            }
+        },
+        gas: {
+            eth: ethGasFees,
+            baseToken: gasFeesInBaseToken,
+        },
+        tranche: {
+            expiration: trancheExpiration,
+        },
         inputs: userData,
     }
 }
