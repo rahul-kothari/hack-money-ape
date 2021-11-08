@@ -17,7 +17,7 @@ export const tokenHolders: {amount: number, tokenName: string, largeHolderAddres
     {
         tokenName: 'usdc',
         largeHolderAddress: "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503",
-        amount: 10001
+        amount: 400_000
     },
     {
         tokenName: 'weth',

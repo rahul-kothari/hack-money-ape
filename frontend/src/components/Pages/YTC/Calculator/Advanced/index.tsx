@@ -6,6 +6,7 @@ import { trancheSelector } from "../../../../../recoil/trancheRates/atom";
 import { getCompoundsFromTargetExposure } from "../../../../../features/ytc/simulateYTC";
 import { FormFields } from "..";
 import { InfoTooltip } from "../../../../Reusable/Tooltip";
+import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 export const AdvancedCollapsable: React.FC = () => {
     const [show, setShow] = useState<boolean>(false);
@@ -14,7 +15,8 @@ export const AdvancedCollapsable: React.FC = () => {
 
     return <Flex flexDir="column" alignItems="center">
         <Button variant="link" onClick={handleToggle} gridGap={2}>
-            Advanced Options
+            {show ? <ChevronDownIcon/> : <ChevronRightIcon/>}
+            {show ? "Hide" : "Show"} Advanced Options
             <InfoTooltip label="The simulator will by default run with 1-8 compounds. Advanced options allow you to change this by selecting either the number of compounds you want to simulate, or the percentage of your collateral you want to spend."/>
         </Button>
         <Collapse in={show}>
@@ -62,7 +64,7 @@ const PercentageExposureField = () => {
     }
 
     return <InputGroup
-        bgColor="text.primary"
+        bgColor="input_bg"
         rounded="2xl"
     >
         <Input
@@ -75,13 +77,13 @@ const PercentageExposureField = () => {
             onChange={handleChange}
             id="amount-input"/>
         <InputRightAddon
-            bgColor="text.primary"
+            bgColor="input_bg"
+                color="text.primary"
         >
             <Text
                 id="amount-token-label"
                 fontSize="2xl"
                 whiteSpace="nowrap"
-                color="gray.500"
             >
                 %
             </Text>
@@ -93,7 +95,7 @@ const NumberCompoundsField = () => {
     const formik = useFormikContext<FormFields>();
 
     return <InputGroup
-            bgColor="text.primary"
+            bgColor="input_bg"
             rounded="2xl"
         >
             <Input
@@ -105,7 +107,8 @@ const NumberCompoundsField = () => {
                 onChange={formik.handleChange}
                 id="amount-input"/>
                 <InputRightAddon
-                    bgColor="text.primary"
+                    bgColor="input_bg"
+                    color="text.primary"
                 >
                     Compounds
                 </InputRightAddon>

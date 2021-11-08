@@ -295,7 +295,7 @@ const Form: React.FC<FormProps> = (props) => {
                         alignItems="center"
                         gridGap={2}
                     >
-                        Tranche
+                        Term
                         <InfoTooltip label="Select an active Element Finance Tranche"/>
                     </Flex>
                 </FormLabel>
@@ -312,7 +312,7 @@ const Form: React.FC<FormProps> = (props) => {
                         name="tokenAddress"
                         rounded="full"
                         variant="filled"
-                        bgColor="text.primary"
+                        bgColor="input_bg"
                         cursor="pointer"
                         value={formik.values.tokenAddress}
                         onChange={handleTokenChange}
@@ -330,7 +330,7 @@ const Form: React.FC<FormProps> = (props) => {
                         rounded="full"
                         cursor="pointer"
                         variant="filled"
-                        bgColor="text.primary"
+                        bgColor="input_bg"
                         value={formik.values.trancheAddress}
                         onChange={formik.handleChange}
                         shadow="lg"
@@ -423,7 +423,7 @@ const Form: React.FC<FormProps> = (props) => {
                     }}
                 >
                     <InputGroup
-                        bgColor="text.primary"
+                        bgColor="input_bg"
                         rounded="2xl"
                     >
                         <Input
@@ -436,13 +436,13 @@ const Form: React.FC<FormProps> = (props) => {
                             onChange={formik.handleChange}
                             id="amount-input"/>
                         <InputRightAddon
-                            bgColor="text.primary"
+                            bgColor="input_bg"
+                            color="text.primary"
                         >
                             <Text
                                 id="amount-token-label"
                                 fontSize="2xl"
                                 whiteSpace="nowrap"
-                                color="gray.500"
                             >
                         {getTokenNameByAddress(formik.values.tokenAddress)?.toUpperCase()}
                     </Text>

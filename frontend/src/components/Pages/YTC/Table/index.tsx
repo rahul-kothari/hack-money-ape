@@ -21,16 +21,13 @@ const ResultsTable: React.FC<TableProps> = (props) => {
     const [predictedRate, setPredictedRate] = useRecoilState(predictedRateAtom);
     const simulationResults = useRecoilValue(calculatorGainSelector);
 
-    // Multiply by 100 to display as percent rather than a decimal
-    const predictedRatePercentage = predictedRate || undefined;
-
     const trancheAddress = simulationResults[0]?.inputs.trancheAddress;
     const trancheRate = useRecoilValue(trancheSelector(trancheAddress));
 
     const tableRef = useRef<HTMLTableElement>(null);
 
     const handlePredictedRateChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        setPredictedRate(parseFloat(e.target.value) || 0);
+        setPredictedRate(parseFloat(e.target.value)/100 || 0);
     }
 
     // Set the predicted rate to equal the tranche variable rate on load
@@ -76,22 +73,22 @@ const ResultsTable: React.FC<TableProps> = (props) => {
                         </Flex>
                     </FormLabel>
                     <InputGroup
-                        bgColor="text.primary"
+                        bgColor="input_bg"
                         rounded="2xl"
                     >
                         <Input
                             type="number"
-                            value={predictedRatePercentage}
+                            value={predictedRate}
                             onChange={handlePredictedRateChange}
                         />
                         <InputRightAddon
-                            bgColor="text.primary"
+                            bgColor="input_bg"
                         >
                             <Text
                                 id="amount-token-label"
                                 fontSize="2xl"
                                 whiteSpace="nowrap"
-                                color="gray.500"
+                                color="text.primary"
                             >
                                 %
                             </Text>
