@@ -26,22 +26,22 @@ export const tokenHolders: {amount: number, tokenName: string, largeHolderAddres
     },
     {
         tokenName: 'crv3crypto',
-        largeHolderAddress: "0x73cae59e9d6e73b43ad32de120b456783f72b7aa",
+        largeHolderAddress: "0xdefd8fdd20e0f34115c7018ccfb655796f6b2168",
         amount: 100
     },
     {
         tokenName: "wbtc",
-        largeHolderAddress: "0xEd344fA1075499DAc4E7eb0b868a1874dCDD36CF",
+        largeHolderAddress: "0xbf72da2bd84c5170618fbe5914b0eca9638d5eb5",
         amount: 1
     },
     {
         tokenName: "alusd3crv-f",
-        largeHolderAddress: "0xd44a4999df99fb92db7cdfe7dea352a28bcedb63",
+        largeHolderAddress: "0xb76256d1091e93976c61449d6e500d9f46d827d4",
         amount: 100_000
     },
     {
         tokenName: "mim-3lp3crv-f",
-        largeHolderAddress: "0x9888e846bcb0a14e0fcb2f66368a69d1d04bd5f0",
+        largeHolderAddress: "0xd8b712d29381748db89c36bca0138d7c75866ddf",
         amount: 200_000
     },
     {

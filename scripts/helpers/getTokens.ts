@@ -22,7 +22,14 @@ export const getTokens = async (largeHolderAddress: string, tokenName: string, a
         params: [largeHolderAddress],
       });
 
+    // get the signer that we require for the token holder
     const largeHolderSigner = await hre.ethers.getSigner(largeHolderAddress)
+
+    // Send some ether to the holder so that they can transfer tokens
+    await hre.network.provider.send("hardhat_setBalance", [
+      largeHolderAddress,
+      "0x1000000000000000",
+    ]);
 
     const erc20Abi = ERC20.abi;
 
@@ -32,7 +39,6 @@ export const getTokens = async (largeHolderAddress: string, tokenName: string, a
 
     const erc20Contract: ERC20Type  = (new hre.ethers.Contract(tokenAddress, erc20Abi, largeHolderSigner) as ERC20Type);
 
-    // Sending 1000 units of the token
     const decimals = await erc20Contract.decimals()
     const amountAbsolute = ethers.utils.parseUnits(amountNormalized.toString(), decimals);
 
