@@ -19,7 +19,7 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
         id="base-token"
         flexDir="row"
         width="full"
-        bgColor="text.primary"
+        bgColor="input_bg"
         rounded="2xl"
         shadow="lg"
         justify="space-between"

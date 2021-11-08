@@ -15,19 +15,30 @@ export default extendTheme({
         900: "#312E81"
     },
     main: {
-      primary: "#FFF32C",
-      primary_hover: "#fff777",
+      primary: "#0850D1",
+      primary_hover: "#3973da",
       primary_text: "",
       secondary: "",
       secondary_hover: ""
     },
-    text: {
-      primary: "#EDE9E3",
-      secondary: "#2D3748"
+    component: {
+      blue: "#0850D1",
+      red: "#FF1D36",
+      green: "#01B26F",
+      yellow: "#F1DC00",
+      orange: "#FF9433",
+      black: "#1C1C1C",
     },
-    background: "#0c216e",
-    card: "#CDC6C3",
+    text: {
+      primary: "#1C1C1C",
+      secondary: "#EDE9E3"
+    },
+    background: "#FFFFFF",
+    card: "#FFFFFF",
+    card_border: "#1C1C1C",
+    input_bg: "#e0e0e0",
     dark_card: "#8f8a88",
-    light_card: "#dfdad8"
+    light_card: "#bdbdbd"
   },
 })
+

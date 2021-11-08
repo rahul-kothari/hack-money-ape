@@ -63,11 +63,11 @@ export const Wallet = (props: Props) => {
                         onClick={handleDisconnect}
                         fontSize={'sm'}
                         fontWeight={600}
-                        color="text.secondary"
+                        color=""
                         bg={'card'}
                         href={'#'}
                         _hover={{
-                            bg: 'text.primary',
+                            bg: 'primary.hover',
                         }}>
                             {shortenAddress(currentAddress)}
                     </Button> 

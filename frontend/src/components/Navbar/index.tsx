@@ -25,7 +25,7 @@ interface MyLinkProps {
 const MyLink: React.FC<MyLinkProps> = (props) => {
     const {to, text} = props;
 
-    return <NavLink to={to} activeClassName="text-yellow-200" color="text.primary" >
+    return <NavLink to={to} activeClassName="text-blue-500" color="text.primary" >
         {text}
     </NavLink>
 }
