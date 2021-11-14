@@ -21,7 +21,6 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
         width="full"
         bgColor="input_bg"
         rounded="2xl"
-        shadow="lg"
         justify="space-between"
     >
         <Flex

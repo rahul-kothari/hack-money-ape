@@ -11,9 +11,9 @@ const Card: React.FC<Props & StyleProps > = (props) => {
     return (
         <Box
             id="card-border"
-            padding="0.1rem"
+            padding="0.06rem"
             rounded="2xl"
-            bgGradient="linear(to-r, component.red, component.orange, component.green, component.yellow, component.blue)"
+            bgGradient="linear(to-r, component.red, component.orange, component.yellow, component.green, component.blue)"
             shadow="lg"
             {...rest}
         >
@@ -30,6 +30,29 @@ const Card: React.FC<Props & StyleProps > = (props) => {
                 {props.children}
             </Flex>
         </Box>
+    )
+}
+
+export const BasicCard: React.FC<Props & StyleProps> = (props) => {
+    const {children, ...rest} = props;
+
+    return (
+        <Flex
+            id="card"
+            shadow="lg"
+            flexDir="column"
+            alignItems="stretch"
+            bgColor="card"
+            borderColor="component.blue"
+            borderWidth={1}
+            rounded="2xl"
+            width="full"
+            px={4}
+            py={2}
+            {...rest}
+        >
+            {props.children}
+        </Flex>
     )
 }
 

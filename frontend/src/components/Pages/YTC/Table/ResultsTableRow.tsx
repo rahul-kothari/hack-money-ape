@@ -14,8 +14,6 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
 
     const {output, onSelect, isSelected, baseTokenName} = props;
 
-    console.log(output)
-
     return (
         <Tr
             onClick={onSelect}
