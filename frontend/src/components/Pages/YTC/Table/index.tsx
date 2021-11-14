@@ -22,7 +22,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
     const simulationResults = useRecoilValue(calculatorGainSelector);
 
     // Multiply by 100 to display as percent rather than a decimal
-    const predictedRatePercentage = predictedRate*100;
+    const predictedRatePercentage = predictedRate || undefined;
 
     const trancheAddress = simulationResults[0]?.inputs.trancheAddress;
     const trancheRate = useRecoilValue(trancheSelector(trancheAddress));
@@ -30,7 +30,7 @@ const ResultsTable: React.FC<TableProps> = (props) => {
     const tableRef = useRef<HTMLTableElement>(null);
 
     const handlePredictedRateChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        setPredictedRate(parseFloat(e.target.value)/100 || 0);
+        setPredictedRate(parseFloat(e.target.value) || 0);
     }
 
     // Set the predicted rate to equal the tranche variable rate on load

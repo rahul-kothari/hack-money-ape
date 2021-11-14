@@ -7,6 +7,9 @@ import {ERC20 as ERC20Type} from '../../hardhat/typechain/ERC20';
 import { ElementAddresses, Tranche } from "../../types/manual/types";
 import { getRemainingTrancheYears, getTrancheByAddress } from "../element";
 import { getTokenPrice } from "../prices";
+import { getUnderlyingTotal } from "../element/wrappedPositionAmount";
+import { getPrincipalTotal } from "../element/principalTotal";
+import { getYieldTotal } from "../element/yieldTotal";
 
 export interface YTCInput {
     baseTokenAddress: string;
@@ -19,8 +22,10 @@ export interface YTCInput {
 }
 
 export interface YTCGain {
+    estimatedRedemption: number;
     netGain: number,
-    finalApy: number,
+    roi: number,
+    apy: number,
 }
 
 export interface YTCOutput {
@@ -48,10 +53,7 @@ export interface YTCOutput {
         expiration: number,
     },
     inputs: YTCInput,
-    gain?: {
-        finalApy: number,
-        netGain: number
-    }
+    gain?: YTCGain
 }
 
 export interface YTCParameters {
@@ -157,18 +159,42 @@ export const getYTCParameters = async (userData: YTCInput, elementAddresses: Ele
 
 // Calculates the expected gains from a yield token compound simulation
 // param speculatedVariableRate
-export const calculateGain = (ytExposure: number, speculatedVariableRate: number, trancheExpiration: number, baseTokensSpent: number, estimatedBaseTokensGas: number): YTCGain => {
+export const calculateGain = (ytExposure: number, speculatedVariableRate: number = 0, trancheExpiration: number, baseTokensSpent: number, estimatedBaseTokensGas: number, yieldTokenAccruedValue: number): YTCGain => {
     const termRemainingYears = getRemainingTrancheYears(trancheExpiration);
 
+
     // speculated variable rate is an apy, but we need this as an apr
-    const returnPercentage = (1 + speculatedVariableRate)**termRemainingYears - 1;
-    const netGain = (returnPercentage * ytExposure) - baseTokensSpent - estimatedBaseTokensGas;
-    const finalApy = (netGain / baseTokensSpent)*100
+    const returnPercentage = (1 + speculatedVariableRate/100)**termRemainingYears - 1;
+
+    const returnedTokens = (returnPercentage + yieldTokenAccruedValue) * ytExposure;
+
+    // Returned amount
+    // Tokens spent
+    // Net Gain
+    // Gas
+    // APY
+    // ROI
+
+    const netGain = (returnedTokens) - baseTokensSpent - estimatedBaseTokensGas;
+    const roi = (netGain / baseTokensSpent);
+    const apy = (1+roi)**(1/termRemainingYears) - 1;
 
     return {
-        netGain,
-        finalApy
+        estimatedRedemption: returnedTokens,
+        netGain: netGain,
+        roi,
+        apy
     }
+}
+
+export const yieldTokenAccruedValue = async (elementAddresses: ElementAddresses, trancheAddress: string, signer: Signer): Promise<number> => {
+    const wrappedPositionTotal = await getUnderlyingTotal(elementAddresses, trancheAddress, signer);
+
+    const principalTotal = await  getPrincipalTotal(elementAddresses, trancheAddress, signer);
+
+    const yieldTotal = await getYieldTotal(elementAddresses, trancheAddress, signer);
+
+    return (wrappedPositionTotal - principalTotal) / yieldTotal;
 }
 
 export const isTrancheActive = (tranche: Tranche): boolean => {
