@@ -28,5 +28,5 @@ export const getFixedRate = async (tokenName: string, trancheAddress: string, el
 
     const spot = calcSpotPricePt(reserves.balances[0].toString(), reserves.balances[1].toString(), reserves.totalSupply.toString(), timeRemainingSeconds, tParamSeconds, reserves.decimals[0])
     
-    return calcFixedAPR(spot, timeRemainingSeconds)/100;
+    return calcFixedAPR(spot, timeRemainingSeconds);
 }
