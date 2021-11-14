@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect } from "react";
 import { getRemainingTrancheYears, getTrancheByAddress } from "../../../../features/element";
 import { getFixedRate } from "../../../../features/element/fixedRate";
-import { getTokenNameByAddress } from "../../../../features/ytc/ytcHelpers";
+import { getTokenNameByAddress, yieldTokenAccruedValue } from "../../../../features/ytc/ytcHelpers";
 import { SignerContext } from "../../../../hardhat/SymfoniContext";
 import { TrancheRatesInterface, trancheSelector } from "../../../../recoil/trancheRates/atom";
 import { Tranche } from "../../../../types/manual/types";
@@ -65,6 +65,19 @@ export const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
         }
     }, [handleChangeTrancheRate, signer, trancheAddress, elementAddresses, tokenAddress])
 
+    // set the accruedValue for the tranche
+    useEffect(() => {
+        if (signer){
+            yieldTokenAccruedValue(elementAddresses, trancheAddress, signer).then((accruedValue) => {
+                handleChangeTrancheRate({
+                    accruedValue: accruedValue,
+                })
+            }).catch((error) => {
+                console.error(error);
+            })
+        }
+    }, [elementAddressesAtom, signer, trancheAddress, handleChangeTrancheRate])
+
     useEffect(() => {
         const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
         if (baseTokenName){
@@ -88,14 +101,14 @@ export const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
 
 const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
 
-    const {variable, fixed, daysRemaining} = props;
+    const {variable, fixed, daysRemaining, accruedValue} = props;
 
     return <DetailPane>
         <DetailItem
             name= "Fixed Rate:"
             value={ 
                 fixed ? 
-                    `${shortenNumber(fixed * 100)}%`: 
+                    `${shortenNumber(fixed)}%`: 
                     <>
                         <Spinner/>%
                     </>
@@ -105,7 +118,7 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
             name= "Variable Rate:"
             value={
                 variable ? 
-                    `${shortenNumber(variable * 100)}%`: 
+                    `${shortenNumber(variable)}%`: 
                     <>
                         <Spinner/>%
                     </>
@@ -116,6 +129,16 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
             value={
                 daysRemaining ? 
                     shortenNumber(daysRemaining) : 
+                    <>
+                        <Spinner/>
+                    </>
+            }
+        />
+        <DetailItem
+            name= "Percentage Yield Accrued:"
+            value={
+                accruedValue ? 
+                    shortenNumber(accruedValue) : 
                     <>
                         <Spinner/>
                     </>
