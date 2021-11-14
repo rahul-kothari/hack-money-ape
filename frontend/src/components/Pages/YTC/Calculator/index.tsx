@@ -316,7 +316,6 @@ const Form: React.FC<FormProps> = (props) => {
                         cursor="pointer"
                         value={formik.values.tokenAddress}
                         onChange={handleTokenChange}
-                        shadow="lg"
                     >
                         {tokens.map((token) => {
                             return <option value={token.address} key={token.address}>
@@ -333,7 +332,6 @@ const Form: React.FC<FormProps> = (props) => {
                         bgColor="input_bg"
                         value={formik.values.trancheAddress}
                         onChange={formik.handleChange}
-                        shadow="lg"
                     >
                         {
                             tranches && tranches.map((tranche: Tranche) => {
