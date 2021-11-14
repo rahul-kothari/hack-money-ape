@@ -1,6 +1,7 @@
 import { atom, selector } from 'recoil'
 import { calculateGain, YTCOutput } from '../../features/ytc/ytcHelpers'
 import { predictedRateAtom } from '../predictedRate/atom'
+import { trancheSelector } from '../trancheRates/atom'
 // This is a recoil atom
 // Atoms are pieces of state that can be accessed and or modified by various components through a set of hooks
 
@@ -34,10 +35,14 @@ export const calculatorGainSelector = selector({
 
         const predictedRate = get(predictedRateAtom);
 
+        const trancheAddress = simulationResults[0].inputs.trancheAddress;
+
+        const trancheRates = get(trancheSelector(trancheAddress));
+
         return simulationResults.map((result) => {
             return {
                 ...result,
-                gain: calculateGain(result.receivedTokens.yt.amount, predictedRate, result.tranche.expiration, result.spentTokens.baseTokens.amount, result.gas.baseToken)
+                gain: calculateGain(result.receivedTokens.yt.amount, predictedRate, result.tranche.expiration, result.spentTokens.baseTokens.amount, result.gas.baseToken, (trancheRates.accruedValue || 0) )
             }
         })
     }

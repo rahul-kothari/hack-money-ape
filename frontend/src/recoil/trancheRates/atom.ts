@@ -10,6 +10,7 @@ export interface TrancheRatesInterface {
     variable: number | undefined,
     fixed: number | undefined,
     daysRemaining: number | undefined,
+    accruedValue: number | undefined,
 }
 
 // This is an atom family, it functions as a key value pair of atoms allowing for the generation of new atoms if an existing one is not found
@@ -20,6 +21,7 @@ const trancheRatesAtoms = atomFamily<TrancheRatesInterface, string>({
         variable: undefined,
         fixed: undefined,
         daysRemaining: undefined,
+        accruedValue: undefined,
     },
   });
   
