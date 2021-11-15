@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Wallet from '../Wallet';
 import WalletSettings from '../Wallet/Settings';
 import componentLogo from '../../images/Component_h_blue.png';
-import Navbar from '../Navbar';
 
 export const Header = () => {
     return (
