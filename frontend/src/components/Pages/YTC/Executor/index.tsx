@@ -1,5 +1,5 @@
 import { Button, Spinner, Flex, FormLabel } from "@chakra-ui/react";
-import { YTCInput } from "../../../../features/ytc/ytcHelpers";
+import { YTCGain, YTCInput } from "../../../../features/ytc/ytcHelpers";
 import { executeYieldTokenCompounding } from "../../../../features/ytc/executeYieldTokenCompounding";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
 import { useRecoilValue } from 'recoil';
@@ -30,12 +30,12 @@ export interface ApeProps {
         eth: number,
         baseToken: number,
     };
-    estimatedApy?: number;
+    gain?: YTCGain;
 }
 
 export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
-    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData, gas, estimatedApy, inputAmount} = props;
+    const {baseToken, yieldToken, baseTokenAmount, yieldTokenAmount, userData, gas, inputAmount, gain} = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const setSimulationResults = useRecoilState(simulationResultsAtom)[1];
     const elementAddresses = useRecoilValue(elementAddressesAtom);
@@ -91,7 +91,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                 <Flex
                     id="outputs"
                     flexDir='column'
-                    alignItems='center'
+                    alignItems='stretch'
                     gridGap={3}
                     p={2}
                 >
@@ -159,8 +159,11 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                     <ExecutionDetails 
                         slippageTolerance={slippageTolerance}
                         estimatedGas={gas.eth}
-                        percentageReturn={estimatedApy}
-                        minimumReturn={minimumReturn}
+                        netGain= {gain?.netGain}
+                        roi={gain?.roi}
+                        apy={gain?.apy}
+                        minimumReceived={minimumReturn}
+                        expectedReturn={gain?.estimatedRedemption}
                     />
                 </Flex>
             </Card>
@@ -185,30 +188,47 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
 interface ExecutionDetailsProps {
     slippageTolerance: number,
-    minimumReturn: number,
+    minimumReceived: number,
+    expectedReturn?: number,
     estimatedGas: number,
-    percentageReturn : number | undefined,
+    netGain?: number,
+    roi?: number, 
+    apy?: number,
 }
 
 const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
-    const {slippageTolerance, minimumReturn, estimatedGas, percentageReturn} = props;
+    const {slippageTolerance, minimumReceived, estimatedGas, netGain, roi, apy, expectedReturn} = props;
 
-    return <DetailPane>
+    return <DetailPane
+        mx={10}
+    >
         <DetailItem
             name="Slippage Tolerance:"
             value={`${slippageTolerance}%`}
         />
         <DetailItem
             name="Minimum YT Received:"
-            value={shortenNumber(minimumReturn)}
+            value={shortenNumber(minimumReceived)}
+        />
+        <DetailItem
+            name="Expected Redemption:"
+            value={expectedReturn ? `$${shortenNumber(expectedReturn)}`: "?"}
         />
         <DetailItem
             name="Estimated Gas Cost:"
             value={`${shortenNumber(estimatedGas)} ETH`}
         />
         <DetailItem
-            name="Percentage Return"
-            value={percentageReturn ? `${shortenNumber(percentageReturn)}%` : "?"}
+            name="Expected Earned:"
+            value={netGain ? `$${shortenNumber(netGain)}`: "?"}
+        />
+        <DetailItem
+            name="Return on Investment:"
+            value={roi ? `${shortenNumber(roi)}%`: "?"}
+        />
+        <DetailItem
+            name="APY: "
+            value={apy ? `${shortenNumber(apy)}%`: "?"}
         />
     </DetailPane>
 }

@@ -135,10 +135,10 @@ const TrancheDisplay: React.FC<TrancheRatesInterface> = (props) => {
             }
         />
         <DetailItem
-            name= "Percentage Yield Accrued:"
+            name= "Yield Accrued to Date:"
             value={
                 accruedValue ? 
-                    shortenNumber(accruedValue) : 
+                    `${shortenNumber(accruedValue * 100)}%` : 
                     <>
                         <Spinner/>
                     </>

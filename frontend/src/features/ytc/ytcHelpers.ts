@@ -168,22 +168,17 @@ export const calculateGain = (ytExposure: number, speculatedVariableRate: number
 
     const returnedTokens = (returnPercentage + yieldTokenAccruedValue) * ytExposure;
 
-    // Returned amount
-    // Tokens spent
-    // Net Gain
-    // Gas
-    // APY
-    // ROI
 
     const netGain = (returnedTokens) - baseTokensSpent - estimatedBaseTokensGas;
     const roi = (netGain / baseTokensSpent);
     const apy = (1+roi)**(1/termRemainingYears) - 1;
 
+    // Change X% from X/100 to X
     return {
         estimatedRedemption: returnedTokens,
         netGain: netGain,
-        roi,
-        apy
+        roi: roi * 100,
+        apy: apy * 100
     }
 }
 
