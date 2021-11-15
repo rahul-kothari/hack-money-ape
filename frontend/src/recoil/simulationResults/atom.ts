@@ -35,15 +35,18 @@ export const calculatorGainSelector = selector({
 
         const predictedRate = get(predictedRateAtom);
 
-        const trancheAddress = simulationResults[0].inputs.trancheAddress;
+        if (simulationResults.length >= 1){
+            const trancheAddress = simulationResults[0].inputs.trancheAddress;
+            const trancheRates = get(trancheSelector(trancheAddress));
+            return simulationResults.map((result) => {
+                return {
+                    ...result,
+                    gain: calculateGain(result.receivedTokens.yt.amount, predictedRate, result.tranche.expiration, result.spentTokens.baseTokens.amount, result.gas.baseToken, (trancheRates.accruedValue || 0) )
+                }
+            })
+        } else {
+            return simulationResults
+        }
 
-        const trancheRates = get(trancheSelector(trancheAddress));
-
-        return simulationResults.map((result) => {
-            return {
-                ...result,
-                gain: calculateGain(result.receivedTokens.yt.amount, predictedRate, result.tranche.expiration, result.spentTokens.baseTokens.amount, result.gas.baseToken, (trancheRates.accruedValue || 0) )
-            }
-        })
     }
 })

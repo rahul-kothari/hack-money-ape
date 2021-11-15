@@ -5,7 +5,7 @@ import { Token } from "../../../types/manual/types";
 import { Calculator } from "./Calculator";
 import { Ape, ApeProps } from "./Executor";
 import { useRecoilValue } from 'recoil';
-import { simulationResultsAtom } from '../../../recoil/simulationResults/atom';
+import { calculatorGainSelector, simulationResultsAtom } from '../../../recoil/simulationResults/atom';
 import { YTCOutput } from "../../../features/ytc/ytcHelpers";
 import { Title } from "../../Title";
 import ResultsTable from "./Table";
@@ -18,7 +18,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
 
     const [baseTokens, setBaseTokens] = useState<Token[]>([]);
     const [resultIndex, setResultIndex] = useState<number | undefined>(undefined);
-    const simulationResults: YTCOutput[] = useRecoilValue(simulationResultsAtom);
+    const simulationResults: YTCOutput[] = useRecoilValue(calculatorGainSelector);
     const elementAddresses = useRecoilValue(elementAddressesAtom);
 
     useEffect(() => {
@@ -41,6 +41,7 @@ export const YTC: React.FC<YTCProps> = (props) => {
             yieldTokenAmount: result.receivedTokens.yt.amount,
             userData: result.inputs,
             gas: result.gas,
+            gain: result.gain
         }
     }
 
