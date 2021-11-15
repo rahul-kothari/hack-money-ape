@@ -5,7 +5,7 @@ import { Token } from "../../../types/manual/types";
 import { Calculator } from "./Calculator";
 import { Ape, ApeProps } from "./Executor";
 import { useRecoilValue } from 'recoil';
-import { calculatorGainSelector, simulationResultsAtom } from '../../../recoil/simulationResults/atom';
+import { calculatorGainSelector } from '../../../recoil/simulationResults/atom';
 import { YTCOutput } from "../../../features/ytc/ytcHelpers";
 import { Title } from "../../Title";
 import ResultsTable from "./Table";
