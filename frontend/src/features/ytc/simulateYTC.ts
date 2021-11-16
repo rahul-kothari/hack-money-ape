@@ -4,6 +4,8 @@ import { GAS_LIMITS } from "../../constants/gasLimits";
 import { ElementAddresses } from "../../types/manual/types";
 import { getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpers";
 
+const MAX_UINT_HEX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+
 // Simulates a single yield token compounding execution to determine what the output would be
 // No actual transaction is executed
 // param YTC Parameters, derived params required to execute the transaction, a ytc contract instance, the balancer pool, decimals for tokens, the name of the yield token etc.
@@ -12,7 +14,8 @@ import { getYTCParameters, YTCInput, YTCOutput, YTCParameters } from "./ytcHelpe
 // returns YTCOutput, contains both input data, and the results fo the simulation, including yield exposure, gas fees, tokens spent, remaining tokens etc.
 export const simulateYTC = async ({ytc, trancheAddress, trancheExpiration, balancerPoolId, yieldTokenDecimals, baseTokenDecimals, baseTokenName, ytSymbol: ytName, baseTokenAmountAbsolute, ethToBaseTokenRate}: YTCParameters, userData: YTCInput, signer: Signer): Promise<YTCOutput> => {
     // Call the method statically to calculate the estimated return
-    const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
+    // The last two arguments are to prevent slippage, but this isn't required as it is a simulation and cannot be frontrun
+    const returnedVals = await ytc.callStatic.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0", MAX_UINT_HEX);
 
     // Estimate the required amount of gas, this is likely very imprecise
     // const gasAmountEstimate = await ytc.estimateGas.compound(userData.numberOfCompounds, trancheAddress, balancerPoolId, baseTokenAmountAbsolute, "0");
