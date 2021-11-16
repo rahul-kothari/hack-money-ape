@@ -11,7 +11,7 @@ const Card: React.FC<Props & StyleProps > = (props) => {
     return (
         <Box
             id="card-border"
-            padding="0.06rem"
+            padding="1px"
             rounded="2xl"
             bgGradient="linear(to-r, component.red, component.orange, component.yellow, component.green, component.blue)"
             shadow="lg"
