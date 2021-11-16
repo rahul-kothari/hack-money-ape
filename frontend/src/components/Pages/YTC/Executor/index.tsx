@@ -228,15 +228,34 @@ const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
         />
         <DetailItem
             name="Expected Earned:"
-            value={netGain ? `$${shortenNumber(netGain)}`: "?"}
+            value={netGain ? 
+                <Text
+                    color={(netGain > 0 ? "green.600" : "red.500")}
+                >
+                    ${shortenNumber(netGain)}
+                </Text> : "?"
+            }
         />
         <DetailItem
             name="Return on Investment:"
-            value={roi ? `${shortenNumber(roi)}%`: "?"}
+            value={roi ? 
+                <Text
+                    color={(roi > 0 ? "green.600" : "red.500")}
+                >
+                    {shortenNumber(roi)}%
+                </Text> : "?"
+            }
         />
         <DetailItem
             name="APY: "
-            value={apy ? `${shortenNumber(apy)}%`: "?"}
+            value={apy ? 
+                <Text
+                    color={(apy > 0 ? "green.600" : "red.500")}
+                >
+                    {shortenNumber(apy)}%
+                </Text> : "?"
+            }
+
         />
     </DetailPane>
 }
