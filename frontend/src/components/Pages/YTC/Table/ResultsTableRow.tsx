@@ -1,4 +1,4 @@
-import { Tr, Td } from "@chakra-ui/react";
+import { Tr, Td, Tooltip } from "@chakra-ui/react";
 import { YTCOutput } from "../../../../features/ytc/ytcHelpers";
 import { shortenNumber } from "../../../../utils/shortenNumber";
 import { BaseTokenPriceTag } from "../../../Prices";
@@ -21,8 +21,7 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
             color={isSelected ? "text.secondary" : "text.primary"}
             cursor="pointer"
             _hover={{
-                bgColor: isSelected ? "main.primary" : "main.primary_hover",
-                color: "text.secondary"
+                bgColor: isSelected ? "main.primary" : "blue.100",
             }}
         >
             <Td isNumeric>
@@ -39,15 +38,22 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
             <Td isNumeric
                 textColor={
                     output.gain ?
-                        (output.gain?.netGain >= 0) ? 
-                            "green.600" : 
-                            "red.500" :
+                        (output.gain.netGain >= 0) ? 
+                            (isSelected ? "green.200" : "green.600") : 
+                            (isSelected ? "red.200" : "red.500") :
                         "inherit"
                 }
             >
-                {output.gain ? <BaseTokenPriceTag amount={output.gain.netGain} baseTokenName={baseTokenName}/> : "?"}
+                {output.gain ? 
+                    <BaseTokenPriceTag amount={output.gain.netGain} baseTokenName={baseTokenName}/> :
+                    "?"
+                }
                 <br/>
-                {output.gain ? ` (%${shortenNumber(output.gain.apy)} APY)` : "?"}
+                <Tooltip
+                    label={`Return on investment over the term annualized. ${output.gain && shortenNumber(output.gain.roi)}% x ${output.gain && shortenNumber(output.gain.apr/output.gain.roi)}`}
+                >
+                    {output.gain ? ` (%${shortenNumber(output.gain.apr)} APR)` : "?"}
+                </Tooltip>
             </Td>
         </Tr>
     )
