@@ -31,7 +31,8 @@ contract YieldTokenCompounding {
         address _trancheAddress,
         bytes32 _balancerPoolId,
         uint256 _amount,
-        uint256 _expectedYtOutput
+        uint256 _expectedYtOutput,
+        uint256 _expectedBaseTokensSpent
     ) public returns (uint256, uint256) {
         require (_n > 0 && _n < 31, "n has to be between 1 to 255 inclusive.");
         // Step 1: Assume the user approves the contract for the base token [permit support is a nice to have in general but for simplicity fine to omit]
@@ -48,15 +49,18 @@ contract YieldTokenCompounding {
 
         // Step 5: repeat steps 3-4 N times.
         uint256 ytBalance = _forLoop(_n, tranche, _balancerPoolId, baseTokenAddress, wrappedPositionAddress);
+
+        uint256 baseTokensSpent = _baseTokensSpent(baseTokenAddress, initialBalance);
         
-        require(ytBalance >= _expectedYtOutput, "Too much slippage");
+        require(ytBalance >= _expectedYtOutput, "Too much slippage: YT");
+        require(baseTokensSpent <= _expectedBaseTokensSpent, "Too much slippage: BT");
 
         // Step 6: Send the smart contract balance of yt to the user
         // Transfer YTs from this contract to the user
         tranche.interestToken().transfer(msg.sender, ytBalance);
         // There will be 0 PTs left (all compounded away). Any baseTokens `_amount` have already been sent to the user on last compounding.     
         
-        return (ytBalance, _baseTokensSpent(baseTokenAddress, initialBalance));   
+        return (ytBalance, baseTokensSpent);   
     }
     
     function _baseTokensSpent(address baseTokenAddress, uint256 initialBalance) internal view returns (uint256) {

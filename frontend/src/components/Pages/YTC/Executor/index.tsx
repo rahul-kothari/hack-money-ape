@@ -61,6 +61,8 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
             executeYieldTokenCompounding(
                 userData,
                 yieldTokenAmount,
+                // this is equivalent to base tokens spent
+                (inputAmount-baseTokenAmount),
                 slippageTolerance,
                 elementAddresses,
                 signer
