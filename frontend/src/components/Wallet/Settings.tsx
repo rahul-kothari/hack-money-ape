@@ -6,7 +6,12 @@ import React from "react";
 import { useRecoilState } from "recoil";
 import { slippageToleranceAtom } from "../../recoil/transactionSettings/atom";
 
-export const WalletSettings = () => {
+interface Props {
+    icon: React.ReactElement
+}
+
+export const WalletSettings: React.FC<Props> = (props) => {
+    const { icon } = props;
     const [slippageTolerance, setSlippageTolerance] = useRecoilState(slippageToleranceAtom);
 
     const handleSlippageChange = (percentage: number) => {
@@ -23,12 +28,9 @@ export const WalletSettings = () => {
         <Popover>
             {/** This is a button that causes the popover to open */}
             <PopoverTrigger>
-                <Flex p={2} justifyContent="center" alignItems="center" tabIndex={0} rounded="full" cursor="pointer">
-                    {/** This is a gear icon */}
-                    <Icon viewBox="0 0 20 20" color="text.primary" h={5} w={5} stroke="text.primary" fill="text.primary">
-                        <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                    </Icon>
-                </Flex>
+                <a>
+                    {icon}
+                </a>
             </PopoverTrigger>
             <PopoverContent>
                 <PopoverCloseButton/>
