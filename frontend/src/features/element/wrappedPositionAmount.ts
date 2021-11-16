@@ -1,11 +1,11 @@
 
 // Find the total amount of tokens in the underlying wrapped position
-import { BigNumber, Contract, ethers, Signer } from 'ethers';
+import { Contract, ethers, Signer } from 'ethers';
 import ITranche from '../../artifacts/contracts/element-finance/ITranche.sol/ITranche.json';
 import IWrappedPosition from '../../artifacts/contracts/element-finance/IWrappedPosition.sol/IWrappedPosition.json';
 import {IWrappedPosition as IWrappedPositionType} from '../../hardhat/typechain/IWrappedPosition';
 import {ITranche as ITrancheType} from '../../hardhat/typechain/ITranche';
-import { ElementAddresses, Tranche } from '../../types/manual/types';
+import { ElementAddresses } from '../../types/manual/types';
 import ERC20 from '../../artifacts/contracts/balancer-core-v2/lib/openzeppelin/ERC20.sol/ERC20.json';
 import { ERC20 as ERC20Type} from '../../hardhat/typechain/ERC20';
 

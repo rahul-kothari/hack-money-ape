@@ -76,7 +76,7 @@ export const TrancheDetails: React.FC<TrancheDetailsProps> = (props) => {
                 console.error(error);
             })
         }
-    }, [elementAddressesAtom, signer, trancheAddress, handleChangeTrancheRate])
+    }, [elementAddresses, signer, trancheAddress, handleChangeTrancheRate])
 
     useEffect(() => {
         const baseTokenName = getTokenNameByAddress(tokenAddress, elementAddresses.tokens);
