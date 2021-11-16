@@ -1,6 +1,4 @@
 import { ButtonGroup } from "@chakra-ui/button";
-import Icon from "@chakra-ui/icon";
-import { Flex } from "@chakra-ui/layout";
 import { Popover, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger } from "@chakra-ui/popover";
 import React from "react";
 import { useRecoilState } from "recoil";
@@ -28,9 +26,9 @@ export const WalletSettings: React.FC<Props> = (props) => {
         <Popover>
             {/** This is a button that causes the popover to open */}
             <PopoverTrigger>
-                <a>
+                <button>
                     {icon}
-                </a>
+                </button>
             </PopoverTrigger>
             <PopoverContent>
                 <PopoverCloseButton/>
