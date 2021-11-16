@@ -1,7 +1,7 @@
 import { Text } from '@chakra-ui/layout';
 
 interface DetailItemProps {
-    name: string,
+    name: string | React.ReactElement,
     value: string | React.ReactElement,
 }
 
