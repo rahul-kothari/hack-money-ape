@@ -7,7 +7,6 @@ import Footer from './Footer';
 import Header from './Header';
 import { Notifications } from './Notifications';
 import { Decollateralize } from './Pages/Decollateralize';
-import Home from './Pages/Home';
 import { Ladder } from './Pages/Ladder';
 import { YTC } from './Pages/YTC';
 import { Alert } from './Reusable/Alert';
@@ -50,7 +49,8 @@ export const Template: React.FC<Props> = (props: Props) => {
                         <Ladder/>
                     </Route>
                     <Route path="/">
-                        <Home/>
+                        {/** Temporarily swapped the home page to also point to YTC */}
+                        <YTC/>
                     </Route>
                 </Switch>
             </Box>
