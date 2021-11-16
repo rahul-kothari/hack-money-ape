@@ -1,4 +1,4 @@
-import { Button, Spinner, Flex, FormLabel, Icon, Text } from "@chakra-ui/react";
+import { Button, Spinner, Flex, FormLabel, Icon, Text, Tooltip } from "@chakra-ui/react";
 import { YTCGain, YTCInput } from "../../../../features/ytc/ytcHelpers";
 import { executeYieldTokenCompounding } from "../../../../features/ytc/executeYieldTokenCompounding";
 import { elementAddressesAtom } from "../../../../recoil/element/atom";
@@ -162,7 +162,7 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         estimatedGas={gas.eth}
                         netGain= {gain?.netGain}
                         roi={gain?.roi}
-                        apy={gain?.apy}
+                        apr={gain?.apr}
                         minimumReceived={minimumReturn}
                         expectedReturn={gain?.estimatedRedemption}
                     />
@@ -194,11 +194,11 @@ interface ExecutionDetailsProps {
     estimatedGas: number,
     netGain?: number,
     roi?: number, 
-    apy?: number,
+    apr?: number,
 }
 
 const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
-    const {slippageTolerance, minimumReceived, estimatedGas, netGain, roi, apy, expectedReturn} = props;
+    const {slippageTolerance, minimumReceived, estimatedGas, netGain, roi, apr, expectedReturn} = props;
 
     return <DetailPane
         mx={10}
@@ -246,17 +246,23 @@ const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
                 </Text> : "?"
             }
         />
-        <DetailItem
-            name="APY: "
-            value={apy ? 
-                <Text
-                    color={(apy > 0 ? "green.600" : "red.500")}
-                >
-                    {shortenNumber(apy)}%
-                </Text> : "?"
-            }
+        <Tooltip
+            label="Return on investment over the term annualized."
+        >
+            <div>
+                <DetailItem
+                    name="APR: "
+                    value={apr ? 
+                        <Text
+                            color={(apr > 0 ? "green.600" : "red.500")}
+                        >
+                            {shortenNumber(apr)}%
+                        </Text> : "?"
+                    }
 
-        />
+                />
+            </div>
+        </Tooltip>
     </DetailPane>
 }
 

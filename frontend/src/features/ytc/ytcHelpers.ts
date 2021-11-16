@@ -25,7 +25,7 @@ export interface YTCGain {
     estimatedRedemption: number;
     netGain: number,
     roi: number,
-    apy: number,
+    apr: number,
 }
 
 export interface YTCOutput {
@@ -164,21 +164,21 @@ export const calculateGain = (ytExposure: number, speculatedVariableRate: number
 
 
     // speculated variable rate is an apy, but we need this as an apr
-    const returnPercentage = (1 + speculatedVariableRate/100)**termRemainingYears - 1;
+    const returnPercentage = speculatedVariableRate*termRemainingYears;
 
-    const returnedTokens = (returnPercentage + yieldTokenAccruedValue) * ytExposure;
+    const returnedTokens = (returnPercentage/100 + yieldTokenAccruedValue) * ytExposure;
 
 
     const netGain = (returnedTokens) - baseTokensSpent - estimatedBaseTokensGas;
     const roi = (netGain / baseTokensSpent);
-    const apy = (1+roi)**(1/termRemainingYears) - 1;
+    const apr = (roi)*(1/termRemainingYears);
 
     // Change X% from X/100 to X
     return {
         estimatedRedemption: returnedTokens,
         netGain: netGain,
         roi: roi * 100,
-        apy: apy * 100
+        apr: apr * 100
     }
 }
 
