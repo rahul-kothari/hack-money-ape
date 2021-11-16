@@ -18,9 +18,11 @@ export const ResultsTableRow: React.FC<ResultsTableRowInterface> = (props) => {
         <Tr
             onClick={onSelect}
             bgColor={isSelected ? "main.primary" : "inherit"}
+            color={isSelected ? "text.secondary" : "text.primary"}
             cursor="pointer"
             _hover={{
-                bgColor: isSelected ? "main.primary" : "main.primary_hover"
+                bgColor: isSelected ? "main.primary" : "main.primary_hover",
+                color: "text.secondary"
             }}
         >
             <Td isNumeric>
