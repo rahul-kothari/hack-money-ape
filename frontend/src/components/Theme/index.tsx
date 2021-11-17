@@ -1,6 +1,10 @@
 import { extendTheme } from "@chakra-ui/react"
 
 export default extendTheme({
+  fonts: {
+    heading: "Urbanist",
+    body: "Urbanist"
+  },
   colors: {
     indigo: {
         50: "#EEF2FF",

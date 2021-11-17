@@ -1,3 +1,5 @@
+import "@fontsource/urbanist/500.css";
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
