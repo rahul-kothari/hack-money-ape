@@ -61,9 +61,9 @@ export const YTPriceTag: React.FC<YTPriceTagProps> = (props) => {
 
 
     return (
-        <PriceTag
-            price={price}
-            amount={amount}
+        <BaseTokenPriceTag
+            amount={price}
+            baseTokenName={baseTokenName}
         />
     )
 }

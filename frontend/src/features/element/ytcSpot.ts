@@ -8,6 +8,8 @@ export const getYTCSpotPrice = async (tokenName: string, trancheAddress: string,
     const tranche = _.find(elementAddresses.tranches[tokenName], (tranche: Tranche) => (tranche.address === trancheAddress));
     const balancerAddress = elementAddresses.balancerVault;
 
+    const tokenAddress = elementAddresses.tokens[tokenName];
+
     if (!tranche) {
         throw new Error('Cannot find tranche pool')
     }
@@ -16,7 +18,17 @@ export const getYTCSpotPrice = async (tokenName: string, trancheAddress: string,
 
     const reserves = await getReserves(ytPool.address, balancerAddress, signer);
 
-    const ytcSpot = calcSpotPriceYt(reserves.balances[0].toString(), reserves.balances[1].toString())
+    // The getReserves function does not return the base/yt reserves in a particular order
+    // It does return the token address in tokens in the same index as it's balance in "balance"
+    let baseTokenReserve;
+    let yTReserve;
+    if (reserves.tokens[0] === tokenAddress){
+        [baseTokenReserve, yTReserve] = reserves.balances;
+    } else {
+        [yTReserve, baseTokenReserve] = reserves.balances;
+    }
+
+    const ytcSpot = calcSpotPriceYt(baseTokenReserve.toString(), yTReserve.toString())
     
     return ytcSpot;
 }
