@@ -14,6 +14,8 @@ export const getFixedRate = async (tokenName: string, trancheAddress: string, el
     const tranche = _.find(elementAddresses.tranches[tokenName], (tranche: Tranche) => (tranche.address === trancheAddress));
     const balancerAddress = elementAddresses.balancerVault;
 
+    const tokenAddress = elementAddresses.tokens[tokenName];
+
     if (!tranche) {
         throw new Error('Cannot find tranche pool')
     }
@@ -26,7 +28,16 @@ export const getFixedRate = async (tokenName: string, trancheAddress: string, el
 
     const timeRemainingSeconds = tranche.expiration - (new Date()).getTime()/1000;
 
-    const spot = calcSpotPricePt(reserves.balances[0].toString(), reserves.balances[1].toString(), reserves.totalSupply.toString(), timeRemainingSeconds, tParamSeconds, reserves.decimals[0])
+    // The getReserves function does not return the base/pt reserves in a particular order
+    let baseTokenReserve;
+    let pTReserve;
+    if (reserves.tokens[0] === tokenAddress){
+        [baseTokenReserve, pTReserve] = reserves.balances;
+    } else {
+        [pTReserve, baseTokenReserve] = reserves.balances;
+    }
+
+    const spot = calcSpotPricePt(baseTokenReserve.toString(), pTReserve.toString(), reserves.totalSupply.toString(), timeRemainingSeconds, tParamSeconds, reserves.decimals[0])
     
     return calcFixedAPR(spot, timeRemainingSeconds);
 }
