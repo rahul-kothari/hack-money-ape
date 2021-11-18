@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { shortenNumber } from "../../../../utils/shortenNumber";
-import { BaseTokenPriceTag } from "../../../Prices";
+import { BaseTokenPriceTag, YTPriceTag } from "../../../Prices";
 
 interface TokenResultProps {
     token: {
@@ -84,13 +84,13 @@ export const TokenResult: React.FC<TokenResultProps> = (props) => {
                             />
                     }
                     {
-                        tokenType === "YToken" && <></>
+                        tokenType === "YToken" &&
                             // This is commented out due to a bug in yt price calculation
-                            // && <YTPriceTag
-                            //     amount={token.amount}
-                            //     baseTokenName={props.baseTokenName}
-                            //     trancheAddress={props.trancheAddress}
-                            // />
+                            <YTPriceTag
+                                amount={token.amount}
+                                baseTokenName={props.baseTokenName}
+                                trancheAddress={props.trancheAddress}
+                            />
                     }
                 </Flex>
             </Flex>

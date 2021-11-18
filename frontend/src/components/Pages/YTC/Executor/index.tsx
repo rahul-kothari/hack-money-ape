@@ -15,6 +15,7 @@ import { DetailItem } from '../../../Reusable/DetailItem';
 import { TokenResult } from "./TokenResult";
 import { DetailPane } from "../../../Reusable/DetailPane";
 import WalletSettings from "../../../Wallet/Settings";
+import { BaseTokenPriceTag, YTPriceTag } from "../../../Prices";
 
 export interface ApeProps {
     baseToken: {
@@ -167,6 +168,8 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
                         apr={gain?.apr}
                         minimumReceived={minimumReturn}
                         expectedReturn={gain?.estimatedRedemption}
+                        trancheAddress={userData.trancheAddress}
+                        baseTokenName={baseToken.name}
                     />
                 </Flex>
             </Card>
@@ -190,6 +193,8 @@ export const Ape: React.FC<ApeProps> = (props: ApeProps) => {
 
 
 interface ExecutionDetailsProps {
+    trancheAddress: string,
+    baseTokenName: string,
     slippageTolerance: number,
     minimumReceived: number,
     expectedReturn?: number,
@@ -200,10 +205,20 @@ interface ExecutionDetailsProps {
 }
 
 const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
-    const {slippageTolerance, minimumReceived, estimatedGas, netGain, roi, apr, expectedReturn} = props;
+    const {
+        slippageTolerance,
+        minimumReceived,
+        estimatedGas,
+        netGain,
+        roi,
+        apr,
+        expectedReturn,
+        baseTokenName,
+        trancheAddress
+    } = props;
 
     return <DetailPane
-        mx={10}
+        mx={{base: 0, sm: 10}}
     >
         <DetailItem
             name={
@@ -218,24 +233,63 @@ const ExecutionDetails: React.FC<ExecutionDetailsProps> = (props) => {
         />
         <DetailItem
             name="Minimum YT Received:"
-            value={shortenNumber(minimumReceived)}
+            value={
+                <Flex flexDir="row" gridGap={1}>
+                    <Text>
+                        {shortenNumber(minimumReceived)}
+                    </Text>
+                    (<YTPriceTag
+                        amount={expectedReturn}
+                        baseTokenName={baseTokenName}
+                        trancheAddress={trancheAddress}
+                    />)
+                </Flex>
+            }
         />
         <DetailItem
             name="Expected Redemption:"
-            value={expectedReturn ? `$${shortenNumber(expectedReturn)}`: "?"}
+            value={expectedReturn ? 
+                <Flex flexDir="row" gridGap={1}>
+                    <Text>
+                        {shortenNumber(expectedReturn)}
+                    </Text>
+                    (<BaseTokenPriceTag
+                        amount={expectedReturn}
+                        baseTokenName={baseTokenName}
+                    />)
+                </Flex> : <Text>?</Text>
+            }
         />
         <DetailItem
             name="Estimated Gas Cost:"
-            value={`${shortenNumber(estimatedGas)} ETH`}
+            value={
+                <Flex flexDir="row" gridGap={1}>
+                    <Text>
+                        {shortenNumber(estimatedGas)} ETH
+                    </Text>
+                    (<BaseTokenPriceTag
+                        amount={estimatedGas}
+                        baseTokenName={"eth"}
+                    />)
+                </Flex>
+            }
         />
         <DetailItem
             name="Expected Earned:"
             value={netGain ? 
-                <Text
+                <Flex
+                    flexDir="row"
+                    gridGap={1}
                     color={(netGain > 0 ? "green.600" : "red.500")}
                 >
-                    ${shortenNumber(netGain)}
-                </Text> : "?"
+                    <Text>
+                        {shortenNumber(netGain)}
+                    </Text>
+                    (<BaseTokenPriceTag
+                        amount={netGain}
+                        baseTokenName={baseTokenName}
+                    />)
+                </Flex> : "?"
             }
         />
         <DetailItem

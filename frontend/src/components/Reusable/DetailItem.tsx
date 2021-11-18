@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/layout';
+import { Flex, Text } from '@chakra-ui/layout';
 
 interface DetailItemProps {
     name: string | React.ReactElement,
@@ -8,8 +8,13 @@ interface DetailItemProps {
 export const DetailItem: React.FC<DetailItemProps> = (props) => {
     const {name, value} = props;
 
-    return <div className="flex flex-row justify-between gap-4">
+    return <Flex 
+        flexDir="row"
+        justify="space-between"
+        gridGap={4}
+        alignItems="center"
+    >
         <Text>{name}</Text>
         <Text>{value}</Text>
-    </div>
+    </Flex>
 }
